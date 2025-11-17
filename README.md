@@ -1,1 +1,1 @@
-Nhóm N03 - ProJect Cinema
+Nhóm N03 - Project Cinema
