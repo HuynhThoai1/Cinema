@@ -7,7 +7,7 @@
 
 using std::format;
 
-vector<Seat> SeatData::readSeatsFromFile(string fileName) {
+vector<Seat> SeatDAL::loadSeats(string fileName) {
     vector<Seat> seats;
     std::ifstream file(fileName);
     string line;
@@ -34,13 +34,13 @@ vector<Seat> SeatData::readSeatsFromFile(string fileName) {
     return seats;
 }
 
-bool SeatData::writeSeats(string room, string rowID, vector<string> seatBooked, string fileName) {
+bool SeatDAL::saveSeats(string room, string rowID, vector<string> seatBooked, string fileName) {
     if (!DALUtils::fileManagementTest(fileName)) {
         return false;
     }
 
     bool found = false;
-    vector<Seat> seats = SeatData::readSeatsFromFile(fileName);
+    vector<Seat> seats = SeatDAL::loadSeats(fileName);
     for(int i=0; i<seats.size(); i++) {
         if(seats[i]._roomID == room && seats[i]._rowID == rowID) {
             seats[i]._seatBooked = seatBooked;

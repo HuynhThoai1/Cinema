@@ -39,7 +39,7 @@ public:
  * @brief Lớp Data Access Layer (DAL) chịu trách nhiệm Đọc/Ghi dữ liệu ghế từ file.
  * @details Cung cấp các phương thức static để thao tác với file dữ liệu (thường là Seats.txt).
  */
-class SeatData {
+class SeatDAL {
 public:
     /**
      * @brief Đọc toàn bộ dữ liệu ghế từ file.
@@ -47,7 +47,7 @@ public:
      * * @param fileName Đường dẫn đến file dữ liệu ghế (ví dụ: "Seats.txt").
      * @return vector<Seat> Danh sách các đối tượng Seat (mỗi đối tượng là một dãy ghế).
      */
-    static vector<Seat> readSeatsFromFile(string fileName);
+    static vector<Seat> loadSeats(string fileName);
 
     /**
      * @brief Cập nhật và lưu trạng thái ghế xuống file.
@@ -63,7 +63,7 @@ public:
      * @return true Nếu cập nhật và ghi file thành công.
      * @return false Nếu có lỗi xảy ra (không mở được file, dữ liệu sai...).
      */
-    static bool writeSeats(string room, string rowID, vector<string> seatBooked, string fileName);
+    static bool saveSeats(string room, string rowID, vector<string> seatBooked, string fileName);
 };
 
 #endif

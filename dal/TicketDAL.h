@@ -57,7 +57,7 @@ public:
      * * @param fileName Đường dẫn đến file dữ liệu vé (thường là "Tickets.txt").
      * @return vector<Ticket> Danh sách các vé đã bán. Trả về vector rỗng nếu file lỗi hoặc chưa có dữ liệu.
      */
-    static vector<Ticket> readTicketsFromFile(string fileName);
+    static vector<Ticket> loadTickets(string fileName);
 
     /**
      * @brief Ghi (Thêm mới) một vé vào file dữ liệu.
@@ -70,7 +70,7 @@ public:
      * @return true Nếu ghi file thành công.
      * @return false Nếu không mở được file hoặc đường dẫn sai.
      */
-    static bool writeTickets(string fileName, Ticket ticket);
+    static bool saveTickets(string fileName, Ticket ticket);
 };
 
 #endif

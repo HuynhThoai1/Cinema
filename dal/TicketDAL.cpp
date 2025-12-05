@@ -7,7 +7,7 @@
 
 using std::format;
 
-vector<Ticket> TicketDAL::readTicketsFromFile(string input) {
+vector<Ticket> TicketDAL::loadTickets(string input) {
     vector<Ticket> tickets;
     std::ifstream file(input);
     DALUtils::fileManagementTest(input);
@@ -32,11 +32,11 @@ vector<Ticket> TicketDAL::readTicketsFromFile(string input) {
     return tickets;
 }
 
-bool TicketDAL::writeTickets(string fileName, Ticket ticket) {
+bool TicketDAL::saveTickets(string fileName, Ticket ticket) {
     if(!DALUtils::fileManagementTest(fileName)) {
         return false;
     }
-    vector<Ticket> ticketBooked = TicketDAL::readTicketsFromFile(fileName);
+    vector<Ticket> ticketBooked = TicketDAL::loadTickets(fileName);
 
     Ticket newTicket;
     newTicket._ticketID = ticket._ticketID;
