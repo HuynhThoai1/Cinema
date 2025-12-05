@@ -1,6 +1,6 @@
 ## Biên dịch & chạy TicketDAL
 ```Bash
-$ g++ -std=c++23 TicketDAL.cpp ../DALUtils/DALUtils.cpp -o run
+$ g++ -std=c++23 TicketDAL.cpp DALUtils.cpp -o run
 ```
 ```Bash
 $ ./run
@@ -8,7 +8,7 @@ $ ./run
 
 ## Biên dịch & chạy SeatDAL
 ```Bash
-$ g++ -std=c++23 SeatDAL.cpp ../DALUtils/DALUtils.cpp -o run
+$ g++ -std=c++23 SeatDAL.cpp DALUtils.cpp -o run
 ```
 ```Bash
 $ ./run 
