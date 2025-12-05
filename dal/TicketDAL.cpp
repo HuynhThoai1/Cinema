@@ -64,7 +64,7 @@ bool TicketDAL::writeTickets(string fileName, Ticket ticket) {
 //Test
 
 // int main() {
-//     vector<Ticket> tickets = TicketDAL::readTicketsFromFile("../text/Tickets.txt");
+//     vector<Ticket> tickets = TicketDAL::readTicketsFromFile("../data/Tickets.txt");
 
 //     for (const Ticket& ticket : tickets) {
 //         std::cout << "TicketID: " << ticket._ticketID << ", Movie: " << ticket._movie 
@@ -74,6 +74,6 @@ bool TicketDAL::writeTickets(string fileName, Ticket ticket) {
 //     }
 
 //     Ticket newTicket{"abc", "123", "456", "789", "234", "345", "678", "125"};
-//     TicketDAL::writeTickets("../text/Tickets.txt", newTicket);
+//     TicketDAL::writeTickets("../data/Tickets.txt", newTicket);
 //     return 0;
 // }

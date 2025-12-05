@@ -74,7 +74,7 @@ bool SeatData::writeSeats(string room, string rowID, vector<string> seatBooked, 
 //Test
 
 // int main() {
-//     vector<Seat> seats = SeatData::readSeatsFromFile("../text/Seats.txt");
+//     vector<Seat> seats = SeatData::readSeatsFromFile("../data/Seats.txt");
 
 //     for (const Seat& seat : seats) {
 //         std::cout << "Room: " << seat._roomID << ", SeatID: " << seat._rowID << ", Booked: ";
@@ -82,6 +82,6 @@ bool SeatData::writeSeats(string room, string rowID, vector<string> seatBooked, 
 //         std::cout << seatBooked << std::endl;
 //     }
 
-//     SeatData::writeSeats("R01", "F", {"1", "3", "5", "7",}, "../text/Seats.txt");
+//     SeatData::writeSeats("R01", "F", {"1", "3", "5", "7",}, "../data/Seats.txt");
 //     return 0;
 // }
