@@ -7,7 +7,7 @@
 
 using std::format;
 
-vector<Ticket> TicketDAL::readTicketsFromFile(string input) {
+vector<Ticket> TicketDAL::loadTickets(string input) {
     vector<Ticket> tickets;
     std::ifstream file(input);
     DALUtils::fileManagementTest(input);
@@ -32,11 +32,11 @@ vector<Ticket> TicketDAL::readTicketsFromFile(string input) {
     return tickets;
 }
 
-bool TicketDAL::writeTickets(string fileName, Ticket ticket) {
+bool TicketDAL::saveTickets(string fileName, Ticket ticket) {
     if(!DALUtils::fileManagementTest(fileName)) {
         return false;
     }
-    vector<Ticket> ticketBooked = TicketDAL::readTicketsFromFile(fileName);
+    vector<Ticket> ticketBooked = TicketDAL::loadTickets(fileName);
 
     Ticket newTicket;
     newTicket._ticketID = ticket._ticketID;
@@ -64,7 +64,7 @@ bool TicketDAL::writeTickets(string fileName, Ticket ticket) {
 //Test
 
 // int main() {
-//     vector<Ticket> tickets = TicketDAL::readTicketsFromFile("../data/Tickets.txt");
+//     vector<Ticket> tickets = TicketDAL::loadTickets("../data/Tickets.txt");
 
 //     for (const Ticket& ticket : tickets) {
 //         std::cout << "TicketID: " << ticket._ticketID << ", Movie: " << ticket._movie 
@@ -74,6 +74,6 @@ bool TicketDAL::writeTickets(string fileName, Ticket ticket) {
 //     }
 
 //     Ticket newTicket{"abc", "123", "456", "789", "234", "345", "678", "125"};
-//     TicketDAL::writeTickets("../data/Tickets.txt", newTicket);
+//     TicketDAL::saveTickets("../data/Tickets.txt", newTicket);
 //     return 0;
 // }
