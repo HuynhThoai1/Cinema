@@ -1,0 +1,4 @@
+F01| Chocolate PopCorn| 65.000
+F02| Cheese PopCorn| 60.000
+F03| Soda| 20.000
+F04| Mineral Water| 12.000
