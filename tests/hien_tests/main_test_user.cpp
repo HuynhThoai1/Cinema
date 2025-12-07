@@ -4,9 +4,9 @@
 
 // LƯU Ý: Sửa đường dẫn include tùy thuộc vào cấu trúc thư mục thật của bạn
 // Nếu file này nằm ngang hàng với folder bus, dal, dto thì để như sau:
-#include "../bus/UserBUS.h"
-#include "../bus/AdminBUS.h"
-#include "../dto/User.h"
+#include "../../bus/UserBUS.h"
+#include "../../bus/AdminBUS.h"
+#include "../../dto/User.h"
 
 using namespace std;
 
