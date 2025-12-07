@@ -1,0 +1,6 @@
+TK001 | Avatar 3 | R01 | A-1 | Tran Van A | 75.000 | 17:00 | 19/12/2025 
+TK002 | Avengers: Endgame | R01 | A-2 | Nguyen Van A | 75.000 | 16:00 | 05/12/2025 
+TK003 | Spider-Man: No Way Home | R02 | C-5 | Tran Thi B, Le Van C | 160.000 | 18:00 | 09/12/2025 
+TK004 | Doraemon: Nobita's Sky Utopia | R01 | B-1 | Le Van C | 60.000 | 19:00 | 12/12/2025 
+TK005 | Mission: Impossible - Dead Reckoning | R03 | E-4 | Pham Van D | 90.000 | 20:15 | 14/12/2025 
+TK006 | Detective Conan: Black Iron Submarine | R02 | D-2 | Nguyen Thi E | 85.000 | 14:30 | 15/12/2025 
