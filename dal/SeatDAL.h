@@ -5,8 +5,8 @@
  * @details Chứa DTO (Seat) và DAL (SeatData) để quản lý trạng thái đặt chỗ trong rạp chiếu phim.
  */
 
-#ifndef _SeatDAL_H_
-#define _SeatDAL_H_
+#ifndef _SEATDAL_H_
+#define _SEATDAL_H_
 
 #include <string>
 #include <vector>
