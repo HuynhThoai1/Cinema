@@ -19,7 +19,7 @@ void AdminBUS::loadUsers() {
     users.clear();
 
     // Load lại từ file
-    this->users = userDal.loadUsers();
+    this->users = userDal.loadUsers(DATA_FILE);
 }
 
 vector<User*> AdminBUS::getAllUsers() {
@@ -37,7 +37,7 @@ bool AdminBUS::lockUser(string userId) {
             }
 
             user->setRole("Locked"); // Đổi role thành Locked
-            userDal.saveUsers(users); // Lưu ngay xuống file
+            userDal.saveUsers(users, DATA_FILE); // Lưu ngay xuống file
             return true;
         }
     }
@@ -49,7 +49,7 @@ bool AdminBUS::unlockUser(string userId) {
         if (user->getId() == userId) {
             if (user->getRole() == "Locked") {
                 user->setRole("Customer");
-                userDal.saveUsers(users);
+                userDal.saveUsers(users, DATA_FILE);
                 return true;
             }
         }
@@ -68,7 +68,7 @@ bool AdminBUS::removeUser(string userId) {
             delete users[i];
             users.erase(users.begin() + i);
 
-            userDal.saveUsers(users);
+            userDal.saveUsers(users, DATA_FILE);
             return true;
         }
     }

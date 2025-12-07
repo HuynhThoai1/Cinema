@@ -11,12 +11,12 @@ vector<string> split(const string& str, char delimiter) {
 }
 
 // --- 1. Load Users: Đọc file và tạo object ---
-vector<User*> UserDAL::loadUsers() {
+vector<User*> UserDAL::loadUsers(const string& filename) {
     vector<User*> users;
-    std::ifstream file("data/Users.txt");
+    ifstream file(filename);
 
     if (!file.is_open()) {
-        cout << "Lỗi: Không thể mở file data/Users.txt để đọc!\n";
+        cout << "Lỗi: Không thể mở file" << filename << "để đọc!\n";
         return users;
     }
 
@@ -51,10 +51,10 @@ vector<User*> UserDAL::loadUsers() {
 }
 
 // --- 2. Save Users: ghi đè toàn bộ danh sách ---
-void UserDAL::saveUsers(const vector<User*>& users) {
-    std:: ofstream file("data/Users.txt", std::ios::trunc);// ios::trunc là xóa hết cũ ghi mới
+void UserDAL::saveUsers(const vector<User*>& users, const string& filename) {
+    ofstream file(filename, std::ios::trunc);// ios::trunc là xóa hết cũ ghi mới
     if (!file.is_open()) {
-        cout << "Lỗi: Không thể mở file data/Users.txt để ghi!\n";
+        cout << "Lỗi: Không thể mở file" << filename << "để ghi!\n";
         return;
     }
     
@@ -69,12 +69,12 @@ void UserDAL::saveUsers(const vector<User*>& users) {
 }
 
 // --- 3. Add User: Thêm 1 người vào cuối file ---
-void UserDAL::addUser(User* user) {
+void UserDAL::addUser(User* user, const string& filename) {
     // ios::app = append (ghi nối tiếp vào cuối file)
-    std::ofstream file("data/Users.txt", std::ios::app); 
+    ofstream file(filename, std::ios::app); 
 
     if (!file.is_open()) {
-        cout << "Lỗi: Không thể mở file data/Users.txt để thêm mới!\n";
+        cout << "Lỗi: Không thể mở file" << filename << "để thêm mới!\n";
         return;
     }
 

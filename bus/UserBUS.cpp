@@ -17,7 +17,7 @@ void UserBUS::loadData() {
         delete user;
     }
     users.clear();
-    this->users = userDal.loadUsers();
+    this->users = userDal.loadUsers(DATA_FILE);
 }
 
 User* UserBUS::login(string username, string password) {
@@ -57,7 +57,7 @@ bool UserBUS::registerUser(string username, string password) {
     users.push_back(newUser);
 
     // 5. Lưu xuống file (Ổ cứng)
-    userDal.addUser(newUser);
+    userDal.addUser(newUser, DATA_FILE);
 
     return true;
 }
@@ -76,7 +76,7 @@ bool UserBUS::changePassword(string id, string oldPw, string newPw) {
             // Kiểm tra mật khẩu cũ
             if (user->checkPassword(oldPw)) {
                 user->setPassword(newPw);
-                userDal.saveUsers(users);
+                userDal.saveUsers(users, DATA_FILE);
                 return true;
             } else {
                 return false;

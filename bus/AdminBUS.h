@@ -16,6 +16,9 @@ class AdminBUS {
 private:
     UserDAL userDal;    ///< Đối tượng DAL
     vector<User*> users;///< Danh sách user để quản lý
+
+    const string DATA_FILE = "../../data/Users.txt"; 
+
 public:
     AdminBUS();
     ~AdminBUS();

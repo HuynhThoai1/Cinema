@@ -19,6 +19,9 @@ private:
     UserDAL userDal;        ///< Đối tượng DAL để thao tác file
     vector<User*> users;    ///< Cache danh sách user trong RAM
     User* currentUser;      ///< Lưu pointer đến người dùng đang đăng nhập
+
+    const string DATA_FILE = "../../data/Users.txt"; 
+
 public:
     UserBUS();
     
