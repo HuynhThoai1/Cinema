@@ -5,7 +5,7 @@
 
 using std::stringstream, std::cout;
 
-string DALUtils::Trim(string str) {
+string DALUtils::Trim(const string& str) {
     stringstream ss(str);
     string letter, newstr;
 
@@ -19,10 +19,10 @@ string DALUtils::Trim(string str) {
     return newstr;
 }
 
-string DALUtils::Join(vector<string> list, string delimiter) {
+string DALUtils::Join(const vector<string>& list, const string& delimiter) {
     string res;
 
-    for(string item : list) {
+    for(const string& item : list) {
         if (!res.empty()) {
             res += delimiter;
         }
@@ -33,11 +33,11 @@ string DALUtils::Join(vector<string> list, string delimiter) {
     return res;
 }
 
-vector<string> DALUtils::Split(string str, string delimiter) {  
+vector<string> DALUtils::Split(const string& str, const string& delimiter) {  
     vector<string> list;
-    int delimiterPos = 0;
+    size_t delimiterPos = 0;
     string token;
-    int head = 0;
+    size_t head = 0;
 
     while((delimiterPos = str.find(delimiter, head)) != string::npos) {
         token = str.substr(head, delimiterPos-head);
@@ -50,11 +50,19 @@ vector<string> DALUtils::Split(string str, string delimiter) {
     return list;
 }
 
-int DALUtils::parseInt(string str) {
-    return std::stoi(str);
+int DALUtils::parseInt(const string& str) {
+    try {
+        return std::stoi(str);
+    } catch (const std::invalid_argument& e) {
+        cout << "Error: invalid argument passed to parseInt: '" << str << "'\n";
+        return 0;
+    } catch (const std::out_of_range& e) {
+        cout << "Error: out of range value passed to parseInt: '" << str << "'\n";
+        return 0;
+    }
 }
 
-bool DALUtils::fileManagementTest(string filename) {
+bool DALUtils::fileManagementTest(const string& filename) {
     std::ifstream file(filename);
     if (!file) {
         cout << "Error: Unable to open file " << filename << "\n";

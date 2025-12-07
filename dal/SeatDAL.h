@@ -48,7 +48,7 @@ public:
      * * @param fileName Đường dẫn đến file dữ liệu ghế (ví dụ: "Seats.txt").
      * @return vector<Seat> Danh sách các đối tượng Seat (mỗi đối tượng là một dãy ghế).
      */
-    static vector<Seat> loadSeats(string fileName);
+    static vector<Seat> loadSeats(const string& fileName);
 
     /**
      * @brief Cập nhật và lưu trạng thái ghế xuống file.
@@ -64,7 +64,7 @@ public:
      * @return true Nếu cập nhật và ghi file thành công.
      * @return false Nếu có lỗi xảy ra (không mở được file, dữ liệu sai...).
      */
-    static bool saveSeats(string room, string rowID, vector<string> seatBooked, string fileName);
+    static bool saveSeats(const string& room, const string& rowID, const vector<string>& seatBooked, const string& fileName);
 };
 
 #endif
