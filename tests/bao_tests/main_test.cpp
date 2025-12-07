@@ -1,10 +1,9 @@
 #include <iostream>
-#include "dto/Movie.h"
-#include "dal/MovieDAL.h"
-#include "bus/MovieBUS.h"
-#include "dto/Showtime.h"
-#include "dal/ShowtimeDAL.h"
-
+#include "../../dto/Movie.h"
+#include "../../dal/MovieDAL.h"
+#include "../../bus/MovieBUS.h"
+#include "../../dto/Showtime.h"
+#include "../../dal/ShowtimeDAL.h"
 using std::cout;
 using std::string;
 using std::vector;
@@ -14,7 +13,7 @@ int main() {
 
     MovieBUS movieBus;
 
-    string movieFile = "Movies.txt";
+    string movieFile = "../../data/Movies.txt";
 
     movieBus.load(movieFile);
 
@@ -36,7 +35,7 @@ int main() {
     list.push_back(Showtime("S001", "M001", "2025-12-30 19:30", "Room 1"));
     list.push_back(Showtime("S002", "M001", "2025-12-05 22:00", "Room 1"));
 
-    string showFile = "Showtime.txt";
+    string showFile = "../../data/Showtime.txt";
 
     ShowtimeDAL::saveToFile(list, showFile);
 
