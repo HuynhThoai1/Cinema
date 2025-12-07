@@ -7,7 +7,7 @@
 
 using std::format;
 
-vector<Seat> SeatDAL::loadSeats(string fileName) {
+vector<Seat> SeatDAL::loadSeats(const string& fileName) {
     vector<Seat> seats;
     std::ifstream file(fileName);
     string line;
@@ -24,7 +24,7 @@ vector<Seat> SeatDAL::loadSeats(string fileName) {
         Seat rowData;
         rowData._roomID = DALUtils::Trim(tokens[0]);
         rowData._rowID = DALUtils::Trim(tokens[1]);
-        for(int i=2; i<tokens.size(); i++) {
+        for(size_t i=2; i<tokens.size(); i++) {
             rowData._seatBooked.push_back(DALUtils::Trim(tokens[i]));
         }
         seats.push_back(rowData);
@@ -34,14 +34,14 @@ vector<Seat> SeatDAL::loadSeats(string fileName) {
     return seats;
 }
 
-bool SeatDAL::saveSeats(string room, string rowID, vector<string> seatBooked, string fileName) {
+bool SeatDAL::saveSeats(const string& room, const string& rowID, const vector<string>& seatBooked, const string& fileName) {
     if (!DALUtils::fileManagementTest(fileName)) {
         return false;
     }
 
     bool found = false;
     vector<Seat> seats = SeatDAL::loadSeats(fileName);
-    for(int i=0; i<seats.size(); i++) {
+    for(size_t i=0; i<seats.size(); i++) {
         if(seats[i]._roomID == room && seats[i]._rowID == rowID) {
             seats[i]._seatBooked = seatBooked;
             found = true;
@@ -59,9 +59,9 @@ bool SeatDAL::saveSeats(string room, string rowID, vector<string> seatBooked, st
 
     std::ofstream file(fileName);
     string line;
-    for(Seat updateSeat : seats) {
-        line = format("{} | {} | ", updateSeat._roomID, updateSeat._rowID);
-        string updateSeatNumber = DALUtils::Join(updateSeat._seatBooked, " | ");
+    for(const Seat& seat : seats) {
+        line = format("{} | {} | ", seat._roomID, seat._rowID);
+        string updateSeatNumber = DALUtils::Join(seat._seatBooked, " | ");
         line += updateSeatNumber + "\n";
 
         file << line;

@@ -27,7 +27,7 @@ public:
      * @param str Chuỗi gốc cần xử lý.
      * @return string Chuỗi kết quả sau khi đã cắt gọn.
      */
-    static string Trim(string str);
+    static string Trim(const string& str);
 
     /**
      * @brief Tách chuỗi thành danh sách các chuỗi con dựa trên ký tự phân cách.
@@ -36,7 +36,7 @@ public:
      * @param delimiter Chuỗi dùng làm dấu phân cách (VD: "|" hoặc ", ").
      * @return vector<string> Danh sách các chuỗi con (Tokens).
      */
-    static vector<string> Split(string str, string delimiter);
+    static vector<string> Split(const string& str, const string& delimiter);
 
     /**
      * @brief Gộp danh sách chuỗi thành một chuỗi duy nhất.
@@ -45,7 +45,7 @@ public:
      * @param delimiter Dấu phân cách muốn chèn vào giữa các phần tử.
      * @return string Chuỗi kết quả sau khi gộp.
      */
-    static string Join(vector<string> list, string delimiter);
+    static string Join(const vector<string>& list, const string& delimiter);
 
     /**
      * @brief Chuyển đổi chuỗi sang số nguyên (Integer) an toàn.
@@ -53,7 +53,7 @@ public:
      * @param str Chuỗi chứa số (VD: "123", "  45 ").
      * @return int Giá trị số nguyên. Trả về 0 (hoặc giá trị mặc định) nếu chuỗi lỗi.
      */
-    static int parseInt(string str);
+    static int parseInt(const string& str);
 
     /**
      * @brief Kiểm tra sự tồn tại và khả năng truy cập của file.
@@ -62,7 +62,7 @@ public:
      * @return true Nếu file tồn tại và có thể mở được.
      * @return false Nếu file không tồn tại hoặc bị khóa quyền truy cập.
      */
-    static bool fileManagementTest(string filename);
+    static bool fileManagementTest(const string& filename);
 };
 
 #endif

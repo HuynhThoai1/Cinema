@@ -7,7 +7,7 @@
 
 using std::format;
 
-vector<Ticket> TicketDAL::loadTickets(string input) {
+vector<Ticket> TicketDAL::loadTickets(const string& input) {
     vector<Ticket> tickets;
     std::ifstream file(input);
     DALUtils::fileManagementTest(input);
@@ -32,28 +32,19 @@ vector<Ticket> TicketDAL::loadTickets(string input) {
     return tickets;
 }
 
-bool TicketDAL::saveTickets(string fileName, Ticket ticket) {
+bool TicketDAL::saveTickets(const string& fileName, const Ticket& ticket) {
     if(!DALUtils::fileManagementTest(fileName)) {
         return false;
     }
     vector<Ticket> ticketBooked = TicketDAL::loadTickets(fileName);
 
-    Ticket newTicket;
-    newTicket._ticketID = ticket._ticketID;
-    newTicket._movie = ticket._movie;
-    newTicket._roomID = ticket._roomID;
-    newTicket._seatID = ticket._seatID;
-    newTicket._customerName = ticket._customerName;
-    newTicket._price = ticket._price;
-    newTicket._showTime = ticket._showTime;
-    newTicket._date = ticket._date;
-    ticketBooked.push_back(newTicket);
+    ticketBooked.push_back(ticket);
 
     std::ofstream file(fileName);
     string line;
-    for(Ticket tickets : ticketBooked) {
-        line = format("{} | {} | {} | {} | {} | {} | {} | {} \n", tickets._ticketID, tickets._movie, tickets._roomID, tickets._seatID,
-                             tickets._customerName, tickets._price, tickets._showTime, tickets._date);
+    for(const Ticket& ticketItem : ticketBooked) {
+        line = format("{} | {} | {} | {} | {} | {} | {} | {} \n", ticketItem._ticketID, ticketItem._movie, ticketItem._roomID, ticketItem._seatID,
+                             ticketItem._customerName, ticketItem._price, ticketItem._showTime, ticketItem._date);
         file << line;
     }
 
