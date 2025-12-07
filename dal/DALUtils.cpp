@@ -54,10 +54,10 @@ int DALUtils::parseInt(const string& str) {
     try {
         return std::stoi(str);
     } catch (const std::invalid_argument& e) {
-        cout << "Error: invalid argument passed to parseInt: '" << str << "'\n";
+        cout << "Error: Invalid argument passed to parseInt: '" << str << "' - " << e.what() << "\n";
         return 0;
     } catch (const std::out_of_range& e) {
-        cout << "Error: out of range value passed to parseInt: '" << str << "'\n";
+        cout << "Error: Out of range value passed to parseInt: '" << str << "' - " << e.what() << "\n";
         return 0;
     }
 }
