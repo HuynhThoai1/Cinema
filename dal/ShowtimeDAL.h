@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "Showtime.h"
+#include "../dto/Showtime.h"
 
 using std::string;
 using std::vector;

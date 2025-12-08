@@ -60,20 +60,3 @@ bool TicketDAL::saveTickets(string fileName, Ticket ticket) {
     file.close();
     return true;
 }
-
-//Test
-
-// int main() {
-//     vector<Ticket> tickets = TicketDAL::loadTickets("../data/Tickets.txt");
-
-//     for (const Ticket& ticket : tickets) {
-//         std::cout << "TicketID: " << ticket._ticketID << ", Movie: " << ticket._movie 
-//                   << ", RoomID: " << ticket._roomID << ", SeatID: " << ticket._seatID 
-//                   << ", CustomerName: " << ticket._customerName << ", Price: " << ticket._price 
-//                   << ", ShowTime: " << ticket._showTime << ", Date: " << ticket._date << std::endl;
-//     }
-
-//     Ticket newTicket{"abc", "123", "456", "789", "234", "345", "678", "125"};
-//     TicketDAL::saveTickets("../data/Tickets.txt", newTicket);
-//     return 0;
-// }

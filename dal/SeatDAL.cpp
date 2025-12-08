@@ -70,18 +70,3 @@ bool SeatDAL::saveSeats(string room, string rowID, vector<string> seatBooked, st
     file.close();
     return true;
 }
-
-// Test
-
-// int main() {
-//     vector<Seat> seats = SeatDAL::loadSeats("../data/Seats.txt");
-
-//     for (const Seat& seat : seats) {
-//         std::cout << "Room: " << seat._roomID << ", SeatID: " << seat._rowID << ", Booked: ";
-//         string seatBooked = DALUtils::Join(seat._seatBooked, ", ");
-//         std::cout << seatBooked << std::endl;
-//     }
-
-//     SeatDAL::saveSeats("R01", "F", {"1", "3", "5", "7",}, "../data/Seats.txt");
-//     return 0;
-// }

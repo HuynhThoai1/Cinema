@@ -1,48 +1,11 @@
-/**
- * @file TicketDAL.h
- * @brief Tệp tiêu đề định nghĩa cấu trúc dữ liệu Vé và lớp xử lý file Vé.
- * @details Chứa DTO (Ticket) để lưu trữ thông tin vé và DAL (TicketDAL) để tương tác với cơ sở dữ liệu file text.
- */
-
 #ifndef _TICKET_DAL_H_
 #define _TICKET_DAL_H_
 
 #include <string>
 #include <vector>
+#include "../dto/Ticket.h"
 
 using std::vector, std::string;
-
-/**
- * @class Ticket
- * @brief Đối tượng chuyển giao dữ liệu (DTO) đại diện cho một vé xem phim.
- * @details Chứa đầy đủ thông tin chi tiết về một giao dịch đặt vé.
- */
-class Ticket {
-public:
-    /** @brief Mã định danh duy nhất của vé (Ví dụ: "TK001"). */
-    string _ticketID;
-
-    /** @brief Tên phim (Ví dụ: "Avatar 2"). */
-    string _movie;
-
-    /** @brief Mã phòng chiếu (Ví dụ: "R01"). */
-    string _roomID;
-
-    /** @brief Vị trí ghế ngồi (Ví dụ: "A-5" hoặc "E-10"). */
-    string _seatID;
-
-    /** @brief Tên khách hàng đặt vé. */
-    string _customerName;
-
-    /** @brief Giá vé (Lưu dưới dạng chuỗi có định dạng, VD: "75.000"). */
-    string _price;
-
-    /** @brief Giờ chiếu (Ví dụ: "19:00"). */
-    string _showTime;
-
-    /** @brief Ngày chiếu (Ví dụ: "19/12/2025"). */
-    string _date;
-};
 
 /**
  * @class TicketDAL

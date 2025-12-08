@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "Movie.h"
+#include "../dto/Movie.h"
 
 using std::string;
 using std::vector;
