@@ -17,10 +17,11 @@ private:
     UserDAL userDal;    ///< Đối tượng DAL
     vector<User*> users;///< Danh sách user để quản lý
 
-    const string DATA_FILE = "../../data/Users.txt"; 
+    string DATA_FILE;
 
 public:
     AdminBUS();
+    AdminBUS(const string& filename);
     ~AdminBUS();
 
     /**

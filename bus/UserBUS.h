@@ -20,10 +20,12 @@ private:
     vector<User*> users;    ///< Cache danh sách user trong RAM
     User* currentUser;      ///< Lưu pointer đến người dùng đang đăng nhập
 
-    const string DATA_FILE = "../../data/Users.txt"; 
+    string DATA_FILE; 
 
 public:
     UserBUS();
+    UserBUS(const string& filename);
+
     
     /**
      * @brief Hủy đối tượng BUS và giải phóng bộ nhớ của danh sách users.

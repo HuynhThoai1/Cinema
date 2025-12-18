@@ -14,7 +14,7 @@ using std::string;
  * @brief Lớp cha lưu trữ thông tin chung của Admin và Customer.
  */
 class User {
-private:
+protected:
     string _id;         ///< Mã định danh người dùng (VD: U1, U2)
     string _username;   ///< Tên đăng nhập
     string _password;   ///< Mật khẩu
