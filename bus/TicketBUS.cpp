@@ -5,39 +5,36 @@
 using std::cout;
 
 
-// [QUAN TRỌNG] Đổi tên hàm và thêm tham số showtimeId để khớp với BookingFacade
-bool TicketBUS::createAndSaveTicket(string customerName, string showtimeId, string movieTitle, string roomId, 
-                                    string seatId, string price, string time, string date) {
+string TicketBUS::createAndSaveTicket(string customerName, string showtimeId, string movieTitle, string roomId, 
+                                      string seatId, string price, string time, string date) {
     
-    // 1. Gọi Factory để tạo đối tượng (Truyền thêm showtimeId)
-    // Lưu ý: Tạm bỏ BUSUtils::formatCurrency để tránh lỗi biên dịch nếu thiếu file.
-    // Nếu bạn có file đó, hãy uncomment lại.
-    // price = BUSUtils::formatCurrency(stoi(price)); 
-
+    // 1. Gọi Factory để tạo đối tượng
     Ticket* newTicket = TicketFactory::createTicket(showtimeId, movieTitle, roomId, seatId, customerName, price, time, date);
     
     if (newTicket == nullptr) {
         cout << "[TicketBUS] Loi: Khong the tao doi tuong Ve.\n";
-        return false;
+        return ""; // Trả về chuỗi rỗng báo lỗi
     }
 
-    // 2. Lưu xuống File qua DAL
-    // [QUAN TRỌNG] Sửa đường dẫn thành "../data/Tickets.txt" để chạy từ thư mục ui
-    bool success = TicketDAL::saveTickets("../data/Tickets.txt", *newTicket);
+    // [QUAN TRỌNG] Lấy ID vé ra trước khi lưu và xóa object
+    string generatedID = newTicket->getTicketID();
 
-    if (!success) {
-        cout << "[TicketBUS] Loi: Khong the ghi ve xuong File (Check path ../data/Tickets.txt).\n";
-        delete newTicket; 
-        return false;
-    } 
-    
-    // cout << "Luu ve thanh cong!"; // Có thể bỏ dòng này để UI tự thông báo
+    // 2. Lưu xuống File qua DAL
+    bool success = TicketDAL::saveTickets("../data/Tickets.txt", *newTicket);
 
     // 3. Dọn dẹp bộ nhớ
     delete newTicket; 
+
+    if (!success) {
+        cout << "[TicketBUS] Loi: Khong the ghi ve xuong File.\n";
+        return ""; // Thất bại
+    } 
     
-    return true;
+    // 4. Trả về ID vé vừa tạo thành công
+    return generatedID;
 }
+
+
 
 Ticket* TicketBUS::getTicketById(string ticketId) {
     string fileName = "../data/Tickets.txt"; // [SỬA] Đường dẫn tương đối

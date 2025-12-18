@@ -67,7 +67,7 @@ bool SeatBUS::checkAvailable(string showtimeId, string roomId, string seatId) {
         }
     }
     // Nếu không tìm thấy dòng nào => Suất mới => Ghế trống
-    return true; 
+    return false; 
 }
 
 bool SeatBUS::bookSeat(string showtimeId, string roomId, string seatId) {

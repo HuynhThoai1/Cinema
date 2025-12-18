@@ -80,8 +80,9 @@ bool BookingFacade::processBooking(string userId, string showtimeId, vector<stri
             continue; // Bỏ qua ghế này, thử ghế tiếp theo
         }
 
-        // 3.3. Tạo vé (Cập nhật file Tickets.txt)
-        bool ticketSuccess = ticketBus.createAndSaveTicket(
+        // 3.3. Tạo vé và nhận về MÃ VÉ (Thay vì bool)
+        // [QUAN TRỌNG] Bạn phải sửa TicketBUS trả về string để code này hoạt động
+        string newTicketId = ticketBus.createAndSaveTicket(
             userId, 
             showtimeId,
             movieTitle, 
@@ -92,11 +93,14 @@ bool BookingFacade::processBooking(string userId, string showtimeId, vector<stri
             dateOnly
         );
 
-        if (ticketSuccess) {
+        // Kiểm tra chuỗi rỗng thay vì check true/false
+        if (!newTicketId.empty()) { 
             cout << " -> Da dat thanh cong ghe: " << seatId ;
-            cout << "  |  Ma ve: [" << showtimeId << "-" << seatId << "] ";
+            
+            // [ĐÃ SỬA] In ra newTicketId thay vì userId
+            cout << "  |  Ma ve: ["<< newTicketId <<"] ";            
             cout << "  |  Phim: " << movieTitle;
-            cout << "  |  Phong: " << roomName;
+            cout << "  |  Phong: " << roomName; 
             cout << "  |  Thoi gian: " << fullStartTime;
             cout << "  |  Gia ve: " << priceStr << " VND" << "\n";
             successCount++;
@@ -117,7 +121,6 @@ bool BookingFacade::processBooking(string userId, string showtimeId, vector<stri
         return false;
     }
 }
-
 
 bool BookingFacade::cancelTicket(string ticketId, string& outMessage) {
     // B1: Tìm vé để lấy thông tin (Suất chiếu, Phòng, Ghế) trước khi xóa

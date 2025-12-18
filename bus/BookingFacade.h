@@ -70,6 +70,17 @@ public:
      * @return false Nếu có bất kỳ lỗi nào (ghế đã có người đặt, lỗi file...).
      */
     bool processBooking(string userId, string showtimeId, vector<string> seatList);
+    /**
+     * @brief Hủy vé đã đặt.
+     * @details Quy trình thực hiện:
+     * 1. Tìm vé theo ticketId để lấy thông tin suất chiếu, phòng, ghế.
+     * 2. Xóa vé khỏi file vé (TicketBUS).
+     * 3. Mở lại ghế đã đặt (SeatBUS).
+     * * @param ticketId Mã vé cần hủy.
+     * @param outMessage Thông điệp trả về chi tiết kết quả hủy vé.
+     * @return true Nếu hủy vé thành công.
+     * @return false Nếu có lỗi xảy ra (không tìm thấy vé, lỗi file...).
+     */
     bool cancelTicket(string ticketId, string& outMessage);
 };
 
