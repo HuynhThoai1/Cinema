@@ -1,63 +1,59 @@
-/**
- * @file TicketUI.h
- * @brief Định nghĩa giao diện hiển thị sơ đồ ghế (Presentation Layer).
- *
- * Class này chịu trách nhiệm vẽ trực quan trạng thái của phòng chiếu
- * dựa trên dữ liệu được truyền vào từ bên ngoài (thường là từ Controller hoặc Main).
- * @date 2023-10-27
- */
-
 #ifndef TICKET_UI_H
 #define TICKET_UI_H
 
-#include <iostream>
-#include <vector>
+#include "../bus/BookingFacade.h"
+#include "../bus/MovieBUS.h"
+#include "../bus/ShowtimeBUS.h"
+#include "../bus/SeatBUS.h"
 #include <string>
-#include <iomanip>
-#include "../dto/Seat.h" 
 
 using std::string;
-using std::vector;
 
 /**
  * @class TicketUI
- * @brief Lớp giao diện người dùng (UI) quản lý việc hiển thị đặt vé.
- *
- * Lớp này được thiết kế theo hướng "Stateless" (không lưu trạng thái dữ liệu),
- * chỉ nhận dữ liệu và hiển thị (Rendering).
+ * @brief Lớp giao diện Console tương tác với người dùng.
  */
 class TicketUI {
 private:
-    /**
-     * @brief Số lượng ghế tối đa trên một hàng.
-     * Dùng để định dạng độ rộng khi in ra console hoặc xác định giới hạn vòng lặp vẽ ghế.
-     */
-    const int SEATS_PER_ROW = 30; 
+    // Các đối tượng xử lý nghiệp vụ
+    BookingFacade bookingFacade;
+    MovieBUS movieBus;
+    ShowtimeBUS showtimeBus;
+    SeatBUS seatBus; // Cần để vẽ map và unlock ghế thủ công
+
+    // Thông tin người dùng hiện tại (Giả lập session)
+    string currentUserId;
 
 public:
-    /**
-     * @brief Constructor mặc định.
-     */
-    TicketUI() {}
+    TicketUI();
 
     /**
-     * @brief Vẽ sơ đồ ghế của phòng chiếu ra màn hình console.
-     *
-     * Hàm này thực hiện các nhiệm vụ:
-     * 1. Nhận danh sách các hàng ghế (Seat*) đã được load từ BUS/DAL.
-     * 2. Duyệt qua từng hàng, kiểm tra loại ghế (VIP/Normal) để đổi màu hoặc ký hiệu.
-     * 3. Duyệt từng số ghế trong hàng, đối chiếu với danh sách đã đặt (`seatBooked`) 
-     * để hiển thị trạng thái (VD: [X] là đã đặt, [ ] là trống).
-     *
-     * @note **Design Pattern**: Áp dụng nguyên lý tách biệt (Separation of Concerns). 
-     * UI không tự gọi BUS để lấy dữ liệu mà đợi dữ liệu được truyền vào (Dependency Injection).
-     * Điều này giúp UI dễ dàng tái sử dụng cho nhiều phòng chiếu hoặc dữ liệu giả lập khác nhau.
-     *
-     * @param roomId Mã phòng chiếu đang hiển thị (để in tiêu đề).
-     * @param listRows Vector chứa các con trỏ `Seat*`. Nhờ tính đa hình, vector này
-     * có thể chứa cả `NormalSeat` và `VipSeat`.
+     * @brief Hàm chạy chính của chương trình (Vòng lặp menu).
      */
-    void renderSeatMap(string roomId, const vector<Seat*>& listRows);
+    void run();
+
+private:
+    // --- CÁC MÀN HÌNH CHỨC NĂNG ---
+    
+    // Hiển thị danh sách phim đang chiếu
+    void viewMovies();
+    
+    // Quy trình đặt vé: Chọn Phim -> Chọn Suất -> Chọn Ghế -> Thanh toán
+    void processBookingWorkflow();
+    
+    // Hủy vé (Mở khóa ghế - Tính năng cho Admin/Testing)
+    void processCancelWorkflow();
+
+    // --- HÀM HỖ TRỢ HIỂN THỊ ---
+    
+    // Vẽ sơ đồ ghế của một phòng cụ thể
+    void drawSeatMap(string showtimeId, string roomId);
+    
+    // Xóa màn hình console
+    void clearScreen();
+    
+    // In tiêu đề đẹp
+    void printHeader(string title);
 };
 
 #endif // TICKET_UI_H

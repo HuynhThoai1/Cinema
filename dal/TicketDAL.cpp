@@ -1,59 +1,65 @@
 #include "TicketDAL.h"
 #include "DALUtils.h"
 #include <fstream>
-#include <sstream>
-#include <format>
 #include <iostream>
+#include <format> // C++20
 
 using std::format;
+using std::vector;
+using std::string;
 
 vector<Ticket> TicketDAL::loadTickets(string input) {
     vector<Ticket> tickets;
+    
+    // Kiểm tra file trước khi mở
+    if (!DALUtils::fileManagementTest(input)) {
+        return tickets;
+    }
+
     std::ifstream file(input);
-    DALUtils::fileManagementTest(input);
     string line;
 
     while(std::getline(file, line)) {
+        if(line.empty()) continue;
+
         vector<string> tokens = DALUtils::Split(line, " | ");
-        Ticket ticket;
+        // Đảm bảo đủ 8 trường dữ liệu
         if (tokens.size() >= 8) {
-            ticket._ticketID = DALUtils::Trim(tokens[0]);
-            ticket._movie = DALUtils::Trim(tokens[1]);   
-            ticket._roomID = DALUtils::Trim(tokens[2]);
-            ticket._seatID = DALUtils::Trim(tokens[3]);
-            ticket._customerName = DALUtils::Trim(tokens[4]);
-            ticket._price = DALUtils::Trim(tokens[5]);
-            ticket._showTime = DALUtils::Trim(tokens[6]);
-            ticket._date = DALUtils::Trim(tokens[7]);
-            
+            string id = DALUtils::Trim(tokens[0]);
+            string stID = DALUtils::Trim(tokens[1]);
+            string movie = DALUtils::Trim(tokens[2]);   
+            string room = DALUtils::Trim(tokens[3]);
+            string seat = DALUtils::Trim(tokens[4]);
+            string cust = DALUtils::Trim(tokens[5]);
+            string price = DALUtils::Trim(tokens[6]);
+            string time = DALUtils::Trim(tokens[7]);
+            string date = DALUtils::Trim(tokens[8]);
+
+            // Sử dụng constructor của Ticket thay vì gán từng biến private (nếu class Ticket private biến)
+            Ticket ticket(id, stID,movie, room, seat, cust, price, time, date);
             tickets.push_back(ticket);
         }
     }
+    file.close();
     return tickets;
 }
 
 bool TicketDAL::saveTickets(string fileName, Ticket ticket) {
-    if(!DALUtils::fileManagementTest(fileName)) {
-        return false;
-    }
+    // 1. Load danh sách cũ
     vector<Ticket> ticketBooked = TicketDAL::loadTickets(fileName);
 
-    Ticket newTicket;
-    newTicket._ticketID = ticket._ticketID;
-    newTicket._movie = ticket._movie;
-    newTicket._roomID = ticket._roomID;
-    newTicket._seatID = ticket._seatID;
-    newTicket._customerName = ticket._customerName;
-    newTicket._price = ticket._price;
-    newTicket._showTime = ticket._showTime;
-    newTicket._date = ticket._date;
-    ticketBooked.push_back(newTicket);
+    // 2. Thêm vé mới
+    ticketBooked.push_back(ticket);
 
+    // 3. Ghi đè lại file
     std::ofstream file(fileName);
-    string line;
-    for(Ticket tickets : ticketBooked) {
-        line = format("{} | {} | {} | {} | {} | {} | {} | {} \n", tickets._ticketID, tickets._movie, tickets._roomID, tickets._seatID,
-                             tickets._customerName, tickets._price, tickets._showTime, tickets._date);
+    if (!file.is_open()) return false;
+
+    for(const auto& t : ticketBooked) {
+        // Sử dụng getter để lấy dữ liệu
+        string line = format("{} | {} | {} | {} | {} | {} | {} | {} | {}\n", 
+                             t.getTicketID(), t.getShowtimeID(), t.getMovie(), t.getRoomID(), t.getSeatID(),
+                             t.getCustomerName(), t.getPrice(), t.getShowTime(), t.getDate());
         file << line;
     }
 

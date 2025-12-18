@@ -39,7 +39,12 @@ private:
     SeatBUS seatBus;            ///< Xử lý trạng thái ghế (Check/Book).
     ShowtimeBUS showtimeBus;    ///< Xử lý thông tin suất chiếu (để lấy giờ, ngày, giá).
     MovieBUS movieBus;          ///< Xử lý thông tin phim (để lấy tên phim).
-
+/**
+     * @brief Hàm phụ trợ: Tính giá vé dựa trên hàng ghế.
+     * Logic này được chuyển từ Class Seat cũ sang đây.
+     * VD: Hàng A, B, C giá 50k. Hàng D trở đi giá 80k.
+     */
+    string calculatePrice(string seatId);
 public:
     /**
      * @brief Constructor khởi tạo Facade.
@@ -64,7 +69,8 @@ public:
      * * @return true Nếu toàn bộ quy trình thành công.
      * @return false Nếu có bất kỳ lỗi nào (ghế đã có người đặt, lỗi file...).
      */
-    bool processBooking(string userId, string showtimeId, string seatId);
+    bool processBooking(string userId, string showtimeId, vector<string> seatList);
+    bool cancelTicket(string ticketId, string& outMessage);
 };
 
 #endif // BOOKING_FACADE_H
