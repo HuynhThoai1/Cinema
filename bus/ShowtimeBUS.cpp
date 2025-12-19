@@ -1,63 +1,38 @@
-#include "ShowtimeBUS.h"
+#include "bus/ShowtimeBUS.h"
 
-void ShowtimeBUS::load(const string& filename) {
-    _showtimes = ShowtimeDAL::loadFromFile(filename);
-}
+#include <algorithm>
 
-void ShowtimeBUS::save(const string& filename) const {
-    ShowtimeDAL::saveToFile(_showtimes, filename);
-}
+ShowtimeBUS::ShowtimeBUS(ShowtimeDAL showtimeDal) : showtimeDal(std::move(showtimeDal)) {}
 
-vector<Showtime> ShowtimeBUS::getAll() const {
-    return _showtimes; // copy, an toàn cho caller
-}
-
-bool ShowtimeBUS::addShowtime(const Showtime& s) {
-    // Không cho trùng id
-    for (size_t i = 0; i < _showtimes.size(); ++i) {
-        if (_showtimes[i].getId() == s.getId()) {
-            return false;
-        }
+std::vector<Showtime> ShowtimeBUS::getByMovie(const std::string& movieId) {
+    auto showtimes = showtimeDal.loadShowtimes();
+    std::vector<Showtime> filtered;
+    filtered.reserve(showtimes.size());
+    for (const auto& s : showtimes) {
+        if (s.getMovieId() == movieId) filtered.push_back(s);
     }
-    _showtimes.push_back(s);
+    return filtered;
+}
+
+bool ShowtimeBUS::addShowtime(const Showtime& showtime) {
+    auto showtimes = showtimeDal.loadShowtimes();
+    auto it = std::find_if(showtimes.begin(), showtimes.end(),
+                           [&](const Showtime& s) { return s.getId() == showtime.getId(); });
+    if (it != showtimes.end()) return false;
+
+    showtimes.push_back(showtime);
+    showtimeDal.saveShowtimes(showtimes);
     return true;
 }
 
-bool ShowtimeBUS::deleteShowtime(const string& id) {
-    for (size_t i = 0; i < _showtimes.size(); ++i) {
-        if (_showtimes[i].getId() == id) {
-            _showtimes.erase(_showtimes.begin() + i);
-            return true;
-        }
-    }
-    return false;
-}
+bool ShowtimeBUS::deleteShowtime(const std::string& id) {
+    auto showtimes = showtimeDal.loadShowtimes();
+    auto before = showtimes.size();
+    showtimes.erase(std::remove_if(showtimes.begin(), showtimes.end(),
+                                  [&](const Showtime& s) { return s.getId() == id; }),
+                    showtimes.end());
+    if (showtimes.size() == before) return false;
 
-bool ShowtimeBUS::updateShowtime(const Showtime& s) {
-    for (size_t i = 0; i < _showtimes.size(); ++i) {
-        if (_showtimes[i].getId() == s.getId()) {
-            _showtimes[i] = s;
-            return true;
-        }
-    }
-    return false;
-}
-
-Showtime* ShowtimeBUS::findById(const string& id) {
-    for (size_t i = 0; i < _showtimes.size(); ++i) {
-        if (_showtimes[i].getId() == id) {
-            return &_showtimes[i];
-        }
-    }
-    return nullptr;
-}
-
-vector<Showtime> ShowtimeBUS::getByMovieId(const string& movieId) const {
-    vector<Showtime> result;
-    for (size_t i = 0; i < _showtimes.size(); ++i) {
-        if (_showtimes[i].getMovieId() == movieId) {
-            result.push_back(_showtimes[i]);
-        }
-    }
-    return result;
+    showtimeDal.saveShowtimes(showtimes);
+    return true;
 }

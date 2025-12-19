@@ -1,45 +1,24 @@
-#ifndef _MOVIEDAL_H_
-#define _MOVIEDAL_H_
+#ifndef DAL_MOVIEDAL_H
+#define DAL_MOVIEDAL_H
 
 #include <string>
 #include <vector>
-#include "Movie.h"
 
-using std::string;
-using std::vector;
+#include "dto/Movie.h"
 
 /**
  * @class MovieDAL
- * @brief Lớp truy cập dữ liệu cho phim (Data Access Layer)
- * 
- * Lớp này cung cấp các phương thức để đọc và ghi dữ liệu phim
- * từ/vào file văn bản.
+ * @brief Data Access Layer cho Movie (đọc/ghi Movies.txt).
  */
 class MovieDAL {
+private:
+    std::string filePath;
+
 public:
-    /**
-     * @brief Tải danh sách phim từ file
-     * 
-     * Đọc file văn bản và chuyển đổi từng dòng thành đối tượng Movie.
-     * Các dòng không hợp lệ sẽ bị bỏ qua và ghi log lỗi.
-     * 
-     * @param filename Đường dẫn đến file chứa dữ liệu phim
-     * @return vector<Movie> Danh sách các đối tượng phim đã tải
-     * @note Trả về vector rỗng nếu file không tồn tại hoặc không mở được
-     */
-    static vector<Movie> loadFromFile(const string& filename);
-    
-    /**
-     * @brief Lưu danh sách phim vào file
-     * 
-     * Ghi đè toàn bộ nội dung file bằng danh sách phim mới.
-     * Mỗi phim được ghi trên một dòng riêng biệt.
-     * 
-     * @param list Danh sách các đối tượng phim cần lưu
-     * @param filename Đường dẫn đến file đích
-     * @note Nếu file không mở được, phương thức sẽ không thực hiện gì
-     */
-    static void saveToFile(const vector<Movie>& list, const string& filename);
+    explicit MovieDAL(std::string filePath = "Movies.txt");
+
+    std::vector<Movie> loadMovies();
+    void saveMovies(const std::vector<Movie>& movies);
 };
 
-#endif
+#endif // DAL_MOVIEDAL_H
