@@ -68,8 +68,9 @@ public:
      * @param seatId Mã ghế người dùng chọn (VD: "A5").
      * * @return true Nếu toàn bộ quy trình thành công.
      * @return false Nếu có bất kỳ lỗi nào (ghế đã có người đặt, lỗi file...).
+     * @param typeList Danh sách loại vé tương ứng với từng ghế trong seatList (VD: {"normal", "child"})
      */
-    bool processBooking(string userId, string showtimeId, vector<string> seatList);
+    bool processBooking(string userId, string showtimeId, vector<string> seatList, vector<string> typeList);
     /**
      * @brief Hủy vé đã đặt.
      * @details Quy trình thực hiện:

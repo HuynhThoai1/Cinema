@@ -5,11 +5,15 @@
 using std::cout;
 
 
-string TicketBUS::createAndSaveTicket(string customerName, string showtimeId, string movieTitle, string roomId, 
+#include "TicketBUS.h"
+
+
+string TicketBUS::createAndSaveTicket(string type, string customerName, string showtimeId, string movieTitle, string roomId, 
                                       string seatId, string price, string time, string date) {
     
     // 1. Gọi Factory để tạo đối tượng
-    Ticket* newTicket = TicketFactory::createTicket(showtimeId, movieTitle, roomId, seatId, customerName, price, time, date);
+   
+    Ticket* newTicket = TicketFactory::createTicket(type, showtimeId, movieTitle, roomId, seatId, customerName, price, time, date);
     
     if (newTicket == nullptr) {
         cout << "[TicketBUS] Loi: Khong the tao doi tuong Ve.\n";
@@ -17,12 +21,13 @@ string TicketBUS::createAndSaveTicket(string customerName, string showtimeId, st
     }
 
     // [QUAN TRỌNG] Lấy ID vé ra trước khi lưu và xóa object
+    // Vì sau khi delete newTicket, dữ liệu sẽ mất
     string generatedID = newTicket->getTicketID();
 
     // 2. Lưu xuống File qua DAL
     bool success = TicketDAL::saveTickets("../data/Tickets.txt", *newTicket);
 
-    // 3. Dọn dẹp bộ nhớ
+    // 3. Dọn dẹp bộ nhớ (Vì Factory dùng 'new', ta phải 'delete')
     delete newTicket; 
 
     if (!success) {

@@ -38,6 +38,7 @@ public:
      * 1. Sử dụng TicketFactory để tạo đối tượng Ticket.
      * 2. Gọi TicketDAL để lưu vé vào file/DB.
      * 3. Gọi SeatBUS để cập nhật trạng thái ghế thành "đã đặt" (Booked).
+     * @param type Loại vé (VD: "normal", "child", "student").
      * * @param customerName Tên khách hàng đặt vé.
      * @param showtimeId Mã suất chiếu (để liên kết vé với suất chiếu cụ thể).
      * @param movieTitle Tên phim (lưu trữ để hiển thị nhanh).
@@ -49,7 +50,7 @@ public:
      * @return true Nếu tạo vé và lưu thành công.
      * @return false Nếu có lỗi (lỗi ghi file hoặc ghế đã bị người khác đặt trước đó).
      */
-    string createAndSaveTicket(string customerName, string showtimeId, string movieTitle, string roomId, 
+    string createAndSaveTicket(string type, string customerName, string showtimeId, string movieTitle, string roomId, 
                              string seatId, string price, string time, string date);
     
     /**

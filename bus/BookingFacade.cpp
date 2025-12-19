@@ -17,8 +17,8 @@ BookingFacade::BookingFacade() {
     showtimeBus.load("../data/Showtime.txt");
 }
 
-// [SỬA 1] Thay tham số seatId thành vector<string> seatList
-bool BookingFacade::processBooking(string userId, string showtimeId, vector<string> seatList) {
+
+bool BookingFacade::processBooking(string userId, string showtimeId, vector<string> seatList, vector<string> typeList) {
     cout << "\n --- XU LY DAT VE (" << seatList.size() << " ghe) ---" << "\n";
 
     string movieTitle = "Unknown";
@@ -47,7 +47,6 @@ bool BookingFacade::processBooking(string userId, string showtimeId, vector<stri
          << " | Phong: " << roomName << "\n";
 
     // --- BƯỚC 2: CHECK TOÀN BỘ GHẾ TRƯỚC (Pre-check) ---
-    // Nếu có bất kỳ ghế nào bận, dừng ngay không đặt ghế nào cả
     for (const string& seatId : seatList) {
         if (!seatBus.checkAvailable(showtimeId, roomName, seatId)) {
             cout << " -> LOI: Ghe " << seatId << " da co nguoi dat. Huy toan bo giao dich." << "\n";
@@ -57,70 +56,92 @@ bool BookingFacade::processBooking(string userId, string showtimeId, vector<stri
 
     // --- BƯỚC 3: TIẾN HÀNH ĐẶT TỪNG VÉ ---
     
-    // Tách thời gian (Làm 1 lần ở ngoài vòng lặp cho tối ưu)
+    // Tách thời gian
     stringstream ss(fullStartTime);
     string dateOnly, timeOnly;
     ss >> dateOnly >> timeOnly; 
 
     int successCount = 0;
-    long long totalPrice = 0;
+    long long totalPrice = 0; // Sẽ lưu tổng giá ĐÃ GIẢM
 
-    // Duyệt qua từng ghế trong danh sách để đặt
-    for (const string& seatId : seatList) {
+    // [SỬA] Đổi vòng lặp từ for-each sang for index
+    for (size_t i = 0; i < seatList.size(); i++) {
+        string seatId = seatList[i];
         
-        // 3.1. Lấy giá tiền riêng cho từng ghế (VD: ghế hàng A rẻ hơn ghế hàng E)
-        long long priceVal = seatBus.getSeatPrice(showtimeId, roomName, seatId);
-        if (priceVal == 0) priceVal = 50000; 
-        string priceStr = to_string(priceVal);
-        totalPrice += priceVal;
-
-        // 3.2. Đặt ghế (Cập nhật file Seats.txt)
-        if (!seatBus.bookSeat(showtimeId, roomName, seatId)) {
-            cout << " -> LOI: Khong the dat ghe " << seatId << " (Loi he thong)." << "\n";
-            continue; // Bỏ qua ghế này, thử ghế tiếp theo
+        // Lấy loại vé tương ứng
+        string ticketType = "ADULT";
+        if (i < typeList.size()) {
+            ticketType = typeList[i];
         }
 
-        // 3.3. Tạo vé và nhận về MÃ VÉ (Thay vì bool)
-        // [QUAN TRỌNG] Bạn phải sửa TicketBUS trả về string để code này hoạt động
+        // 3.1. Lấy giá tiền GỐC
+        long long basePrice = seatBus.getSeatPrice(showtimeId, roomName, seatId);
+        if (basePrice == 0) basePrice = 50000; 
+        
+        // [MỚI] TÍNH TOÁN GIÁ THỰC TẾ ĐỂ CỘNG VÀO TỔNG BILL
+        long long finalPrice = basePrice;
+        if (ticketType == "CHILD") {
+            finalPrice = basePrice / 2;       // Giảm 50%
+        } else if (ticketType == "STUDENT") {
+            finalPrice = (long long)(basePrice * 0.8); // Giảm 20%
+        }
+
+        // Cộng giá ĐÃ GIẢM vào tổng tiền thanh toán
+        totalPrice += finalPrice;
+
+        string basePriceStr = to_string(basePrice); // Vẫn truyền giá gốc xuống Factory
+
+        // 3.2. Đặt ghế
+        if (!seatBus.bookSeat(showtimeId, roomName, seatId)) {
+            cout << " -> LOI: Khong the dat ghe " << seatId << " (Loi he thong)." << "\n";
+            totalPrice -= finalPrice; // Trừ lại tiền nếu lỗi
+            continue; 
+        }
+
+        // 3.3. Tạo vé và nhận về MÃ VÉ
         string newTicketId = ticketBus.createAndSaveTicket(
+            ticketType,    // Loại vé
             userId, 
             showtimeId,
             movieTitle, 
             roomName, 
             seatId, 
-            priceStr, 
+            basePriceStr,  // Truyền giá gốc (Factory tự chia tiền để lưu file)
             timeOnly, 
             dateOnly
         );
 
-        // Kiểm tra chuỗi rỗng thay vì check true/false
+        // Kiểm tra chuỗi rỗng
         if (!newTicketId.empty()) { 
-            cout << " -> Da dat thanh cong ghe: " << seatId ;
+            cout << " -> [" << ticketType << "] Da dat thanh cong ghe: " << seatId << "\n";
+            cout << "  |  Ma ve:     ["<< newTicketId <<"] "<<"\n";            
+            cout << "  |  Phim:       " << movieTitle << "\n"; 
+            cout << "  |  Phong:      " << roomName << "\n";
+            cout << "  |  Thoi gian:  " << fullStartTime << "\n";
             
-            // [ĐÃ SỬA] In ra newTicketId thay vì userId
-            cout << "  |  Ma ve: ["<< newTicketId <<"] ";            
-            cout << "  |  Phim: " << movieTitle;
-            cout << "  |  Phong: " << roomName; 
-            cout << "  |  Thoi gian: " << fullStartTime;
-            cout << "  |  Gia ve: " << priceStr << " VND" << "\n";
+            // [SỬA] In ra giá thực tế để người dùng thấy
+            cout << "  |  Gia ve:     " << finalPrice << " VND (Goc: " << basePrice << ")" << "\n";
             successCount++;
         } else {
             cout << " -> LOI: Tao ve cho ghe " << seatId << " that bai. Rollback..." << "\n";
-            // Nếu tạo vé lỗi -> Phải mở lại ghế đó (Rollback)
             seatBus.unlockSeat(showtimeId, roomName, seatId); 
+            totalPrice -= finalPrice; // Trừ lại tiền nếu tạo vé thất bại
         }
     }
 
     // Tổng kết
     if (successCount > 0) {
         cout << " -> HOAN TAT: Da dat " << successCount << "/" << seatList.size() << " ve." << "\n";
-        cout << " -> TONG TIEN: " << totalPrice << " VND" << "\n";
+        // [SỬA] In ra label đúng nghĩa
+        cout << " -> TONG THANH TOAN: " << totalPrice << " VND" << "\n";
         return true;
     } else {
         cout << " -> THAT BAI: Khong dat duoc ve nao." << "\n";
         return false;
     }
 }
+
+
 
 bool BookingFacade::cancelTicket(string ticketId, string& outMessage) {
     // B1: Tìm vé để lấy thông tin (Suất chiếu, Phòng, Ghế) trước khi xóa

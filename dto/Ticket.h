@@ -21,7 +21,7 @@ using std::string;
  * Chứa các thông tin chi tiết về giao dịch đặt vé như: phim, phòng, ghế, giá tiền, thời gian...
  */
 class Ticket {
-private:
+protected:
     string _ticketID;       ///< Mã định danh duy nhất của vé (VD: TKT1234).
     string _showtimeID;   ///< Mã suất chiếu (VD: S001).
     string _movie;          ///< Tên phim.
@@ -50,6 +50,7 @@ public:
            string customerName, string price, string showTime, string date);
 
     Ticket();
+    virtual ~Ticket() {}
 public:
     // --- Getters (Truy xuất thông tin) ---
 

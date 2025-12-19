@@ -101,7 +101,7 @@ void TicketUI::viewMovies() {
 }
 
 void TicketUI::processBookingWorkflow() {
-    // 1. CHỌN PHIM (Hiển thị danh sách để người dùng biết ID mà chọn)
+    // 1. CHỌN PHIM
     viewMovies();
     string movieId;
     cout << "\n>> Nhap ID Phim muon xem (hoac '0' de quay lai): ";
@@ -142,13 +142,13 @@ void TicketUI::processBookingWorkflow() {
     int qty;
     cout << "\n>> Ban muon dat bao nhieu ve? ";
     
-    // VALIDATION NHẬP SỐ LƯỢNG
+    // VALIDATION NHẬP SỐ LƯỢNG (Code cũ giữ nguyên)
     while (true) {
         cin >> qty;
         if (cin.fail()) {
             cout << "     [!] Loi: Vui long chi nhap so nguyen. Nhap lai: ";
             cin.clear(); cin.ignore(10000, '\n');
-        } else if (qty <= 0 || qty > 50) {
+        } else if (qty <= 0 || qty > 50) { // Giả sử max là 50
             cout << "     [!] Loi: So luong phai > 0 va <= 50. Nhap lai: ";
         } else {
             cin.ignore(10000, '\n'); // Xóa enter thừa
@@ -157,6 +157,9 @@ void TicketUI::processBookingWorkflow() {
     }
 
     vector<string> selectedSeats;
+    // [THÊM MỚI] Vector lưu loại vé song song với ghế
+    vector<string> selectedTypes; 
+    
     long long tempTotalPrice = 0;
 
     for (int i = 0; i < qty; i++) {
@@ -164,16 +167,16 @@ void TicketUI::processBookingWorkflow() {
         cout << "   - Nhap ma ghe thu " << (i + 1) << " (VD: A" << (i + 1) << "): ";
         cin >> s;
 
-        // --- BƯỚC 1: KIỂM TRA ĐỊNH DẠNG ---
+        // --- BƯỚC 1: KIỂM TRA ĐỊNH DẠNG (Code cũ giữ nguyên) ---
         if (!isValidSeatFormat(s)) {
              cout << RED << "     [!] Loi: Dinh dang ghe sai! (VD dung: A1, B12). Nhap lai!\n" << RESET;
              i--; continue;
         }
 
-        // --- BƯỚC 2: CHUẨN HÓA (a1 -> A1) ---
+        // --- BƯỚC 2: CHUẨN HÓA (Code cũ giữ nguyên) ---
         s[0] = toupper(s[0]); 
 
-        // --- BƯỚC 3: KIỂM TRA TRÙNG LẶP ---
+        // --- BƯỚC 3: KIỂM TRA TRÙNG LẶP (Code cũ giữ nguyên) ---
         bool isDuplicate = false;
         for (const string& seat : selectedSeats) {
             if (seat == s) { isDuplicate = true; break; }
@@ -183,9 +186,9 @@ void TicketUI::processBookingWorkflow() {
             i--; continue;
         }
 
-        // --- BƯỚC 4: KIỂM TRA TỒN TẠI & TRẠNG THÁI (BUS) ---
+        // --- BƯỚC 4: KIỂM TRA TỒN TẠI & TRẠNG THÁI (Code cũ giữ nguyên) ---
         bool seatAvailable = seatBus.checkAvailable(showtimeId, roomId, s);
-        long long p = seatBus.getSeatPrice(showtimeId, roomId, s);
+        long long p = seatBus.getSeatPrice(showtimeId, roomId, s); // Đây là giá gốc
 
         if (!seatAvailable) {
             cout << RED << "     [!] Ghe " << s << " khong ton tai hoac da duoc dat. Vui long chon ghe khac!\n" << RESET;
@@ -197,10 +200,38 @@ void TicketUI::processBookingWorkflow() {
              i--; continue;
         }
 
-        // --- THÀNH CÔNG ---
+        // --- [THÊM MỚI] BƯỚC 4.5: CHỌN LOẠI VÉ CHO GHẾ NÀY ---
+        cout << "     Loai ve cho ghe " << s << "? (1.NguoiLon, 2.TreEm-50%, 3.SinhVien-20%): ";
+        int typeChoice;
+        // Validate nhập số đơn giản
+        if(!(cin >> typeChoice)) { 
+            cin.clear(); cin.ignore(1000, '\n'); 
+            typeChoice = 1; // Mặc định nếu nhập sai
+        }
+        
+        string typeStr = "ADULT";
+        long long finalPrice = p; // Giá hiển thị tạm tính
+
+        if (typeChoice == 2) {
+            typeStr = "CHILD";
+            finalPrice = p * 0.5;
+        } else if (typeChoice == 3) {
+            typeStr = "STUDENT";
+            finalPrice = p * 0.8;
+        }
+
+        // --- THÀNH CÔNG (Cập nhật danh sách) ---
         selectedSeats.push_back(s);
-        tempTotalPrice += p;
-        cout << "     -> Da them: " << GREEN << s << RESET << " | Gia: " << p << " VND\n";
+        
+        // [THÊM MỚI] Lưu loại vé vào danh sách
+        selectedTypes.push_back(typeStr); 
+
+        // [SỬA] Cộng giá đã giảm vào tổng tiền hiển thị (thay vì giá gốc p)
+        tempTotalPrice += finalPrice;
+        
+        cout << "     -> Da them: " << GREEN << s << RESET 
+             << " (" << typeStr << ")" // In thêm loại vé cho user biết
+             << " | Gia: " << finalPrice << " VND\n";
     }
 
     cout << "\nTong tien du kien: " << YELLOW << tempTotalPrice << " VND" << RESET << endl;
@@ -209,7 +240,9 @@ void TicketUI::processBookingWorkflow() {
     cin >> confirm;
 
     if (confirm == 'y' || confirm == 'Y') {
-        bookingFacade.processBooking(currentUserId, showtimeId, selectedSeats);
+        // [SỬA] Truyền thêm tham số selectedTypes vào Facade
+        // (Đây là chỗ bắt buộc phải sửa vì hàm bên kia đã thay đổi)
+        bookingFacade.processBooking(currentUserId, showtimeId, selectedSeats, selectedTypes);
     } else {
         cout << "\nDa huy thao tac." << endl;
     }

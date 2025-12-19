@@ -9,6 +9,9 @@
 #define TICKETFACTORY_H
 
 #include "Ticket.h"
+#include "ChildTicket.h"
+#include "StudentTicket.h"
+#include "NormalTicket.h"
 #include <string>
 #include <ctime>
 #include <cstdlib>
@@ -27,7 +30,9 @@ public:
      * @brief Tạo một đối tượng Ticket mới với ID được sinh tự động.
      * @details Phương thức tĩnh này sẽ gọi hàm sinh ID ngẫu nhiên, sau đó khởi tạo
      * đối tượng Ticket với đầy đủ thông tin được cung cấp.
-     * * @param showtimeId Mã suất chiếu (liên kết vé với suất chiếu cụ thể).
+     * 
+     * @param type Loại vé (VD: "normal", "child", "student").
+     * @param showtimeId Mã suất chiếu (liên kết vé với suất chiếu cụ thể).
      * @param movie Tên phim.
      * @param roomID Mã phòng chiếu.
      * @param seatID Mã ghế (VD: "A5").
@@ -37,9 +42,9 @@ public:
      * @param date Ngày chiếu.
      * @return Ticket* Con trỏ đến đối tượng Ticket mới được tạo.
      */
-    static Ticket* createTicket(string showtimeId, string movie, string roomID, string seatID,
-                               string customerName, string price, 
-                               string showTime, string date);
+    static Ticket* createTicket(string type, string showtimeId, string movie, string roomID, string seatID,
+                                string customerName, string price, 
+                                string showTime, string date);
     
 private:
     /**
