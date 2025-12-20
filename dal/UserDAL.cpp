@@ -16,7 +16,7 @@ vector<User*> UserDAL::loadUsers(const string& filename) {
     ifstream file(filename);
 
     if (!file.is_open()) {
-        cout << "Lỗi: Không thể mở file" << filename << "để đọc!\n";
+        cout << "Lỗi: Không thể mở file " << filename << " để đọc!\n";
         return users;
     }
 
@@ -54,7 +54,7 @@ vector<User*> UserDAL::loadUsers(const string& filename) {
 void UserDAL::saveUsers(const vector<User*>& users, const string& filename) {
     ofstream file(filename, std::ios::trunc);// ios::trunc là xóa hết cũ ghi mới
     if (!file.is_open()) {
-        cout << "Lỗi: Không thể mở file" << filename << "để ghi!\n";
+        cout << "Lỗi: Không thể mở file " << filename << " để ghi!\n";
         return;
     }
     
@@ -74,7 +74,7 @@ void UserDAL::addUser(User* user, const string& filename) {
     ofstream file(filename, std::ios::app); 
 
     if (!file.is_open()) {
-        cout << "Lỗi: Không thể mở file" << filename << "để thêm mới!\n";
+        cout << "Lỗi: Không thể mở file " << filename << " để thêm mới!\n";
         return;
     }
 

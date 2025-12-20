@@ -1,6 +1,10 @@
 #include "AdminBUS.h"
 
-AdminBUS::AdminBUS() {
+AdminBUS::AdminBUS() : DATA_FILE("../../data/Users.txt") {
+    this->loadUsers();
+}
+
+AdminBUS::AdminBUS(const string& filename) : DATA_FILE(filename) {
     this->loadUsers();
 }
 
@@ -19,7 +23,7 @@ void AdminBUS::loadUsers() {
     users.clear();
 
     // Load lại từ file
-    this->users = userDal.loadUsers(DATA_FILE);
+    this->users = userDal.loadUsers(this->DATA_FILE);
 }
 
 vector<User*> AdminBUS::getAllUsers() {
