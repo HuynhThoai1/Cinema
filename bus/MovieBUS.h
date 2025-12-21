@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "dal/MovieDAL.h"
+#include "../dal/MovieDAL.h"
 
 /**
  * @class MovieBUS

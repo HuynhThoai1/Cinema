@@ -1,4 +1,4 @@
-#include "dal/MovieDAL.h"
+#include "MovieDAL.h"
 
 #include <fstream>
 #include <sstream>

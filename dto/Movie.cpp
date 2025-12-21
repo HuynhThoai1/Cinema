@@ -1,4 +1,4 @@
-#include "dto/Movie.h"
+#include "Movie.h"
 
 Movie::Movie(std::string id, std::string title, std::string genre, int duration)
     : id(std::move(id)), title(std::move(title)), genre(std::move(genre)), duration(duration) {}

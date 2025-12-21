@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "dto/Showtime.h"
+#include "../dto/Showtime.h"
 
 /**
  * @class ShowtimeDAL

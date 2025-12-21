@@ -31,4 +31,4 @@ public:
     void setDuration(int v);
 };
 
-#endif // DTO_MOVIE_H
+#endif

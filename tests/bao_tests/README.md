@@ -3,14 +3,15 @@ Nhóm N03 - Project Cinema
 ##Biên dịch & chạy
 ```Bash
 $ g++ -std=c++23 \
-    -I../../dto -I../../dal -I../../bus \
-    main_test.cpp \
-    ../../dal/MovieDAL.cpp \
-    ../../dal/ShowtimeDAL.cpp \
-    ../../bus/MovieBUS.cpp \
-    -o ../../out/bao_test
+  tests/bao_tests/main_test.cpp \
+  bus/MovieBUS.cpp bus/ShowtimeBUS.cpp \
+  dal/MovieDAL.cpp dal/ShowtimeDAL.cpp \
+  dto/Movie.cpp dto/Showtime.cpp \
+  -o out/bao_test
+
 ```
 
 ```Bash
-$ ../../out/bao_test
+$ ./out/bao_test
+
 ```

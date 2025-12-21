@@ -1,51 +1,59 @@
 #include <iostream>
+#include <string>
+#include <vector>
+
 #include "../../dto/Movie.h"
-#include "../../dal/MovieDAL.h"
-#include "../../bus/MovieBUS.h"
 #include "../../dto/Showtime.h"
+#include "../../bus/MovieBUS.h"
+#include "../../bus/ShowtimeBUS.h"
+#include "../../dal/MovieDAL.h"
 #include "../../dal/ShowtimeDAL.h"
+
 using std::cout;
 using std::string;
-using std::vector;
 
 int main() {
-    cout << "TEST MODULE PHIM\n";
+    cout << "MOVIE MODULE\n";
 
-    MovieBUS movieBus;
+    // chạy test từ thư mục root (Cinema/) => data/...
+    const string movieFile = "data/Movies.txt";
+    MovieBUS movieBus{MovieDAL(movieFile)};
 
-    string movieFile = "../../data/Movies.txt";
+    // add movies
+    bool m1 = movieBus.addMovie(Movie("M001", "Avengers: Endgame", "Action", 181));
+    bool m2 = movieBus.addMovie(Movie("M002", "Spirited Away", "Animation", 125));
 
-    movieBus.load(movieFile);
+    cout << "addMovie(M001): " << (m1 ? "OK" : "SKIP (exists)") << "\n";
+    cout << "addMovie(M002): " << (m2 ? "OK" : "SKIP (exists)") << "\n";
 
-    movieBus.addMovie(Movie("M001", "Avengers: Endgame", 181, "Action", "2025-12-05 19:30 - Room 1"));
-    movieBus.addMovie(Movie("M002", "Spirited Away", 125, "Animation", "2025-12-06 20:00 - Room 2"));
-
-    movieBus.save(movieFile);
-
-    for (const Movie& m : movieBus.getAll()) {
+    auto movies = movieBus.getAll();
+    cout << "Total movies: " << movies.size() << "\n";
+    for (const auto& m : movies) {
         cout << m.getId() << " | " << m.getTitle()
              << " | " << m.getGenre()
-             << " | " << m.getDuration()
-             << " | " << m.getShowtime() << "\n";
+             << " | " << m.getDuration() << "\n";
     }
 
-    cout << "\nTEST SUẤT CHIẾU\n";
+    cout << "\nSHOWTIME MODULE \n";
 
-    vector<Showtime> list;
-    list.push_back(Showtime("S001", "M001", "2025-12-30 19:30", "Room 1"));
-    list.push_back(Showtime("S002", "M001", "2025-12-05 22:00", "Room 1"));
+    const string showFile = "data/Showtime.txt";
+    ShowtimeBUS showBus{ShowtimeDAL(showFile)};
 
-    string showFile = "../../data/Showtime.txt";
+    // Showtime ctor: (id, movieId, room, startTime)
+    bool s1 = showBus.addShowtime(Showtime("S001", "M001", "Room 1", "2025-12-30 19:30"));
+    bool s2 = showBus.addShowtime(Showtime("S002", "M001", "Room 1", "2025-12-05 22:00"));
 
-    ShowtimeDAL::saveToFile(list, showFile);
+    cout << "addShowtime(S001): " << (s1 ? "OK" : "SKIP (exists)") << "\n";
+    cout << "addShowtime(S002): " << (s2 ? "OK" : "SKIP (exists)") << "\n";
 
-    auto loaded = ShowtimeDAL::loadFromFile(showFile);
-
-    for (const Showtime& s : loaded) {
+    auto showtimes = showBus.getByMovie("M001");
+    cout << "Showtimes for M001: " << showtimes.size() << "\n";
+    for (const auto& s : showtimes) {
         cout << s.getId() << " | " << s.getMovieId()
-             << " | " << s.getStartTime()
-             << " | " << s.getRoom() << "\n";
+             << " | " << s.getRoom()
+             << " | " << s.getStartTime() << "\n";
     }
 
+    cout << "\n===== [BAO TEST] DONE =====\n";
     return 0;
 }

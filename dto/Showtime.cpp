@@ -1,4 +1,4 @@
-#include "dto/Showtime.h"
+#include "Showtime.h"
 
 Showtime::Showtime(std::string id, std::string movieId, std::string room, std::string startTime)
     : id(std::move(id)), movieId(std::move(movieId)), room(std::move(room)), startTime(std::move(startTime)) {}

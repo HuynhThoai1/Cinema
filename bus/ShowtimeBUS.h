@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "dal/ShowtimeDAL.h"
+#include "../dal/ShowtimeDAL.h"
 
 /**
  * @class ShowtimeBUS
