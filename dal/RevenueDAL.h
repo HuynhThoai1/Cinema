@@ -1,50 +1,49 @@
-/**
- * @file Revenue_DAL.h
- * @brief Khai báo lớp RevenueDAL dùng để quản lý truy cập dữ liệu doanh thu.
- * @details File này cung cấp các phương thức để thao tác với danh sách doanh thu như đọc, ghi và lấy dữ liệu.
- */
-
 #ifndef REVENUE_DAL_H
 #define REVENUE_DAL_H
 
 #include <vector>
+#include <fstream>
+#include <sstream>
 #include "../dto/Revenue.h"
-
-// Sử dụng using std::vector thay vì using namespace std để tránh xung đột tên trong header
-using std::vector; 
 
 /**
  * @class RevenueDAL
- * @brief Lớp Data Access Layer (DAL) quản lý các thao tác dữ liệu cho đối tượng Revenue.
- * * Lớp này chịu trách nhiệm tương tác với nguồn dữ liệu (file/database) 
- * để thực hiện các nghiệp vụ liên quan đến doanh thu.
+ * @brief Lớp truy cập dữ liệu (Data Access Layer) cho doanh thu.
+ * * Lớp này chịu trách nhiệm thực hiện các thao tác Đọc/Ghi dữ liệu doanh thu
+ * từ tệp tin văn bản (Revenue.txt) và duy trì danh sách bản ghi trong bộ nhớ.
  */
 class RevenueDAL {
 private:
-    /**
-     * @brief Vector lưu trữ danh sách các đối tượng Revenue trong bộ nhớ.
-     */
+    /** @brief Danh sách lưu trữ tạm thời các bản ghi doanh thu trong bộ nhớ (RAM). */
     vector<Revenue> listRevenue;
+
+    /** @brief Đường dẫn cố định tới tệp tin lưu trữ dữ liệu doanh thu. */
+    const string FILE_NAME = "data/Revenue.txt";
 
 public:
     /**
-     * @brief Tải dữ liệu doanh thu từ nguồn lưu trữ.
-     * * Hàm này đọc dữ liệu (thường là từ file text hoặc binary), 
-     * parse dữ liệu và lưu vào biến thành viên listRevenue.
+     * @brief Đọc dữ liệu từ tệp tin và nạp vào danh sách `listRevenue`.
+     * * Phương thức này sẽ mở tệp tin, phân tích cú pháp từng dòng và chuyển đổi
+     * chúng thành các đối tượng Revenue.
      */
     void loadRevenues();
 
     /**
-     * @brief Thêm một bản ghi doanh thu mới.
-     * * Hàm này sẽ thêm một đối tượng Revenue vào danh sách listRevenue
-     * và thường sẽ thực hiện ghi cập nhật xuống file lưu trữ.
-     * * @param rev Đối tượng Revenue cần thêm (truyền tham chiếu hằng `const &` để tránh copy dữ liệu, giúp tối ưu hiệu năng).
+     * @brief Ghi toàn bộ danh sách doanh thu hiện tại vào tệp tin.
+     * * Quá trình này sẽ ghi đè nội dung cũ của tệp tin để đảm bảo tính đồng bộ
+     * với dữ liệu mới nhất trong bộ nhớ.
+     */
+    void saveRevenues();
+
+    /**
+     * @brief Thêm một bản ghi doanh thu mới vào danh sách bộ nhớ.
+     * @param rev Đối tượng Revenue chứa thông tin doanh thu cần lưu.
      */
     void addRevenue(const Revenue& rev);
 
     /**
-     * @brief Lấy danh sách toàn bộ doanh thu.
-     * * @return vector<Revenue> Bản sao danh sách các đối tượng Revenue hiện có.
+     * @brief Trả về toàn bộ danh sách doanh thu hiện có.
+     * @return vector<Revenue> Danh sách các đối tượng doanh thu.
      */
     vector<Revenue> getList() const;
 };
