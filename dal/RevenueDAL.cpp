@@ -1,32 +1,44 @@
 #include "RevenueDAL.h"
-#include <iostream>
-#include <iomanip>
-using std::cout;
-using std::endl;
-using namespace std;
 
 void RevenueDAL::loadRevenues() {
     listRevenue.clear();
-    listRevenue.push_back(Revenue("R01", "05/12/2025", "M01", 2000000, 500000));
-    listRevenue.push_back(Revenue("R02", "05/12/2025", "M02", 1500000, 300000));
+    std::ifstream inFile(FILE_NAME);
+    if (!inFile.is_open()) return;
+
+    std::string line;
+    while (getline(inFile, line)) {
+        if (line.empty()) continue;
+        std::stringstream ss(line);
+        std::string segment;
+        std::vector<std::string> data;
+        while (getline(ss, segment, ',')) data.push_back(segment);
+
+        if (data.size() == 5) {
+            try {
+                Revenue r(data[0], data[1], data[2], std::stoi(data[3]), std::stoi(data[4]));
+                listRevenue.push_back(r);
+            } catch (...) {}
+        }
+    }
+    inFile.close();
+}
+
+void RevenueDAL::saveRevenues() {
+    std::ofstream outFile(FILE_NAME);
+    if (outFile.is_open()) {
+        for (const auto& r : listRevenue) {
+            outFile << r.getId() << "," << r.getDate() << "," << r.getMovieId() << ","
+                    << r.getTicketRevenue() << "," << r.getFoodRevenue() << std::endl;
+        }
+        outFile.close();
+    }
 }
 
 void RevenueDAL::addRevenue(const Revenue& rev) {
     listRevenue.push_back(rev);
+    saveRevenues();
 }
 
-vector<Revenue> RevenueDAL::getList() const {
-    return listRevenue;
-}
-
-// Implementation Revenue DTO
-Revenue::Revenue() {}
-Revenue::Revenue(string id, string date, string movieId, int tRev, int fRev) 
-    : id(id), date(date), movieId(movieId), ticketRevenue(tRev), foodRevenue(fRev) {}
-string Revenue::getDate() const { return date; }
-string Revenue::getMovieId() const { return movieId; }
-int Revenue::getTotalRevenue() const { return ticketRevenue + foodRevenue; }
-void Revenue::display() const {
-    cout << left << setw(10) << id << setw(12) << date << setw(10) << movieId 
-         << " Total: " << getTotalRevenue() << endl;
+std::vector<Revenue> RevenueDAL::getList() const { 
+    return listRevenue; 
 }

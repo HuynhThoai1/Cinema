@@ -1,4 +1,4 @@
-F01| Chocolate PopCorn| 65.000
-F02| Cheese PopCorn| 60.000
-F03| Soda| 20.000
-F04| Mineral Water| 12.000
+F01,Bắp rang bơ,     45000
+F02,Nước ngọt Pepsi, 25000
+F03,Combo Hot Dog,   65000
+F04,Snack Khoai Tây, 20000
