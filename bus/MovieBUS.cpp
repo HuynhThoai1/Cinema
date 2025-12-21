@@ -1,5 +1,4 @@
 #include "MovieBUS.h"
-
 #include <algorithm>
 
 MovieBUS::MovieBUS(MovieDAL movieDal) : movieDal(std::move(movieDal)) {}

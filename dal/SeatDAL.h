@@ -36,7 +36,7 @@ public:
      * @return true Nếu cập nhật và ghi file thành công.
      * @return false Nếu có lỗi xảy ra (không mở được file, dữ liệu sai...).
      */
-    static bool saveSeats(string room, string rowID, vector<string> seatBooked, string fileName);
+    static bool saveSeats(string showtimeId, string room, string rowID, vector<string> seatBooked, string fileName);
 };
 
 #endif

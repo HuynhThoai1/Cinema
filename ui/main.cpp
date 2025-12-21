@@ -1,6 +1,8 @@
-#include <iostream>
+#include "TicketUI.h" 
+
 
 int main() {
-    std::cout << "Cinema Management System Initialized." << std::endl;
+    TicketUI app;
+    app.run();
     return 0;
 }

@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-
+#include "../dto/Movie.h"
 #include "../dal/MovieDAL.h"
 
 /**
