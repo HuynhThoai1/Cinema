@@ -130,14 +130,7 @@ public:
 
         return Showtime(id, movieId, startTime, room);
     }
-    void getDate(string& dateOut) const {
-        // Giả định định dạng startTime là "YYYY-MM-DD HH:MM"
-        if (_startTime.length() >= 10) {
-            dateOut = _startTime.substr(0, 10); // Lấy phần "YYYY-MM-DD"
-        } else {
-            dateOut = "";
-        }
-    }
+
 };
 
 #endif
