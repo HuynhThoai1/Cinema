@@ -1,4 +1,5 @@
 #include "FoodBUS.h"
+<<<<<<< HEAD
 using namespace std;
 /**
  * @brief Phương thức khởi tạo FoodBUS.
@@ -10,6 +11,19 @@ FoodBUS::FoodBUS() {
 }
 
 /**
+=======
+
+/**
+ * @brief Phương thức khởi tạo FoodBUS.
+ * * Khi đối tượng được tạo, nó sẽ yêu cầu lớp FoodDAL tải dữ liệu từ nguồn (file/database)
+ * vào bộ nhớ tạm để sẵn sàng sử dụng.
+ */
+FoodBUS::FoodBUS() {
+    foodDal.loadFoods(); 
+}
+
+/**
+>>>>>>> 0226781a988cf730ca830fe9989d4de76c815c93
  * @brief Lấy toàn bộ danh sách thực phẩm hiện có.
  * @return Một vector chứa các đối tượng Food được lấy từ lớp truy cập dữ liệu.
  */

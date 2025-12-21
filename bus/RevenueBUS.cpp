@@ -1,5 +1,9 @@
 #include "RevenueBUS.h"
+<<<<<<< HEAD
 using namespace std;
+=======
+
+>>>>>>> 0226781a988cf730ca830fe9989d4de76c815c93
 /**
  * @brief Khởi tạo đối tượng RevenueBUS.
  * * Khi khởi tạo, lớp sẽ tự động gọi phương thức của RevenueDAL để nạp 

@@ -1,5 +1,9 @@
 #include "RevenueDAL.h"
+<<<<<<< HEAD
 using namespace std;
+=======
+
+>>>>>>> 0226781a988cf730ca830fe9989d4de76c815c93
 /**
  * @brief Nạp dữ liệu doanh thu từ file văn bản vào bộ nhớ.
  * * **Quy trình thực hiện:**

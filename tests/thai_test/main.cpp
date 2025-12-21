@@ -1,6 +1,11 @@
 #include <iostream>
+<<<<<<< HEAD
 #include "../../ui/FoodUI.h"     
 #include "../../ui/RevenueUI.h"  
+=======
+#include "ui/FoodUI.h"     
+#include "ui/RevenueUI.h"  
+>>>>>>> 0226781a988cf730ca830fe9989d4de76c815c93
 
 using namespace std;
 

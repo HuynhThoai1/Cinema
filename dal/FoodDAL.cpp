@@ -1,5 +1,9 @@
 #include "FoodDAL.h"
+<<<<<<< HEAD
 using namespace std;
+=======
+
+>>>>>>> 0226781a988cf730ca830fe9989d4de76c815c93
 /**
  * @brief Đọc danh sách thực phẩm từ file văn bản.
  * * Quy trình xử lý:
