@@ -1,55 +1,42 @@
 #include "MovieBUS.h"
 #include <algorithm>
 
-void MovieBUS::load(const string& filename) {
-    _movies = MovieDAL::loadFromFile(filename);
-}
+MovieBUS::MovieBUS(MovieDAL movieDal) : movieDal(std::move(movieDal)) {}
 
-void MovieBUS::save(const string& filename) const {
-    MovieDAL::saveToFile(_movies, filename);
+std::vector<Movie> MovieBUS::getAll() {
+    return movieDal.loadMovies();
 }
 
 bool MovieBUS::addMovie(const Movie& movie) {
-    for (size_t i = 0; i < _movies.size(); i++) {
-        if (_movies[i].getId() == movie.getId()) return false;
-    }
-    _movies.push_back(movie);
+    auto movies = movieDal.loadMovies();
+    auto it = std::find_if(movies.begin(), movies.end(),
+                           [&](const Movie& m) { return m.getId() == movie.getId(); });
+    if (it != movies.end()) return false;
+
+    movies.push_back(movie);
+    movieDal.saveMovies(movies);
     return true;
 }
 
-bool MovieBUS::deleteMovie(const string& id) {
-    for (size_t i = 0; i < _movies.size(); i++) {
-        if (_movies[i].getId() == id) {
-            _movies.erase(_movies.begin() + i);
-            return true;
-        }
-    }
-    return false;
-}
-
 bool MovieBUS::updateMovie(const Movie& movie) {
-    for (size_t i = 0; i < _movies.size(); i++) {
-        if (_movies[i].getId() == movie.getId()) {
-            _movies[i] = movie;
-            return true;
-        }
-    }
-    return false;
+    auto movies = movieDal.loadMovies();
+    auto it = std::find_if(movies.begin(), movies.end(),
+                           [&](const Movie& m) { return m.getId() == movie.getId(); });
+    if (it == movies.end()) return false;
+
+    *it = movie;
+    movieDal.saveMovies(movies);
+    return true;
 }
 
-Movie* MovieBUS::findById(const string& id) {
-    for (size_t i = 0; i < _movies.size(); i++) {
-        if (_movies[i].getId() == id) return &_movies[i];
-    }
-    return nullptr;
-}
+bool MovieBUS::deleteMovie(const std::string& id) {
+    auto movies = movieDal.loadMovies();
+    auto before = movies.size();
+    movies.erase(std::remove_if(movies.begin(), movies.end(),
+                               [&](const Movie& m) { return m.getId() == id; }),
+                 movies.end());
+    if (movies.size() == before) return false;
 
-vector<Movie> MovieBUS::findByTitle(const string& namePart) const {
-    vector<Movie> result;
-    for (size_t i = 0; i < _movies.size(); i++) {
-        if (_movies[i].getTitle().find(namePart) != string::npos) {
-            result.push_back(_movies[i]);
-        }
-    }
-    return result;
+    movieDal.saveMovies(movies);
+    return true;
 }

@@ -1,29 +1,46 @@
 #include "MovieDAL.h"
+
 #include <fstream>
-#include <iostream>
+#include <sstream>
 
-vector<Movie> MovieDAL::loadFromFile(const string& filename) {
-    vector<Movie> result;
-    std::ifstream in(filename.c_str());
-    if (!in.is_open()) return result;
-
-    string line;
-    while (std::getline(in, line)) {
-        if (line.empty()) continue;
-        try {
-            result.push_back(Movie::deserialize(line));
-        } catch (const std::exception& ex) {
-            std::cerr << "[MovieDAL] Invalid line skipped: " << ex.what() << "\n";
-        }
-    }
-    return result;
+static std::vector<std::string> split(const std::string& s, char delim) {
+    std::vector<std::string> out;
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) out.push_back(item);
+    return out;
 }
 
-void MovieDAL::saveToFile(const vector<Movie>& list, const string& filename) {
-    std::ofstream out(filename.c_str(), std::ios::trunc);
-    if (!out.is_open()) return;
+MovieDAL::MovieDAL(std::string filePath) : filePath(std::move(filePath)) {}
 
-    for (size_t i = 0; i < list.size(); i++) {
-        out << list[i].serialize() << "\n";
+std::vector<Movie> MovieDAL::loadMovies() {
+    std::vector<Movie> movies;
+    std::ifstream in(filePath);
+    if (!in) return movies;
+
+    std::string line;
+    while (std::getline(in, line)) {
+        if (line.empty()) continue;
+
+        // Format mặc định: id|title|genre|duration
+        auto parts = split(line, '|');
+        if (parts.size() < 4) continue;
+
+        int duration = 0;
+        try { duration = std::stoi(parts[3]); } catch (...) { duration = 0; }
+
+        movies.emplace_back(parts[0], parts[1], parts[2], duration);
+    }
+    return movies;
+}
+
+void MovieDAL::saveMovies(const std::vector<Movie>& movies) {
+    std::ofstream out(filePath, std::ios::trunc);
+    for (const auto& m : movies) {
+        out << m.getId() << '|'
+            << m.getTitle() << '|'
+            << m.getGenre() << '|'
+            << m.getDuration()
+            << '\n';
     }
 }
