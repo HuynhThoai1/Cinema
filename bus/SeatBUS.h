@@ -1,10 +1,8 @@
 /**
  * @file SeatBUS.h
- * @brief Định nghĩa lớp xử lý nghiệp vụ cho Ghế (Seat).
- *
- * File này chứa các định nghĩa để quản lý trạng thái ghế, đặt ghế,
- * và chuyển đổi dữ liệu thô từ DAL sang dạng cấu trúc phẳng để UI dễ hiển thị.
- * @date 2023-10-27
+ * @brief Định nghĩa lớp Business Logic (BUS) để quản lý ghế ngồi trong rạp chiếu phim.
+ * @details File này chứa các cấu trúc dữ liệu và phương thức để xử lý logic nghiệp vụ
+ * liên quan đến ghế, bao gồm lấy danh sách, kiểm tra trạng thái, và đặt vé.
  */
 
 #ifndef SEAT_BUS_H
@@ -13,92 +11,97 @@
 #include "../dal/SeatDAL.h"
 #include <vector>
 #include <string>
-#include <algorithm> // Để dùng std::find, std::remove
+#include <algorithm>
 
-using namespace std;
+using std::string;
+using std::vector;
 
 /**
  * @struct SeatDisplay
- * @brief Cấu trúc dữ liệu đại diện cho một ghế đơn lẻ (DTO - Data Transfer Object).
- *
- * Cấu trúc này được dùng để tách dữ liệu từ DAL (lưu theo dòng) thành từng ghế riêng biệt,
- * giúp giao diện (UI) dễ dàng vẽ sơ đồ phòng chiếu.
+ * @brief Cấu trúc dữ liệu dùng để hiển thị thông tin ghế lên giao diện (UI).
  */
 struct SeatDisplay {
-    string id;      ///< Mã ghế đầy đủ (VD: "A1").
-    string row;     ///< Hàng ghế (VD: "A").
-    int number;     ///< Số thứ tự ghế trong hàng (VD: 1).
-    bool isBooked;  ///< Trạng thái ghế: true = đã đặt, false = còn trống.
+    string id;      ///< Mã định danh duy nhất của ghế (VD: "A01", "B05").
+    string row;     ///< Ký tự hàng của ghế (VD: "A", "B").
+    int number;     ///< Số thứ tự của ghế trong hàng.
+    bool isBooked;  ///< Trạng thái ghế: true nếu đã đặt/bán, false nếu còn trống.
 };
 
 /**
  * @class SeatBUS
- * @brief Lớp Business Logic Layer (BUS) quản lý nghiệp vụ về ghế.
- *
- * Chịu trách nhiệm tương tác với SeatDAL, kiểm tra tính hợp lệ của việc đặt ghế,
- * và cung cấp danh sách ghế đã được định dạng cho tầng Presentation (UI).
+ * @brief Lớp xử lý nghiệp vụ liên quan đến Ghế (Seat).
+ * @details Lớp này đóng vai trò trung gian giữa giao diện (UI) và dữ liệu (DAL),
+ * chịu trách nhiệm validate dữ liệu và thực hiện các logic đặt chỗ.
  */
 class SeatBUS {
 private:
-    SeatDAL seatDal; ///< Đối tượng truy cập dữ liệu ghế.
-    const string FILE_NAME = "../data/Seats.txt"; ///< Đường dẫn file dữ liệu (Cấu hình cứng).
+    SeatDAL seatDal;                            ///< Đối tượng thao tác với dữ liệu ghế (DAL).
+    const string FILE_NAME = "../data/Seats.txt"; ///< Đường dẫn đến file dữ liệu gốc của ghế.
+    const vector<string> ALL_ROWS = {"A", "B", "C", "D", "E"}; ///< Danh sách các hàng ghế cố định.
+    const int SEATS_PER_ROW = 10;               ///< Số lượng ghế tối đa trên mỗi hàng.
 
 public:
+    // [CẬP NHẬT] Thêm showtimeId vào tất cả các hàm
+    
     /**
-     * @brief Lấy danh sách toàn bộ ghế của một phòng chiếu cụ thể.
-     *
-     * Hàm này thực hiện việc "làm phẳng" (flatten) dữ liệu:
-     * Đọc các dòng ghế từ DAL, sau đó tách từng dòng thành các ghế đơn lẻ (SeatDisplay).
-     *
-     * @param roomId Mã phòng chiếu (VD: "R01").
-     * @return vector<SeatDisplay> Danh sách các ghế để vẽ lên màn hình.
+     * @brief Lấy danh sách toàn bộ ghế của một suất chiếu cụ thể.
+     * @details Hàm này sẽ tổng hợp danh sách ghế gốc và trạng thái đặt chỗ hiện tại
+     * của suất chiếu để trả về danh sách hiển thị.
+     * @param showtimeId Mã suất chiếu cần lấy dữ liệu.
+     * @param roomId Mã phòng chiếu (để xác định cấu trúc ghế của phòng).
+     * @return vector<SeatDisplay> Danh sách các ghế kèm trạng thái (đã đặt hay chưa).
      */
-    vector<SeatDisplay> getSeatsByRoom(string roomId);
+    vector<SeatDisplay> getSeatsByShowtime(string showtimeId, string roomId);
 
     /**
-     * @brief Kiểm tra xem một ghế cụ thể có trống hay không.
-     *
-     * @param roomId Mã phòng chiếu chứa ghế.
-     * @param seatId Mã ghế cần kiểm tra (VD: "A1").
+     * @brief Kiểm tra xem một ghế có khả dụng (trống) hay không.
+     * @param showtimeId Mã suất chiếu.
+     * @param roomId Mã phòng chiếu.
+     * @param seatId Mã ghế cần kiểm tra.
      * @return true Nếu ghế còn trống.
-     * @return false Nếu ghế đã được đặt hoặc không tồn tại.
+     * @return false Nếu ghế đã bị đặt hoặc không tồn tại.
      */
-    bool checkAvailable(string roomId, string seatId);
+    bool checkAvailable(string showtimeId, string roomId, string seatId);
 
     /**
      * @brief Thực hiện đặt một ghế.
-     *
-     * Cập nhật trạng thái của ghế thành "đã đặt" trong cơ sở dữ liệu/file.
-     *
+     * @details Cập nhật trạng thái ghế thành "đã đặt" trong cơ sở dữ liệu.
+     * @param showtimeId Mã suất chiếu.
      * @param roomId Mã phòng chiếu.
      * @param seatId Mã ghế muốn đặt.
      * @return true Nếu đặt thành công.
-     * @return false Nếu thất bại (ghế đã có người đặt hoặc lỗi ghi file).
+     * @return false Nếu thất bại (ghế đã có người đặt hoặc lỗi hệ thống).
      */
-    bool bookSeat(string roomId, string seatId);
+    bool bookSeat(string showtimeId, string roomId, string seatId);
 
     /**
-     * @brief Hủy đặt ghế (Mở khóa ghế).
-     *
-     * Chuyển trạng thái ghế từ "đã đặt" sang "trống". Dùng cho trường hợp hủy vé
-     * hoặc rollback giao dịch.
-     *
+     * @brief Hủy đặt ghế hoặc mở khóa ghế.
+     * @details Chuyển trạng thái ghế từ "đã đặt" về "trống".
+     * @param showtimeId Mã suất chiếu.
      * @param roomId Mã phòng chiếu.
      * @param seatId Mã ghế cần mở khóa.
      * @return true Nếu mở khóa thành công.
      * @return false Nếu thất bại.
      */
-    bool unlockSeat(string roomId, string seatId);
+    bool unlockSeat(string showtimeId, string roomId, string seatId);
+
+    /**
+     * @brief Lấy giá tiền của một ghế cụ thể.
+     * @details Giá vé có thể phụ thuộc vào loại ghế (VIP/Thường) hoặc vị trí.
+     * @param showtimeId Mã suất chiếu (để tính giá theo khung giờ nếu cần).
+     * @param roomId Mã phòng chiếu.
+     * @param seatId Mã ghế cần lấy giá.
+     * @return long long Giá vé (đơn vị: VNĐ).
+     */
+    long long getSeatPrice(string showtimeId, string roomId, string seatId);
 
 private:
     /**
-     * @brief Hàm tiện ích: Phân tích mã ghế đầy đủ thành Hàng và Số.
-     *
-     * Ví dụ: Input "A12" -> Row "A", Number "12".
-     *
-     * @param[in] fullSeatId Mã ghế đầu vào.
-     * @param[out] rowOut Biến tham chiếu lưu kết quả Hàng.
-     * @param[out] numOut Biến tham chiếu lưu kết quả Số (dạng chuỗi).
+     * @brief Hàm hỗ trợ tách mã ghế thành Hàng và Số.
+     * @details Ví dụ: "A10" -> rowOut = "A", numOut = "10".
+     * @param fullSeatId [in] Mã ghế đầy đủ.
+     * @param rowOut [out] Biến tham chiếu lưu ký tự hàng.
+     * @param numOut [out] Biến tham chiếu lưu số ghế.
      */
     void parseSeatId(string fullSeatId, string& rowOut, string& numOut);
 };

@@ -1,5 +1,4 @@
 #include "MovieBUS.h"
-#include "MovieDAL.h"
 #include <algorithm>
 
 void MovieBUS::load(const string& filename) {

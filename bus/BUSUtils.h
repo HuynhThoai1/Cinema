@@ -8,6 +8,7 @@
 #ifndef _BUSUTILS_H_
 #define _BUSUTILS_H_
 
+#include "../dto/Ticket.h"
 #include <string>
 
 /**
@@ -16,7 +17,7 @@
  * @details Chứa các phương thức tĩnh để chuyển đổi số nguyên thô sang dạng chuỗi tiền tệ dễ đọc
  * (thường dùng định dạng phân cách hàng nghìn bằng dấu chấm hoặc phẩy).
  */
-class CurrencyFormat {
+class BUSUtils {
 public:
     /**
      * @brief Định dạng một số nguyên lớn thành chuỗi tiền tệ có dấu phân cách.
@@ -28,6 +29,9 @@ public:
      * @return std::string Chuỗi tiền tệ đã được định dạng đẹp mắt.
      */
     static std::string formatCurrency(long long amount);
+
+    // static void cancelTicket(Ticket ticket);
 };
+
 
 #endif
