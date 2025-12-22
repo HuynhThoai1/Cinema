@@ -1,4 +1,0 @@
-U1|admin_root|123456|Admin
-U2|khach_a|123456|Customer
-U3|khach_bi_khoa|123456|Locked
-U4|khach_doi_pass|123456|Customer
