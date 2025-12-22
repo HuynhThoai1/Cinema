@@ -1,8 +1,6 @@
 /**
- * @file Revenue_BUS.h
- * @brief Khai báo lớp RevenueBUS xử lý nghiệp vụ liên quan đến doanh thu.
- * @details File này cung cấp các phương thức để ghi nhận doanh thu mới (vé, đồ ăn) 
- * và trích xuất báo cáo doanh thu theo tiêu chí (ngày, phim).
+ * @file RevenueBUS.h
+ * @brief Lớp xử lý nghiệp vụ cho Doanh thu.
  */
 
 #ifndef REVENUE_BUS_H
@@ -12,57 +10,41 @@
 #include <vector>
 #include <string>
 
-// Sử dụng using riêng lẻ để tránh ô nhiễm namespace
-using std::vector;
-using std::string;
-
 /**
  * @class RevenueBUS
- * @brief Lớp Business Logic Layer (BUS) quản lý luồng tiền tệ.
- * * Lớp này xử lý logic cộng dồn doanh thu và lọc dữ liệu báo cáo
- * trước khi trả về cho giao diện người dùng.
+ * @brief Xử lý logic tạo mã, tính toán và lọc doanh thu.
  */
 class RevenueBUS {
 private:
-    /**
-     * @brief Đối tượng RevenueDAL để tương tác với cơ sở dữ liệu/file.
-     */
-    RevenueDAL revenueDal;
+    RevenueDAL revenueDal; ///< Đối tượng thao tác dữ liệu
 
 public:
     /**
-     * @brief Ghi nhận doanh thu từ bán vé.
-     * * Hàm này nhận thông tin ngày và số tiền, sau đó gọi DAL để cập nhật
-     * hoặc tạo mới bản ghi doanh thu cho ngày đó.
-     * * @param date Ngày phát sinh doanh thu (định dạng chuỗi).
-     * @param amount Số tiền bán vé cần cộng thêm vào.
+     * @brief Khởi tạo và nạp dữ liệu doanh thu.
      */
-    void addTicketRevenue(string date, int amount);
+    RevenueBUS();
 
     /**
-     * @brief Ghi nhận doanh thu từ bán đồ ăn/nước uống.
-     * * Tương tự như bán vé, hàm này cộng dồn doanh thu thực phẩm vào bản ghi của ngày tương ứng.
-     * * @param date Ngày phát sinh doanh thu.
-     * @param amount Số tiền bán đồ ăn cần cộng thêm.
+     * @brief Tạo bản ghi doanh thu mới (Tự động sinh ID).
+     * @details ID sẽ được tạo tự động dạng R01, R02... dựa trên số lượng hiện có.
+     * @param date Ngày tháng.
+     * @param movieId Mã phim.
+     * @param ticketAmount Tiền vé.
+     * @param foodAmount Tiền đồ ăn.
      */
-    void addFoodRevenue(string date, int amount);
+    void addRevenueRecord(std::string date, std::string movieId, int ticketAmount, int foodAmount);
 
     /**
-     * @brief Lấy báo cáo doanh thu của một ngày cụ thể.
-     * * Tìm kiếm trong danh sách doanh thu để trả về đối tượng Revenue trùng khớp với ngày yêu cầu.
-     * * @param date Ngày cần xem báo cáo.
-     * @return Revenue Đối tượng chứa thông tin doanh thu của ngày đó.
+     * @brief Lấy tất cả bản ghi doanh thu.
      */
-    Revenue getRevenueByDate(string date);
+    std::vector<Revenue> getAll();
 
     /**
-     * @brief Lấy danh sách doanh thu liên quan đến một bộ phim.
-     * * Hàm này lọc danh sách tổng để tìm ra các bản ghi doanh thu
-     * mà bộ phim này có được chiếu.
-     * * @param movieId Mã định danh của bộ phim.
-     * @return vector<Revenue> Danh sách các bản ghi doanh thu liên quan đến phim này.
+     * @brief Lọc doanh thu theo ngày cụ thể.
+     * @param date Chuỗi ngày cần tìm.
+     * @return std::vector<Revenue> Danh sách kết quả.
      */
-    vector<Revenue> getRevenueByMovie(string movieId);
+    std::vector<Revenue> getByDate(std::string date);
 };
 
 #endif

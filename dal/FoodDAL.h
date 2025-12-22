@@ -1,51 +1,56 @@
 /**
- * @file Food_DAL.h
- * @brief Khai báo lớp FoodDAL dùng để quản lý truy cập dữ liệu món ăn.
- * @details File này chứa các định nghĩa hàm để tương tác với dữ liệu Food (đọc, tìm kiếm).
+ * @file FoodDAL.h
+ * @brief Lớp truy cập dữ liệu cho Món ăn.
  */
 
 #ifndef FOOD_DAL_H
 #define FOOD_DAL_H
 
 #include <vector>
-#include <string> // Nên include string nếu dùng string
-#include "../dto/Food.h" 
-
-using namespace std;
+#include <string>
+#include <fstream>
+#include <sstream>
+#include "../dto/Food.h"
 
 /**
  * @class FoodDAL
- * @brief Lớp Data Access Layer (DAL) quản lý các thao tác dữ liệu cho đối tượng Food.
- * * Lớp này chịu trách nhiệm tải dữ liệu từ bộ nhớ lưu trữ (file/DB),
- * cung cấp danh sách và các chức năng tìm kiếm món ăn.
+ * @brief Quản lý việc Đọc/Ghi dữ liệu món ăn từ file văn bản.
  */
 class FoodDAL {
 private:
-    /**
-     * @brief Danh sách lưu trữ các đối tượng Food sau khi tải lên.
-     */
-    vector<Food> listFood;
+    std::vector<Food> listFood; ///< Cache danh sách món ăn trong bộ nhớ
+    const std::string FILE_NAME = "data/FoodandDrink.txt"; ///< Đường dẫn file dữ liệu
 
 public:
     /**
-     * @brief Đọc dữ liệu món ăn từ nguồn lưu trữ.
-     * * Hàm này sẽ đọc file (hoặc database), parse dữ liệu và 
-     * đẩy vào vector listFood.
+     * @brief Đọc dữ liệu từ file vào bộ nhớ.
+     * @details Mở file text, phân tích từng dòng và lưu vào vector listFood.
      */
     void loadFoods();
 
     /**
-     * @brief Lấy danh sách toàn bộ món ăn.
-     * * @return vector<Food> Vector chứa danh sách các đối tượng Food hiện có.
+     * @brief Ghi lại toàn bộ danh sách hiện tại xuống file.
      */
-    vector<Food> getList() const;
+    void saveFoods();
 
     /**
-     * @brief Tìm kiếm một món ăn cụ thể dựa trên ID.
-     * * @param id Mã định danh (ID) của món ăn cần tìm.
-     * @return Food* Con trỏ trỏ đến đối tượng Food tìm thấy. Trả về nullptr hoặc xử lý lỗi nếu không tìm thấy.
+     * @brief Thêm món ăn mới và lưu ngay vào file.
+     * @param food Đối tượng món ăn cần thêm.
      */
-    Food* getFoodById(string id);
+    void addFood(const Food& food);
+
+    /**
+     * @brief Lấy danh sách món ăn đang có.
+     * @return std::vector<Food> Danh sách món ăn.
+     */
+    std::vector<Food> getList() const;
+
+    /**
+     * @brief Tìm món ăn theo ID.
+     * @param id Mã món cần tìm.
+     * @return Food* Con trỏ đến món ăn tìm thấy (hoặc nullptr nếu không thấy).
+     */
+    Food* getFoodById(std::string id);
 };
 
 #endif
