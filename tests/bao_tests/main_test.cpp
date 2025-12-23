@@ -1,59 +1,121 @@
-#include <iostream>
-#include <string>
-#include <vector>
-
-#include "../../dto/Movie.h"
-#include "../../dto/Showtime.h"
 #include "../../bus/MovieBUS.h"
 #include "../../bus/ShowtimeBUS.h"
 #include "../../dal/MovieDAL.h"
 #include "../../dal/ShowtimeDAL.h"
 
+#include <fstream>
+#include <iostream>
+#include <string>
+
 using std::cout;
 using std::string;
 
+static void writeText(const string& path, const string& content) {
+    std::ofstream out(path, std::ios::binary | std::ios::trunc);
+    out << content;
+}
+
+static bool expect(bool cond, const string& name) {
+    cout << (cond ? "[PASS] " : "[FAIL] ") << name << "\n";
+    return cond;
+}
+
 int main() {
-    cout << "MOVIE MODULE\n";
+    cout << "===== BAO EDGE-CASE TEST (Movie + Showtime) =====\n";
 
-    // chạy test từ thư mục root (Cinema/) => data/...
-    const string movieFile = "data/Movies.txt";
-    MovieBUS movieBus{MovieDAL(movieFile)};
+    const string moviesFile    = "tests/bao_tests/test_movies.txt";
+    const string showtimesFile = "tests/bao_tests/test_showtimes.txt";
 
-    // add movies
-    bool m1 = movieBus.addMovie(Movie("M001", "Avengers: Endgame", "Action", 181));
-    bool m2 = movieBus.addMovie(Movie("M002", "Spirited Away", "Animation", 125));
+    // Seed data (intentionally includes both supported formats)
+    // Movie formats:
+    //  A) id|title|genre|duration
+    //  B) id|title|duration|genre|extra...
+    writeText(moviesFile,
+        "M001|Movie One|Action|120\n"
+        "M002|Movie Two|150|Drama|IGNORED_FIELD\n"
+    );
 
-    cout << "addMovie(M001): " << (m1 ? "OK" : "SKIP (exists)") << "\n";
-    cout << "addMovie(M002): " << (m2 ? "OK" : "SKIP (exists)") << "\n";
+    // Showtime format: id|movieId|startTime|room
+    writeText(showtimesFile,
+        "S001|M001|2025-12-23 10:30|R1\n"
+    );
 
-    auto movies = movieBus.getAll();
-    cout << "Total movies: " << movies.size() << "\n";
-    for (const auto& m : movies) {
-        cout << m.getId() << " | " << m.getTitle()
-             << " | " << m.getGenre()
-             << " | " << m.getDuration() << "\n";
-    }
+    MovieDAL movieDal(moviesFile);
+    ShowtimeDAL showtimeDal(showtimesFile);
 
-    cout << "\nSHOWTIME MODULE \n";
+    MovieBUS movieBus(movieDal, showtimeDal);
+    ShowtimeBUS showtimeBus(showtimeDal, movieDal);
 
-    const string showFile = "data/Showtime.txt";
-    ShowtimeBUS showBus{ShowtimeDAL(showFile)};
+    bool okAll = true;
 
-    // Showtime ctor: (id, movieId, room, startTime)
-    bool s1 = showBus.addShowtime(Showtime("S001", "M001", "Room 1", "2025-12-30 19:30"));
-    bool s2 = showBus.addShowtime(Showtime("S002", "M001", "Room 1", "2025-12-05 22:00"));
+    // -----------------
+    // Movie edge cases
+    // -----------------
+    okAll &= expect(!movieBus.addMovie(Movie("", "x", "y", 100)),
+                    "Movie: reject empty id");
+    okAll &= expect(!movieBus.addMovie(Movie("M003", "", "y", 100)),
+                    "Movie: reject empty title");
+    okAll &= expect(!movieBus.addMovie(Movie("M003", "x", "", 100)),
+                    "Movie: reject empty genre");
+    okAll &= expect(!movieBus.addMovie(Movie("M003", "x", "y", 0)),
+                    "Movie: reject duration <= 0");
+    okAll &= expect(!movieBus.addMovie(Movie("M003", "x", "y", 999)),
+                    "Movie: reject duration too large");
 
-    cout << "addShowtime(S001): " << (s1 ? "OK" : "SKIP (exists)") << "\n";
-    cout << "addShowtime(S002): " << (s2 ? "OK" : "SKIP (exists)") << "\n";
+    okAll &= expect(movieBus.addMovie(Movie("M003", "Movie Three", "Comedy", 110)),
+                    "Movie: add valid movie");
+    okAll &= expect(!movieBus.addMovie(Movie("M003", "Dup", "Comedy", 110)),
+                    "Movie: reject duplicate id");
 
-    auto showtimes = showBus.getByMovie("M001");
-    cout << "Showtimes for M001: " << showtimes.size() << "\n";
-    for (const auto& s : showtimes) {
-        cout << s.getId() << " | " << s.getMovieId()
-             << " | " << s.getRoom()
-             << " | " << s.getStartTime() << "\n";
-    }
+    okAll &= expect(movieBus.updateMovie(Movie("M003", "Movie Three Updated", "Comedy", 111)),
+                    "Movie: update existing");
+    okAll &= expect(!movieBus.updateMovie(Movie("M999", "Not exist", "None", 100)),
+                    "Movie: reject update non-existent");
 
-    cout << "\n===== [BAO TEST] DONE =====\n";
-    return 0;
+    // Delete movie when it has showtime must fail (edge case you added)
+    okAll &= expect(!movieBus.deleteMovie("M001"),
+                    "Movie: reject delete when movie still has showtime");
+
+    okAll &= expect(movieBus.deleteMovie("M003"),
+                    "Movie: delete when no showtime");
+    okAll &= expect(!movieBus.deleteMovie("M003"),
+                    "Movie: reject delete non-existent (after delete)");
+
+    // --------------------
+    // Showtime edge cases
+    // --------------------
+    okAll &= expect(!showtimeBus.addShowtime(Showtime("S002", "M001", "R2", "bad time")),
+                    "Showtime: reject invalid datetime format");
+
+    okAll &= expect(!showtimeBus.addShowtime(Showtime("S002", "M404", "R2", "2025-12-23 11:30")),
+                    "Showtime: reject non-existent movieId");
+
+    okAll &= expect(showtimeBus.addShowtime(Showtime("S002", "M001", "R2", "2025-12-23 11:30")),
+                    "Showtime: add valid showtime");
+
+    okAll &= expect(!showtimeBus.addShowtime(Showtime("S002", "M001", "R3", "2025-12-23 12:30")),
+                    "Showtime: reject duplicate showtime id");
+
+    okAll &= expect(!showtimeBus.addShowtime(Showtime("S003", "M001", "R2", "2025-12-23 11:30")),
+                    "Showtime: reject room+time clash");
+
+    okAll &= expect(!showtimeBus.deleteShowtime("S404"),
+                    "Showtime: reject delete non-existent");
+
+    okAll &= expect(showtimeBus.deleteShowtime("S002"),
+                    "Showtime: delete existing");
+
+    // After deleting S002, M001 still has S001, so deleteMovie(M001) should still fail
+    okAll &= expect(!movieBus.deleteMovie("M001"),
+                    "Movie: still reject delete M001 (S001 still exists)");
+
+    okAll &= expect(showtimeBus.deleteShowtime("S001"),
+                    "Showtime: delete remaining showtime of M001");
+
+    okAll &= expect(movieBus.deleteMovie("M001"),
+                    "Movie: delete M001 after all showtimes removed");
+
+    cout << "===============================\n";
+    cout << (okAll ? "ALL TESTS PASS ✅\n" : "SOME TESTS FAILED ❌\n");
+    return okAll ? 0 : 1;
 }
