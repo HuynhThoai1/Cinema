@@ -1,4 +1,14 @@
+/**
+ * @file Movie.cpp
+ * @brief Cài đặt lớp DTO Movie.
+ *
+ * @details
+ * DTO chỉ chứa dữ liệu + getter/setter (không chứa logic nghiệp vụ).
+ */
+
 #include "Movie.h"
+
+#include <utility>
 
 Movie::Movie(std::string id, std::string title, std::string genre, int duration)
     : id(std::move(id)), title(std::move(title)), genre(std::move(genre)), duration(duration) {}
