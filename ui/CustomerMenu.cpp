@@ -1,5 +1,6 @@
 #include "CustomerMenu.h"
 #include "../utils/InputUtils.h"
+#include "TicketUI.h"
 
 using namespace std;
 
@@ -8,6 +9,8 @@ CustomerMenu::CustomerMenu() {
 }
 
 void CustomerMenu::show() {
+    TicketUI ticketUI;
+
     int choice;
     while (true) {
         cout << "\n--- KHÁCH HÀNG ---\n";
@@ -21,10 +24,11 @@ void CustomerMenu::show() {
 
         switch (choice) {
             case 1:
+                // TODO: tích hợp với MovieBUS
                 cout << ">> MovieBUS::getAll()... (Chưa tích hợp)\n";
                 break;
             case 2:
-                cout << ">> BookingFacade::bookTicket()... (chưa tích hợp)\n";
+                ticketUI.run();
                 break;
             default:
                 cout << ">> Sai lựa chọn!\n";
