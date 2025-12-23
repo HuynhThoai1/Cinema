@@ -1,8 +1,12 @@
-#include "TicketUI.h" 
+#include <iostream>
+
+#include "Menu.h"
 
 
 int main() {
-    TicketUI app;
-    app.run();
+    Menu menu;
+
+    menu.showMainMenu();
+
     return 0;
 }

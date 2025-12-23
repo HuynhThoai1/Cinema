@@ -1,5 +1,6 @@
 #include "AdminMenu.h"
 #include "../utils/InputUtils.h"
+#include "RevenueUI.h"
 
 AdminMenu::AdminMenu() {
     // Do nothing
@@ -67,6 +68,7 @@ void AdminMenu::manageUsersMenu() {
 }
 
 void AdminMenu::show() {
+    RevenueUI revenueUI;
     int choice;
     while (true) {
         cout << "\n--- ADMIN DASHBOARD ---\n";
@@ -83,11 +85,12 @@ void AdminMenu::show() {
             this->manageUsersMenu(); 
             break;
         case 2: 
+            // TODO: tích hợp với MovieBUS
             cout << ">> Chức năng thuộc Module Movie (Chưa tích hợp).\n";
             //movieBus.addMovie()
             break;
         case 3:
-            cout << ">> Chức năng thuộc Module Revenue (Chưa tích hợp).\n";
+            revenueUI.process();
             break;
         default:
             cout << ">> Sai lựa chọn!";
