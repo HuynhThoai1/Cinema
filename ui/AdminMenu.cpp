@@ -3,6 +3,8 @@
 #include "../utils/FormatUI.h" // Đảm bảo include file này để dùng màu và hàm format
 #include "RevenueUI.h"
 #include "MovieUI.h"
+#include "ShowtimeUI.h"
+#include "FoodUI.h"
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -95,6 +97,8 @@ void AdminMenu::manageUsersMenu() {
 void AdminMenu::show() {
     RevenueUI revenueUI;
     MovieUI movieUI;
+    ShowtimeUI showtimeUI;
+    FoodUI foodUI;
     int choice;
     
     while (true) {
@@ -103,8 +107,9 @@ void AdminMenu::show() {
 
         cout << CYAN << "1. Quan ly Nguoi dung (Xem/Khoa/Mo)" << RESET << "\n";
         cout << CYAN << "2. Quan ly Phim (Movie Module)" << RESET << "\n";
-        cout << CYAN << "3. Quan ly Doanh thu (Revenue Module)" << RESET << "\n";
-        cout << CYAN << "4. Quan ly Do an (Food Module)" << RESET << "\n";
+        cout << CYAN << "3. Quan suat chieu (Movie Module)" << RESET << "\n";
+        cout << CYAN << "4. Quan ly Doanh thu (Revenue Module)" << RESET << "\n";
+        cout << CYAN << "5. Quan ly Do an (Food Module)" << RESET << "\n";
         cout << CYAN << "0. Dang xuat" << RESET << "\n";
         cout << "------------------------------------------\n";
 
@@ -124,13 +129,14 @@ void AdminMenu::show() {
             movieUI.run();
             break;
         case 3:
-            revenueUI.process();
+            showtimeUI.run();
             break;
         case 4:
-            // Placeholder cho module Food
-            cout << YELLOW << ">> Chuc nang thuoc Module Food (Chua tich hop)." << RESET << "\n";
-            cout << "(An Enter de quay lai...)"; 
-            cin.ignore(); cin.get();
+            revenueUI.process();
+            break;
+        case 5:
+            // TODO: Tích hợp FoodUI cho Admin
+            foodUI.adminMenu();
             break;
         default:
             cout << YELLOW << ">> Lua chon khong hop le!" << RESET << "\n";

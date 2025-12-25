@@ -23,9 +23,14 @@ public:
     FoodUI();
 
     /**
-     * @brief Vòng lặp chính xử lý menu Món ăn.
+     * @brief Menu quản lý món ăn cho Admin.
      */
-    void process();
+    void adminMenu();
+
+    /**
+     * @brief Menu mua thức ăn cho Customer.
+     */
+    void customerMenu();
 
     /**
      * @brief Màn hình nhập thông tin món ăn mới.
@@ -33,14 +38,24 @@ public:
     void inputNewFood();
 
     /**
+     * @brief Cập nhật thông tin món ăn.
+     */
+    void updateFood();
+
+    /**
+     * @brief Xóa món ăn.
+     */
+    void deleteFood();
+
+    /**
      * @brief Hiển thị bảng danh sách món ăn.
      */
     void showAllFoods();
 
     /**
-     * @brief Chức năng demo tính tiền đơn hàng.
+     * @brief Chức năng mua thức ăn cho khách hàng.
      */
-    void orderDemo();
+    void purchaseFood();
 };
 
 #endif

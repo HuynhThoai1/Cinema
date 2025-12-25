@@ -21,6 +21,14 @@ public:
      * @return int Số nguyên hợp lệ người dùng vừa nhập.
      */
     static int readInt(const string& message);
+
+    /**
+     * @brief Hỏi người dùng Yes/No.
+     * @details Chỉ chấp nhận 'y' hoặc 'n' (không phân biệt hoa thường).
+     * @param message Thông báo (VD: "Ban co chac? (y/n): ").
+     * @return char 'y' hoặc 'n'.
+     */
+    static char readYesNo(const string& message);
 };
 
 #endif

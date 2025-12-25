@@ -25,3 +25,15 @@ int FoodBUS::calculateOrderTotal(const std::vector<std::string>& idList) {
     }
     return total;
 }
+
+bool FoodBUS::updateFood(std::string id, std::string name, int price) {
+    if (id.empty() || name.empty() || price < 0) return false;
+    foodDal.loadFoods();
+    return foodDal.updateFood(id, name, price);
+}
+
+bool FoodBUS::deleteFood(std::string id) {
+    if (id.empty()) return false;
+    foodDal.loadFoods();
+    return foodDal.deleteFood(id);
+}

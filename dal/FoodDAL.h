@@ -51,6 +51,22 @@ public:
      * @return Food* Con trỏ đến món ăn tìm thấy (hoặc nullptr nếu không thấy).
      */
     Food* getFoodById(std::string id);
+
+    /**
+     * @brief Cập nhật thông tin món ăn theo ID.
+     * @param id Mã món cần cập nhật.
+     * @param newName Tên mới.
+     * @param newPrice Giá mới.
+     * @return true nếu cập nhật thành công, ngược lại false.
+     */
+    bool updateFood(std::string id, std::string newName, int newPrice);
+
+    /**
+     * @brief Xóa món ăn theo ID.
+     * @param id Mã món cần xóa.
+     * @return true nếu xóa thành công, ngược lại false.
+     */
+    bool deleteFood(std::string id);
 };
 
 #endif
