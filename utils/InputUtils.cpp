@@ -1,4 +1,5 @@
 #include "InputUtils.h"
+#include <cctype>
 
 int InputUtils::readInt(const string& message) {
     int number;
@@ -16,5 +17,21 @@ int InputUtils::readInt(const string& message) {
             cin.clear(); // Xóa trạng thái lỗi
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Xóa bộ nhớ đệm
         }
+    }
+}
+
+char InputUtils::readYesNo(const string& message) {
+    while (true) {
+        cout << message;
+        string s;
+        if (!std::getline(cin, s)) {
+            // Khôi phục trạng thái nếu cần
+            cin.clear();
+            continue;
+        }
+        if (s.empty()) continue;
+        char c = static_cast<char>(std::tolower(static_cast<unsigned char>(s[0])));
+        if (c == 'y' || c == 'n') return c;
+        cout << ">> Lỗi: Vui lòng chỉ nhập 'y' hoặc 'n'!\n";
     }
 }

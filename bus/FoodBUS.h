@@ -44,6 +44,22 @@ public:
      * @return int Tổng thành tiền.
      */
     int calculateOrderTotal(const std::vector<std::string>& idList);
+
+    /**
+     * @brief Cập nhật thông tin món ăn.
+     * @param id Mã món.
+     * @param name Tên mới.
+     * @param price Giá mới (>=0).
+     * @return true nếu cập nhật thành công.
+     */
+    bool updateFood(std::string id, std::string name, int price);
+
+    /**
+     * @brief Xóa món ăn theo ID.
+     * @param id Mã món.
+     * @return true nếu xóa thành công.
+     */
+    bool deleteFood(std::string id);
 };
 
 #endif

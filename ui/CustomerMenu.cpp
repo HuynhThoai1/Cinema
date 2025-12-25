@@ -22,13 +22,13 @@ void CustomerMenu::show() {
         clearScreen();
         printHeader("KHACH HANG");
 
-        cout << CYAN << "1. Xem danh sach phim" << RESET << "\n";
-        cout << CYAN << "2. Dat ve" << RESET << "\n";
-        cout << CYAN << "3. Mua do an va do uong" << RESET << "\n";
-        cout << CYAN << "0. Dang xuat" << RESET << "\n";
+        cout << CYAN << "1. Xem danh sách phim" << RESET << "\n";
+        cout << CYAN << "2. Xem lịch chiếu phim" << RESET << "\n";
+        cout << CYAN << "3. Đặt vé" << RESET << "\n";
+        cout << CYAN << "4. Mua đồ ăn và đồ uống" << RESET << "\n";
+        cout << CYAN << "0. Đăng xuất" << RESET << "\n";
 
-        choice = InputUtils::readInt("Nhap lua chon: ");
-
+        choice = InputUtils::readInt("Nhập lựa chọn: ");
         if (choice == 0) break;
 
         switch (choice) {
@@ -45,8 +45,12 @@ void CustomerMenu::show() {
                 ticketUI.run();
                 break;
             case 3:
+                // TODO: Xem lịch chiếu phim
+
+                break;
+            case 4:
                 // TODO: tích hợp với FoodBUS cho customer
-                foodUI.process();
+                foodUI.customerMenu();
                 break;
             default:
                 cout << YELLOW << ">> Sai lua chon!" << RESET << "\n";

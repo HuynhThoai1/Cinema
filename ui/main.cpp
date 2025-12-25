@@ -1,10 +1,15 @@
 #include <iostream>
-#include <windows.h>//thu vien windows
 #include "Menu.h"
 
+#ifdef _WIN32
+    #include <windows.h> // Nếu là Windows thì dùng cái này
+#endif
 
 int main() {
-    SetConsoleOutputCP(65001);//thêm dong nay de in duoc tieng viet co dau
+    #ifdef _WIN32
+        SetConsoleOutputCP(65001); // Chỉ chạy dòng này nếu là Windows
+    #endif
+
     Menu menu;
 
     menu.showMainMenu();

@@ -1,4 +1,5 @@
 #include "FoodDAL.h"
+#include <algorithm>
 
 void FoodDAL::loadFoods() {
     listFood.clear();
@@ -49,4 +50,28 @@ Food* FoodDAL::getFoodById(std::string id) {
         if (f.getId() == id) return &f;
     }
     return nullptr;
+}
+
+bool FoodDAL::updateFood(std::string id, std::string newName, int newPrice) {
+    for (auto &f : listFood) {
+        if (f.getId() == id) {
+            // Thay thế phần tử bằng đối tượng mới với dữ liệu cập nhật
+            f = Food(id, newName, newPrice);
+            saveFoods();
+            return true;
+        }
+    }
+    return false;
+}
+
+bool FoodDAL::deleteFood(std::string id) {
+    auto it = std::remove_if(listFood.begin(), listFood.end(), [&](const Food &f){
+        return f.getId() == id;
+    });
+    if (it != listFood.end()) {
+        listFood.erase(it, listFood.end());
+        saveFoods();
+        return true;
+    }
+    return false;
 }
