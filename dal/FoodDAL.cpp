@@ -37,7 +37,7 @@ void FoodDAL::saveFoods() {
 
 void FoodDAL::addFood(const Food& food) {
     listFood.push_back(food);
-    saveFoods();
+    this->saveFoods();
 }
 
 std::vector<Food> FoodDAL::getList() const { 

@@ -15,7 +15,7 @@ private:
     std::string filePath;
 
 public:
-    explicit ShowtimeDAL(std::string filePath = "Showtime.txt");
+    explicit ShowtimeDAL(std::string filePath = "../data/Showtime.txt");
 
     std::vector<Showtime> loadShowtimes();
     void saveShowtimes(const std::vector<Showtime>& showtimes);

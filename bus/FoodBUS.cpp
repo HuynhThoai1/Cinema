@@ -5,6 +5,7 @@ FoodBUS::FoodBUS() {
 }
 
 std::vector<Food> FoodBUS::getAll() {
+    foodDal.loadFoods();
     return foodDal.getList();
 }
 

@@ -55,7 +55,11 @@ vector<SeatDisplay> SeatBUS::getSeatsByShowtime(string showtimeId, string roomId
     }
     return displayList;
 }
-
+// Chỉ gọi seatDal() mặc định, vì bên trong SeatDAL nó đã tự lo đường dẫn rồi
+SeatBUS::SeatBUS() : seatDal() { 
+    // Load ghế nếu cần
+    // ...
+}
 bool SeatBUS::checkAvailable(string showtimeId, string roomId, string seatId) {
     string row, num;
     parseSeatId(seatId, row, num);

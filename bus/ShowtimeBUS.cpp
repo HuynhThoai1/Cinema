@@ -29,16 +29,16 @@ static bool looksLikeDateTime(const std::string& s) {
 }
 
 ShowtimeBUS::ShowtimeBUS(ShowtimeDAL showtimeDal, MovieDAL movieDal)
-    : showtimeDal(std::move(showtimeDal)), movieDal(std::move(movieDal)) {}
+    : showtimeDal(std::move(showtimeDal)), movieDal(std::move(movieDal)) {
+        _showtimes = this->showtimeDal.loadShowtimes();
+    }
 
 std::vector<Showtime> ShowtimeBUS::getByMovie(const std::string& movieId) {
     if (isBlank(movieId)) return {};
 
-    auto showtimes = showtimeDal.loadShowtimes();
     std::vector<Showtime> filtered;
-    filtered.reserve(showtimes.size());
-
-    for (const auto& s : showtimes) {
+    // Duyệt trên cache bộ nhớ
+    for (const auto& s : _showtimes) {
         if (s.getMovieId() == movieId && !s.getId().empty()) {
             filtered.push_back(s);
         }
@@ -67,37 +67,62 @@ bool ShowtimeBUS::addShowtime(const Showtime& showtime) {
     auto showtimes = showtimeDal.loadShowtimes();
 
     // Edge: trùng showtimeId
-    auto dupId = std::any_of(showtimes.begin(), showtimes.end(),
-                             [&](const Showtime& s) { return s.getId() == showtime.getId(); });
-    if (dupId) return false;
+    for (const auto& s : _showtimes) {
+        if (s.getId() == showtime.getId()) return false;
+    }
 
-    // Edge: trùng lịch phòng + giờ (đụng lịch)
-    auto clash = std::any_of(showtimes.begin(), showtimes.end(),
-                             [&](const Showtime& s) {
-                                 return s.getRoom() == showtime.getRoom() &&
-                                        s.getStartTime() == showtime.getStartTime();
-                             });
-    if (clash) return false;
+    // Edge: trùng phòng + thời gian (đụng lịch)
+    for (const auto& s : _showtimes) {
+        if (s.getRoom() == showtime.getRoom() && s.getStartTime() == showtime.getStartTime()) {
+            return false; // Đụng lịch
+        }
+    }
 
-    showtimes.push_back(showtime);
-    showtimeDal.saveShowtimes(showtimes);
+    //  lưu vào danh sách tạm thời
+    _showtimes.push_back(showtime);
+
+    // Lưu xuống file
+    showtimeDal.saveShowtimes(_showtimes);
     return true;
 }
-
 bool ShowtimeBUS::deleteShowtime(const std::string& id) {
     if (isBlank(id)) return false;
 
-    auto showtimes = showtimeDal.loadShowtimes();
-    auto before = showtimes.size();
-
-    showtimes.erase(
-        std::remove_if(showtimes.begin(), showtimes.end(),
+    size_t initialSize = _showtimes.size();
+    _showtimes.erase(
+        std::remove_if(_showtimes.begin(), _showtimes.end(),
                        [&](const Showtime& s) { return s.getId() == id; }),
-        showtimes.end()
+        _showtimes.end()
     );
 
-    if (showtimes.size() == before) return false;
+    // Nếu kích thước không đổi nghĩa là không tìm thấy ID để xóa
+    if (_showtimes.size() == initialSize) return false;
 
-    showtimeDal.saveShowtimes(showtimes);
+    // Lưu xuống file
+    showtimeDal.saveShowtimes(_showtimes);
     return true;
 }
+void ShowtimeBUS::load(const string& filename) {
+    // 1. Tạo đối tượng DAL với filename
+    ShowtimeDAL dal(filename); 
+    
+    // 2. Gọi hàm load 
+    _showtimes = dal.loadShowtimes();
+}
+
+void ShowtimeBUS::save(const string& filename) const {
+    // 1. Tạo đối tượng DAL với filename
+    ShowtimeDAL dal(filename);
+    
+    // 2. Gọi hàm save (truyền danh sách _showtimes vào để lưu)
+    dal.saveShowtimes(_showtimes);
+}
+Showtime* ShowtimeBUS::findById(const string& id) {
+    for (size_t i = 0; i < _showtimes.size(); ++i) {
+        if (_showtimes[i].getId() == id) {
+            return &_showtimes[i];
+        }
+    }
+    return nullptr;
+}
+

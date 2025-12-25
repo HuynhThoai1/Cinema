@@ -41,7 +41,7 @@ private:
     const int SEATS_PER_ROW = 10;               ///< Số lượng ghế tối đa trên mỗi hàng.
 
 public:
-    // [CẬP NHẬT] Thêm showtimeId vào tất cả các hàm
+    SeatBUS();
     
     /**
      * @brief Lấy danh sách toàn bộ ghế của một suất chiếu cụ thể.

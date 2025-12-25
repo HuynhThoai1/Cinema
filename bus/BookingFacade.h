@@ -14,6 +14,7 @@
 
 #include <string>
 #include <iostream>
+#include <optional>
 
 // Include các BUS thành phần (Subsystems)
 #include "TicketBUS.h"
