@@ -9,6 +9,8 @@
 
 #include "MovieUI.h"
 
+#include "../utils/FormatUI.h"
+
 #include <iostream>
 #include <string>
 #include <limits>
@@ -60,10 +62,10 @@ void MovieUI::showAll() {
 
     cout << "===== DANH SACH PHIM =====\n";
     for (const auto& m : movies) {
-        cout << "ID: " << m.getId()
+        cout << CYAN << "ID: " << m.getId()
              << " | Ten: " << m.getTitle()
              << " | The loai: " << m.getGenre()
-             << " | Thoi luong: " << m.getDuration() << " phut\n";
+             << " | Thoi luong: " << m.getDuration() << " phut"<< RESET <<"\n";
     }
 }
 
@@ -101,12 +103,13 @@ void MovieUI::deleteMovie() {
 
 void MovieUI::run() {
     while (true) {
-        cout << "\n===== MOVIE MENU =====\n";
-        cout << "1. Xem danh sach phim\n";
-        cout << "2. Them phim\n";
-        cout << "3. Cap nhat phim\n";
-        cout << "4. Xoa phim\n";
-        cout << "0. Thoat\n";
+        clearScreen();
+        printHeader("MOVIE MENU");
+        cout << CYAN << "1. Xem danh sach phim" << RESET << "\n";
+        cout << CYAN << "2. Them phim" << RESET << "\n";
+        cout << CYAN << "3. Cap nhat phim" << RESET << "\n";
+        cout << CYAN << "4. Xoa phim" << RESET << "\n";
+        cout << CYAN << "0. Thoat" << RESET << "\n";
         cout << "Chon: ";
 
         int choice;
@@ -126,5 +129,6 @@ void MovieUI::run() {
             case 0: return;
             default: cout << "-> Lua chon khong hop le.\n"; break;
         }
+        cout << "(An Enter de tiep tuc...)"; cin.ignore(); cin.get();
     }
 }

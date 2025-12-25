@@ -1,6 +1,6 @@
 #include "AdminBUS.h"
 
-AdminBUS::AdminBUS() : DATA_FILE("../../data/Users.txt") {
+AdminBUS::AdminBUS() : DATA_FILE("../data/Users.txt") {
     this->loadUsers();
 }
 

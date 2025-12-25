@@ -4,16 +4,11 @@
 #include <cstdlib> // system("cls")
 #include <cctype>  // isalpha, isdigit, toupper
 #include <algorithm> // transform
+#include "../utils/FormatUI.h"
 
 using namespace std;
 
-// --- CẤU HÌNH MÀU SẮC ANSI ---
-#define RESET   "\033[0m"
-#define RED     "\033[31m"
-#define GREEN   "\033[32m"
-#define YELLOW  "\033[33m"
-#define BLUE    "\033[34m"
-#define CYAN    "\033[36m"
+// color macros and helpers are provided by utils/FormatUI.h
 
 // --- HÀM HỖ TRỢ KIỂM TRA ĐỊNH DẠNG (FIX LỖI NHẬP "ad") ---
 bool isValidSeatFormat(const string& s) {
@@ -27,27 +22,25 @@ bool isValidSeatFormat(const string& s) {
     return true;
 }
 
-TicketUI::TicketUI() {
-    // Load dữ liệu cần thiết
-    movieBus.load("../data/Movies.txt");
-    showtimeBus.load("../data/Showtime.txt");
+TicketUI::TicketUI() 
+{
+    // 1. movieBus tự gọi MovieBUS() -> tự gọi MovieDAL() -> tự lấy "data/Movies.txt"
+    // 2. showtimeBus tự gọi ShowtimeBUS() -> tự lấy "data/Showtime.txt"
+    // 3. seatBus của bạn đã tự lấy "data/Seats.txt" từ trước
+    // => KHÔNG CẦN VIẾT GÌ CẢ!
     
-    // Giả định người dùng đăng nhập
-    currentUserId = "Guest_01"; 
+    currentUserId = "";
 }
-
+// [THÊM MỚI]
+void TicketUI::setCurrentUser(string userId) {
+    this->currentUserId = userId;
+}
 void TicketUI::clearScreen() {
-    #ifdef _WIN32
-        system("cls");
-    #else
-        system("clear");
-    #endif
+    ::clearScreen();
 }
 
 void TicketUI::printHeader(string title) {
-    cout << "\n" << BLUE << "==========================================" << RESET << endl;
-    cout << "   " << YELLOW << title << RESET << endl;
-    cout << BLUE << "==========================================" << RESET << endl;
+    ::printHeader(title);
 }
 
 void TicketUI::drawSeatMap(string showtimeId, string roomId) {
@@ -109,7 +102,7 @@ void TicketUI::processBookingWorkflow() {
     if (movieId == "0") return;
 
     // 2. CHỌN SUẤT CHIẾU
-    vector<Showtime> shows = showtimeBus.getByMovieId(movieId); 
+    vector<Showtime> shows = showtimeBus.getByMovie(movieId); 
     if (shows.empty()) {
         cout << RED << "(!) Phim nay hien chua co suat chieu nao." << RESET << endl;
         cout << "(An Enter de quay lai...)"; cin.ignore(); cin.get();

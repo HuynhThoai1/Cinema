@@ -57,7 +57,7 @@ public:
      * @details Chứa vòng lặp vô hạn hiển thị Menu chính cho đến khi người dùng chọn Thoát.
      */
     void run();
-
+    void setCurrentUser(string userId);
 private:
     // --- CÁC MÀN HÌNH CHỨC NĂNG ---
     
@@ -92,17 +92,11 @@ private:
      */
     void drawSeatMap(string showtimeId, string roomId);
     
-    /**
-     * @brief Xóa toàn bộ nội dung hiển thị trên màn hình console.
-     * @note Hỗ trợ đa nền tảng (Windows dùng "cls", Linux/Mac dùng "clear").
-     */
+    // --- HÀM HỖ TRỢ HIỂN THỊ (HELPER) ---
     void clearScreen();
-    
-    /**
-     * @brief In tiêu đề trang trí cho các mục menu.
-     * * @param title Chuỗi ký tự tiêu đề cần hiển thị.
-     */
     void printHeader(string title);
+
+ 
 };
 
 #endif // TICKET_UI_H

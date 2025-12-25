@@ -13,3 +13,9 @@ TKT17660755452 | S002 | Avengers: Endgame | Room 1 | A2 | Guest_01 | 40000 | 22:
 TKT17661330381 | S002 | Avengers: Endgame | Room 1 | B1 | Guest_01 | 50000 | 22:00 | 2025-12-05
 TKT17661330382 | S002 | Avengers: Endgame | Room 1 | B2 | Guest_01 | 25000 | 22:00 | 2025-12-05
 TKT17662895021 | S001 | Avengers: Endgame | Room 1 | E1 | Guest_01 | 80000 | 19:30 | 2025-12-30
+TKT17665939121 | S001 | Avengers: Endgame | Room 1 | E3 | Guest_01 | 80000 | 19:30 | 2025-12-30
+TKT17665974901 | S001 | Avengers: Endgame | Room 1 | E2 | U10 | 80000 | 19:30 | 2025-12-30
+TKT17666368631 | S001 | Avengers: Endgame | Room 1 | A2 | U10 | 25000 | 19:30 | 2025-12-30
+TKT17666424221 | S001 | Avengers: Endgame | Room 1 | C3 | U10 | 25000 | 19:30 | 2025-12-30
+TKT17666424852 | S001 | Avengers: Endgame | Room 1 | A3 | U10 | 50000 | 19:30 | 2025-12-30
+TKT17666426324 | S001 | Avengers: Endgame | Room 1 | A4 | U10 | 50000 | 19:30 | 2025-12-30

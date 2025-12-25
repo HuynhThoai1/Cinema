@@ -1,7 +1,7 @@
 #include "UserBUS.h"
 #include "../utils/Validation.h" 
 
-UserBUS::UserBUS() : DATA_FILE("../../data/Users.txt") {
+UserBUS::UserBUS() : DATA_FILE("../data/Users.txt") {
     this->currentUser = nullptr;
     this->loadData();
 }

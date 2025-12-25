@@ -37,10 +37,11 @@ bool BookingFacade::processBooking(string userId, string showtimeId, vector<stri
 
     // Lấy tên phim
     string movieId = showtimePtr->getMovieId();
-    Movie* moviePtr = movieBus.findById(movieId);
-    if (moviePtr != nullptr) {
-        movieTitle = moviePtr->getTitle();
+    std::optional<Movie> optMovie = movieBus.findById(movieId);
+    if (optMovie.has_value()) {
+        movieTitle = optMovie->getTitle();
     }
+
 
     cout << " -> B1: Xac nhan: " << movieTitle 
          << " | Thoi gian: " << fullStartTime 

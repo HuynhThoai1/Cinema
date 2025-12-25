@@ -7,3 +7,5 @@ U05|khach_hang_B|password_yeu|Customer
 U06|ke_xau_xa|123456|Locked
 U07|admin_du_phong|admin123|Admin
 U08|khach_vip|vip123|Customer
+U10|hoangvu|123456|Customer
+U11|thoai123|thoai123|Customer

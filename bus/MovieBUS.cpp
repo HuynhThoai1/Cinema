@@ -20,10 +20,12 @@ static bool isBlank(const std::string& s) {
 }
 
 MovieBUS::MovieBUS(MovieDAL movieDal, ShowtimeDAL showtimeDal)
-    : movieDal(std::move(movieDal)), showtimeDal(std::move(showtimeDal)) {}
+    : movieDal(std::move(movieDal)), showtimeDal(std::move(showtimeDal)) {
+        _movies = this->movieDal.loadMovies();
+    }
 
 std::vector<Movie> MovieBUS::getAll() {
-    auto movies = movieDal.loadMovies();
+    auto movies = _movies;
 
     // Edge: loại bỏ record rác (id rỗng)
     movies.erase(
@@ -35,60 +37,87 @@ std::vector<Movie> MovieBUS::getAll() {
 }
 
 bool MovieBUS::addMovie(const Movie& movie) {
-    // Validate dữ liệu cơ bản
     if (isBlank(movie.getId()) || isBlank(movie.getTitle()) || isBlank(movie.getGenre())) return false;
     if (movie.getDuration() <= 0 || movie.getDuration() > 500) return false;
 
-    auto movies = movieDal.loadMovies();
+    for (const auto& m : _movies) {
+        if (m.getId() == movie.getId()) return false;
+    }
 
-    // Edge: trùng ID
-    auto it = std::find_if(movies.begin(), movies.end(),
-                           [&](const Movie& m) { return m.getId() == movie.getId(); });
-    if (it != movies.end()) return false;
-
-    movies.push_back(movie);
-    movieDal.saveMovies(movies);
+    _movies.push_back(movie);
+    movieDal.saveMovies(_movies);
     return true;
 }
 
 bool MovieBUS::updateMovie(const Movie& movie) {
-    // Validate dữ liệu cơ bản
     if (isBlank(movie.getId()) || isBlank(movie.getTitle()) || isBlank(movie.getGenre())) return false;
     if (movie.getDuration() <= 0 || movie.getDuration() > 500) return false;
 
-    auto movies = movieDal.loadMovies();
+    bool found = false;
+    for (auto& m : _movies) {
+        if (m.getId() == movie.getId()) {
+            m = movie; 
+            found = true;
+            break;
+        }
+    }
 
-    // Edge: phải tồn tại mới update được
-    auto it = std::find_if(movies.begin(), movies.end(),
-                           [&](const Movie& m) { return m.getId() == movie.getId(); });
-    if (it == movies.end()) return false;
+    if (!found) return false;
 
-    *it = movie;
-    movieDal.saveMovies(movies);
+    movieDal.saveMovies(_movies);
     return true;
 }
 
 bool MovieBUS::deleteMovie(const std::string& id) {
     if (isBlank(id)) return false;
 
-    // Edge: Không cho xóa Movie nếu còn Showtime thuộc Movie đó
     auto showtimes = showtimeDal.loadShowtimes();
     auto hasShowtime = std::any_of(showtimes.begin(), showtimes.end(),
                                    [&](const Showtime& s) { return s.getMovieId() == id; });
     if (hasShowtime) return false;
 
-    auto movies = movieDal.loadMovies();
-    auto before = movies.size();
+    size_t initialSize = _movies.size();
 
-    movies.erase(
-        std::remove_if(movies.begin(), movies.end(),
+    _movies.erase(
+        std::remove_if(_movies.begin(), _movies.end(),
                        [&](const Movie& m) { return m.getId() == id; }),
-        movies.end()
+        _movies.end()
     );
 
-    // Edge: không tìm thấy ID
-    if (movies.size() == before) return false;
+    if (_movies.size() == initialSize) return false;
 
-    movieDal.saveMovies(movies);
+    movieDal.saveMovies(_movies);
     return true;
+}
+void MovieBUS::load(const string& filename) {
+    // 1. Tạo đối tượng DAL tạm thời với filename mới
+    MovieDAL tempDal(filename);
+    
+    // 2. Gọi hàm load từ đối tượng tạm này
+    _movies = tempDal.loadMovies();
+}
+
+void MovieBUS::save(const string& filename) const {
+    // 1. Tạo đối tượng DAL tạm thời với filename mới
+    MovieDAL tempDal(filename);
+    
+    // 2. Gọi hàm save từ đối tượng tạm này
+    tempDal.saveMovies(_movies);
+}
+
+optional<Movie> MovieBUS::findById(const string& id){
+    for (const auto& m : _movies)
+        if (m.getId() == id) return m;
+    return std::nullopt;
+}
+
+
+vector<Movie> MovieBUS::findByTitle(const string& namePart) const {
+    vector<Movie> result;
+    for (size_t i = 0; i < _movies.size(); i++) {
+        if (_movies[i].getTitle().find(namePart) != string::npos) {
+            result.push_back(_movies[i]);
+        }
+    }
+    return result;
 }
