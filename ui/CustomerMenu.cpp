@@ -1,37 +1,56 @@
 #include "CustomerMenu.h"
 #include "../utils/InputUtils.h"
+#include "../utils/FormatUI.h"
 #include "TicketUI.h"
+#include "FoodUI.h"
+#include <iostream>
 
 using namespace std;
 
 CustomerMenu::CustomerMenu() {
     // Do nothing
 }
-
+void CustomerMenu::setCurrentUser(User* user) {
+    this->currentUser = user;
+}
 void CustomerMenu::show() {
     TicketUI ticketUI;
-
+    MovieUI movieUI;
+    FoodUI foodUI;
     int choice;
     while (true) {
-        cout << "\n--- KHÁCH HÀNG ---\n";
-        cout << "1. Xem danh sách phim\n";
-        cout << "2. Đặt vé\n";
-        cout << "0. Đăng xuất\n";
-        choice = InputUtils::readInt("Nhập lựa chọn: ");
+        clearScreen();
+        printHeader("KHACH HANG");
 
+        cout << CYAN << "1. Xem danh sach phim" << RESET << "\n";
+        cout << CYAN << "2. Dat ve" << RESET << "\n";
+        cout << CYAN << "3. Mua do an va do uong" << RESET << "\n";
+        cout << CYAN << "0. Dang xuat" << RESET << "\n";
+
+        choice = InputUtils::readInt("Nhap lua chon: ");
 
         if (choice == 0) break;
 
         switch (choice) {
             case 1:
-                // TODO: tích hợp với MovieBUS
-                cout << ">> MovieBUS::getAll()... (Chưa tích hợp)\n";
+                movieUI.showAll();
                 break;
             case 2:
+                if (currentUser != nullptr) {
+                    ticketUI.setCurrentUser(currentUser->getId());
+                } else {
+                    cout << RED << "Loi: Khong xac dinh duoc nguoi dung!" << RESET << "\n";
+                    break;
+                }
                 ticketUI.run();
                 break;
+            case 3:
+                // TODO: tích hợp với FoodBUS cho customer
+                foodUI.process();
+                break;
             default:
-                cout << ">> Sai lựa chọn!\n";
+                cout << YELLOW << ">> Sai lua chon!" << RESET << "\n";
         }
+        cout << "(An Enter de tiep tuc...)"; cin.ignore(); cin.get();
     }
 }
