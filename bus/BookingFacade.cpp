@@ -135,6 +135,15 @@ bool BookingFacade::processBooking(string userId, string showtimeId, vector<stri
         cout << " -> HOAN TAT: Da dat " << successCount << "/" << seatList.size() << " ve." << "\n";
         // [SỬA] In ra label đúng nghĩa
         cout << " -> TONG THANH TOAN: " << totalPrice << " VND" << "\n";
+        
+        // [MỚI] GHI NHẬN DOANH THU TỰ ĐỘNG
+        if (totalPrice > 0) {
+            string movieId = showtimePtr->getMovieId();
+            string info = "User: " + userId + ", Showtime: " + showtimeId + ", Seats: " + to_string(successCount);
+            revenueBus.recordRevenue("TICKET", movieId, (int)totalPrice, info);
+            cout << " -> [DOANH THU] Da ghi nhan " << totalPrice << " VND tu ban ve." << "\n";
+        }
+        
         return true;
     } else {
         cout << " -> THAT BAI: Khong dat duoc ve nao." << "\n";

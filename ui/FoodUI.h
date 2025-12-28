@@ -6,7 +6,8 @@
 #ifndef FOOD_UI_H
 #define FOOD_UI_H
 
-#include "../bus/FoodBUS.h" 
+#include "../bus/FoodBUS.h"
+#include "../bus/RevenueBUS.h"  // [MỚI] Để ghi nhận doanh thu tự động 
 
 /**
  * @class FoodUI
@@ -14,7 +15,8 @@
  */
 class FoodUI {
 private:
-    FoodBUS foodBus; ///< Đối tượng nghiệp vụ
+    FoodBUS foodBus;       ///< Đối tượng nghiệp vụ
+    RevenueBUS revenueBus; ///< [MỚI] Để ghi nhận doanh thu
 
 public:
     /**

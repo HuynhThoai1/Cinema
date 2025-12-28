@@ -224,5 +224,19 @@ void FoodUI::purchaseFood() {
     std::cout << std::right << std::setw(40) << "TỔNG CỘNG: " 
               << YELLOW << std::setw(10) << total << RESET << " VND\n";
     std::cout << BLUE << std::string(50, '=') << RESET << "\n";
+    
+    // [MỚI] GHI NHẬN DOANH THU TỰ ĐỘNG
+    if (total > 0) {
+        // Tạo chuỗi thông tin chi tiết về các món đã mua
+        std::stringstream infoStream;
+        infoStream << "Items: ";
+        for(size_t i = 0; i < ids.size(); i++) {
+            if (i > 0) infoStream << ", ";
+            infoStream << ids[i] << "x" << quantities[i];
+        }
+        revenueBus.recordRevenue("FOOD", "FOOD_ORDER", total, infoStream.str());
+        std::cout << GREEN << "\n[DOANH THU] Đã ghi nhận " << total << " VND từ bán đồ ăn." << RESET << "\n";
+    }
+    
     std::cout << GREEN << "\n>> Cảm ơn quý khách! Chúc quý khách xem phim vui vẻ!" << RESET << "\n";
 }

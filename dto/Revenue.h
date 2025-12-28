@@ -18,10 +18,11 @@
 class Revenue {
 private:
     std::string id;             ///< Mã bản ghi doanh thu (Ví dụ: R01)
-    std::string date;           ///< Ngày ghi nhận (dd/mm/yyyy)
-    std::string movieId;        ///< Mã bộ phim
-    int ticketRevenue;          ///< Doanh thu từ bán vé
-    int foodRevenue;            ///< Doanh thu từ bán đồ ăn
+    std::string timestamp;      ///< Thời gian thực tế (dd/mm/yyyy HH:MM:SS)
+    std::string revenueType;    ///< Loại doanh thu: TICKET hoặc FOOD
+    std::string relatedId;      ///< Mã liên quan (Mã phim nếu TICKET, Mã món ăn nếu FOOD)
+    int amount;                 ///< Số tiền doanh thu
+    std::string additionalInfo; ///< Thông tin bổ sung (tùy chọn)
 
 public:
     /**
@@ -32,35 +33,39 @@ public:
     /**
      * @brief Constructor đầy đủ tham số.
      * @param id Mã bản ghi.
-     * @param date Ngày tháng.
-     * @param movieId Mã phim.
-     * @param tRev Tiền vé.
-     * @param fRev Tiền đồ ăn.
+     * @param timestamp Thời gian thực (dd/mm/yyyy HH:MM:SS).
+     * @param type Loại doanh thu (TICKET/FOOD).
+     * @param relatedId Mã liên quan.
+     * @param amount Số tiền.
+     * @param info Thông tin bổ sung (mặc định rỗng).
      */
-    Revenue(std::string id, std::string date, std::string movieId, int tRev, int fRev);
+    Revenue(std::string id, std::string timestamp, std::string type, std::string relatedId, int amount, std::string info = "");
 
     // --- Các phương thức Getter ---
     
     /** @brief Lấy ID bản ghi. */
     std::string getId() const;
     
-    /** @brief Lấy ngày ghi nhận. */
-    std::string getDate() const;
+    /** @brief Lấy timestamp. */
+    std::string getTimestamp() const;
     
-    /** @brief Lấy mã phim. */
-    std::string getMovieId() const;
+    /** @brief Lấy loại doanh thu (TICKET/FOOD). */
+    std::string getRevenueType() const;
     
-    /** @brief Lấy doanh thu vé. */
-    int getTicketRevenue() const;
+    /** @brief Lấy mã liên quan. */
+    std::string getRelatedId() const;
     
-    /** @brief Lấy doanh thu đồ ăn. */
-    int getFoodRevenue() const;
+    /** @brief Lấy số tiền doanh thu. */
+    int getAmount() const;
+    
+    /** @brief Lấy thông tin bổ sung. */
+    std::string getAdditionalInfo() const;
 
     /**
-     * @brief Tính tổng doanh thu.
-     * @return int Tổng của tiền vé và tiền đồ ăn.
+     * @brief Lấy ngày từ timestamp (dd/mm/yyyy).
+     * @return std::string Ngày.
      */
-    int getTotalRevenue() const;
+    std::string getDateOnly() const;
 
     /**
      * @brief Hiển thị chi tiết bản ghi ra màn hình.

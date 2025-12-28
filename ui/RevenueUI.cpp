@@ -30,12 +30,20 @@ void RevenueUI::inputRevenue() {
 void RevenueUI::showAllRevenue() {
     std::vector<Revenue> list = revBus.getAll();
     std::cout << "--------------------------------------------------------\n";
-    std::cout << std::left << std::setw(8) << "ID" << std::setw(12) << "NGÀY" << std::setw(8) << "PHIM" 
-              << std::setw(10) << "VÉ" << std::setw(10) << "ĐỒ ĂN" << "TỔNG\n";
+    std::cout << std::left << std::setw(6) << "ID" << std::setw(25) << "THỜI GIAN" 
+              << std::setw(8) << "LOẠI" << std::setw(15) << "MÃ" << "SỐ TIỀN\n";
+    std::cout << "--------------------------------------------------------\n";
+    
+    int totalRevenue = 0;
     for(auto& r : list) {
-        std::cout << std::left << std::setw(8) << r.getId() << std::setw(12) << r.getDate() 
-                  << std::setw(8) << r.getMovieId() << std::setw(10) << r.getTicketRevenue() 
-                  << std::setw(10) << r.getFoodRevenue() << r.getTotalRevenue() << std::endl;
+        std::cout << std::left << std::setw(6) << r.getId() 
+                  << std::setw(25) << r.getTimestamp() 
+                  << std::setw(8) << r.getRevenueType() 
+                  << std::setw(15) << r.getRelatedId()
+                  << r.getAmount() << " VND\n";
+        totalRevenue += r.getAmount();
     }
+    std::cout << "--------------------------------------------------------\n";
+    std::cout << "TỔNG DOANH THU: " << totalRevenue << " VND\n";
     std::cout << "--------------------------------------------------------\n";
 }
