@@ -21,6 +21,7 @@
 #include "SeatBUS.h"
 #include "ShowtimeBUS.h"
 #include "MovieBUS.h"
+#include "RevenueBUS.h"  // [MỚI] Để ghi nhận doanh thu tự động
 
 using std::string;
 
@@ -40,6 +41,7 @@ private:
     SeatBUS seatBus;            ///< Xử lý trạng thái ghế (Check/Book).
     ShowtimeBUS showtimeBus;    ///< Xử lý thông tin suất chiếu (để lấy giờ, ngày, giá).
     MovieBUS movieBus;          ///< Xử lý thông tin phim (để lấy tên phim).
+    RevenueBUS revenueBus;      ///< [MỚI] Xử lý ghi nhận doanh thu tự động.
 /**
      * @brief Hàm phụ trợ: Tính giá vé dựa trên hàng ghế.
      * Logic này được chuyển từ Class Seat cũ sang đây.

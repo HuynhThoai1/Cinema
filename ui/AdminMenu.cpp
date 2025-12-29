@@ -135,7 +135,6 @@ void AdminMenu::show() {
             revenueUI.process();
             break;
         case 5:
-            // TODO: Tích hợp FoodUI cho Admin
             foodUI.adminMenu();
             break;
         default:

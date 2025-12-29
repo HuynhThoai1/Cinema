@@ -9,6 +9,9 @@
 #include "../dal/RevenueDAL.h"
 #include <vector>
 #include <string>
+#include <ctime>     // Để lấy thời gian thực
+#include <sstream>
+#include <iomanip>
 
 /**
  * @class RevenueBUS
@@ -31,8 +34,18 @@ public:
      * @param movieId Mã phim.
      * @param ticketAmount Tiền vé.
      * @param foodAmount Tiền đồ ăn.
+     * @deprecated Phương thức cũ để tương thích ngược.
      */
     void addRevenueRecord(std::string date, std::string movieId, int ticketAmount, int foodAmount);
+
+    /**
+     * @brief Ghi nhận doanh thu tự động với timestamp hiện tại.
+     * @param type Loại doanh thu (TICKET hoặc FOOD).
+     * @param relatedId Mã liên quan (Mã phim nếu TICKET, Mã món ăn nếu FOOD).
+     * @param amount Số tiền.
+     * @param info Thông tin bổ sung (tùy chọn).
+     */
+    void recordRevenue(std::string type, std::string relatedId, int amount, std::string info = "");
 
     /**
      * @brief Lấy tất cả bản ghi doanh thu.
@@ -45,6 +58,13 @@ public:
      * @return std::vector<Revenue> Danh sách kết quả.
      */
     std::vector<Revenue> getByDate(std::string date);
+
+private:
+    /**
+     * @brief Lấy timestamp hiện tại theo định dạng dd/mm/yyyy HH:MM:SS.
+     * @return std::string Chuỗi thới gian.
+     */
+    std::string getCurrentTimestamp();
 };
 
 #endif

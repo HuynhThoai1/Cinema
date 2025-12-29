@@ -36,6 +36,10 @@ void CustomerMenu::show() {
                 movieUI.showAll();
                 break;
             case 2:
+                // TODO: Xem lịch chiếu phim
+                
+                break;
+            case 3:
                 if (currentUser != nullptr) {
                     ticketUI.setCurrentUser(currentUser->getId());
                 } else {
@@ -44,12 +48,7 @@ void CustomerMenu::show() {
                 }
                 ticketUI.run();
                 break;
-            case 3:
-                // TODO: Xem lịch chiếu phim
-
-                break;
             case 4:
-                // TODO: tích hợp với FoodBUS cho customer
                 foodUI.customerMenu();
                 break;
             default:
