@@ -1,6 +1,25 @@
-TK001 | Avatar 3 | R01 | A-1 | Tran Van A | 75.000 | 17:00 | 19/12/2025 
-TK002 | Avengers: Endgame | R01 | A-2 | Nguyen Van A | 75.000 | 16:00 | 05/12/2025 
-TK003 | Spider-Man: No Way Home | R02 | C-5 | Tran Thi B, Le Van C | 160.000 | 18:00 | 09/12/2025 
-TK004 | Doraemon: Nobita's Sky Utopia | R01 | B-1 | Le Van C | 60.000 | 19:00 | 12/12/2025 
-TK005 | Mission: Impossible - Dead Reckoning | R03 | E-4 | Pham Van D | 90.000 | 20:15 | 14/12/2025 
-TK006 | Detective Conan: Black Iron Submarine | R02 | D-2 | Nguyen Thi E | 85.000 | 14:30 | 15/12/2025 
+TKT17660713381 | S001 | Avengers: Endgame | Room 1 | A1 | Guest_01 | 50000 | 19:30 | 2025-12-30
+TKT17660713382 | S001 | Avengers: Endgame | Room 1 | C5 | Guest_01 | 50000 | 19:30 | 2025-12-30
+TKT17660713383 | S001 | Avengers: Endgame | Room 1 | E10 | Guest_01 | 80000 | 19:30 | 2025-12-30
+TKT17660743661 | S001 | Avengers: Endgame | Room 1 | B1 | Guest_01 | 40000 | 19:30 | 2025-12-30
+TKT17660750541 | S001 | Avengers: Endgame | Room 1 | B2 | Guest_01 | 25000 | 19:30 | 2025-12-30
+TKT17660750922 | S001 | Avengers: Endgame | Room 1 | D1 | Guest_01 | 40000 | 19:30 | 2025-12-30
+TKT17660750923 | S001 | Avengers: Endgame | Room 1 | D2 | Guest_01 | 64000 | 19:30 | 2025-12-30
+TKT17660752741 | S001 | Avengers: Endgame | Room 1 | C1 | Guest_01 | 50000 | 19:30 | 2025-12-30
+TKT17660752742 | S001 | Avengers: Endgame | Room 1 | C9 | Guest_01 | 40000 | 19:30 | 2025-12-30
+TKT17660754121 | S001 | Avengers: Endgame | Room 1 | E6 | Guest_01 | 80000 | 19:30 | 2025-12-30
+TKT17660755451 | S002 | Avengers: Endgame | Room 1 | A1 | Guest_01 | 25000 | 22:00 | 2025-12-05
+TKT17660755452 | S002 | Avengers: Endgame | Room 1 | A2 | Guest_01 | 40000 | 22:00 | 2025-12-05
+TKT17661330381 | S002 | Avengers: Endgame | Room 1 | B1 | Guest_01 | 50000 | 22:00 | 2025-12-05
+TKT17661330382 | S002 | Avengers: Endgame | Room 1 | B2 | Guest_01 | 25000 | 22:00 | 2025-12-05
+TKT17662895021 | S001 | Avengers: Endgame | Room 1 | E1 | Guest_01 | 80000 | 19:30 | 2025-12-30
+TKT17665939121 | S001 | Avengers: Endgame | Room 1 | E3 | Guest_01 | 80000 | 19:30 | 2025-12-30
+TKT17665974901 | S001 | Avengers: Endgame | Room 1 | E2 | U10 | 80000 | 19:30 | 2025-12-30
+TKT17666368631 | S001 | Avengers: Endgame | Room 1 | A2 | U10 | 25000 | 19:30 | 2025-12-30
+TKT17666424221 | S001 | Avengers: Endgame | Room 1 | C3 | U10 | 25000 | 19:30 | 2025-12-30
+TKT17666424852 | S001 | Avengers: Endgame | Room 1 | A3 | U10 | 50000 | 19:30 | 2025-12-30
+TKT17666426324 | S001 | Avengers: Endgame | Room 1 | A4 | U10 | 50000 | 19:30 | 2025-12-30
+TKT17669317651 | S002 | Avengers: Endgame | Room 1 | C6 | U10 | 50000 | 22:00 | 2025-12-05
+TKT17669319322 | S001 | Avengers: Endgame | Room 1 | D6 | U10 | 80000 | 19:30 | 2025-12-30
+TKT17669326641 | S002 | Avengers: Endgame | Room 1 | D6 | U10 | 80000 | 22:00 | 2025-12-05
+TKT17669331821 | S002 | Avengers: Endgame | Room 1 | E10 | U10 | 80000 | 22:00 | 2025-12-05

@@ -1,45 +1,33 @@
 #include "Revenue.h"
-#include <iostream>
-#include <iomanip>
+#include <sstream>
 
-using namespace std;
+Revenue::Revenue() : id(""), timestamp(""), revenueType(""), relatedId(""), amount(0), additionalInfo("") {}
 
-// 1. Constructor mặc định
-Revenue::Revenue() {
-    this->id = "";
-    this->date = "";
-    this->movieId = "";
-    this->ticketRevenue = 0;
-    this->foodRevenue = 0;
+Revenue::Revenue(std::string id, std::string timestamp, std::string type, std::string relatedId, int amount, std::string info) 
+    : id(id), timestamp(timestamp), revenueType(type), relatedId(relatedId), amount(amount), additionalInfo(info) {}
+
+std::string Revenue::getId() const { return this->id; }
+std::string Revenue::getTimestamp() const { return this->timestamp; }
+std::string Revenue::getRevenueType() const { return this->revenueType; }
+std::string Revenue::getRelatedId() const { return this->relatedId; }
+int Revenue::getAmount() const { return this->amount; }
+std::string Revenue::getAdditionalInfo() const { return this->additionalInfo; }
+
+std::string Revenue::getDateOnly() const {
+    // Tách ngày từ timestamp (dd/mm/yyyy HH:MM:SS) -> lấy phần dd/mm/yyyy
+    if (timestamp.empty()) return "";
+    size_t spacePos = timestamp.find(' ');
+    if (spacePos != std::string::npos) {
+        return timestamp.substr(0, spacePos);
+    }
+    return timestamp;
 }
 
-// 2. Constructor đầy đủ tham số
-Revenue::Revenue(string id, string date, string movieId, int tRev, int fRev) 
-    : id(id), date(date), movieId(movieId), ticketRevenue(tRev), foodRevenue(fRev) {
-}
-
-// 3. Các hàm Getter
-string Revenue::getDate() const {
-    return this->date;
-}
-
-string Revenue::getMovieId() const {
-    return this->movieId;
-}
-
-// 4. Tính tổng doanh thu
-// Logic: Tổng = Tiền vé + Tiền đồ ăn
-int Revenue::getTotalRevenue() const {
-    return this->ticketRevenue + this->foodRevenue;
-}
-
-// 5. Hiển thị chi tiết
 void Revenue::display() const {
-    // Định dạng cột: ID(10) | Date(15) | MovieID(10) | ...
-    cout << left << setw(10) << id 
-         << setw(15) << date 
-         << setw(10) << movieId 
-         << " Ticket: " << setw(10) << ticketRevenue
-         << " Food: " << setw(10) << foodRevenue
-         << " => Total: " << getTotalRevenue() << endl;
+    std::cout << std::left << std::setw(8) << id 
+              << std::setw(20) << timestamp 
+              << std::setw(8) << revenueType 
+              << std::setw(10) << relatedId
+              << std::setw(12) << amount
+              << additionalInfo << std::endl;
 }

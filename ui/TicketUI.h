@@ -1,63 +1,102 @@
 /**
  * @file TicketUI.h
- * @brief Định nghĩa giao diện hiển thị sơ đồ ghế (Presentation Layer).
- *
- * Class này chịu trách nhiệm vẽ trực quan trạng thái của phòng chiếu
- * dựa trên dữ liệu được truyền vào từ bên ngoài (thường là từ Controller hoặc Main).
- * @date 2023-10-27
+ * @brief Định nghĩa lớp giao diện người dùng (Console) cho hệ thống đặt vé xem phim.
+ * @author YourName
+ * @date 2025-12-18
  */
 
 #ifndef TICKET_UI_H
 #define TICKET_UI_H
 
-#include <iostream>
-#include <vector>
+#include "../bus/BookingFacade.h"
+#include "../bus/MovieBUS.h"
+#include "../bus/ShowtimeBUS.h"
+#include "../bus/SeatBUS.h"
 #include <string>
-#include <iomanip>
-#include "../dto/Seat.h" 
 
 using std::string;
-using std::vector;
 
 /**
  * @class TicketUI
- * @brief Lớp giao diện người dùng (UI) quản lý việc hiển thị đặt vé.
- *
- * Lớp này được thiết kế theo hướng "Stateless" (không lưu trạng thái dữ liệu),
- * chỉ nhận dữ liệu và hiển thị (Rendering).
+ * @brief Lớp giao diện Console tương tác trực tiếp với người dùng.
+ * * @details Lớp này đóng vai trò là Presentation Layer (Giao diện). Nhiệm vụ chính:
+ * - Hiển thị menu và các thông tin (Phim, Suất chiếu, Sơ đồ ghế).
+ * - Nhận input từ bàn phím.
+ * - Gọi xuống Business Logic Layer (thông qua Facade hoặc BUS) để xử lý.
  */
 class TicketUI {
 private:
-    /**
-     * @brief Số lượng ghế tối đa trên một hàng.
-     * Dùng để định dạng độ rộng khi in ra console hoặc xác định giới hạn vòng lặp vẽ ghế.
+    /** * @brief Đối tượng Facade để xử lý các nghiệp vụ phức tạp (như transaction đặt vé). 
      */
-    const int SEATS_PER_ROW = 30; 
+    BookingFacade bookingFacade;
+
+    /** @brief Service quản lý thông tin phim. */
+    MovieBUS movieBus;
+
+    /** @brief Service quản lý thông tin suất chiếu. */
+    ShowtimeBUS showtimeBus;
+
+    /** * @brief Service quản lý ghế ngồi. 
+     * @note Cần thiết để lấy dữ liệu vẽ sơ đồ (drawSeatMap) và kiểm tra trạng thái ghế.
+     */
+    SeatBUS seatBus; 
+
+    /** * @brief Mã người dùng hiện tại (Giả lập session đăng nhập). 
+     */
+    string currentUserId;
 
 public:
     /**
      * @brief Constructor mặc định.
+     * @details Khởi tạo các đối tượng BUS, load dữ liệu ban đầu và thiết lập user mặc định.
      */
-    TicketUI() {}
+    TicketUI();
 
     /**
-     * @brief Vẽ sơ đồ ghế của phòng chiếu ra màn hình console.
-     *
-     * Hàm này thực hiện các nhiệm vụ:
-     * 1. Nhận danh sách các hàng ghế (Seat*) đã được load từ BUS/DAL.
-     * 2. Duyệt qua từng hàng, kiểm tra loại ghế (VIP/Normal) để đổi màu hoặc ký hiệu.
-     * 3. Duyệt từng số ghế trong hàng, đối chiếu với danh sách đã đặt (`seatBooked`) 
-     * để hiển thị trạng thái (VD: [X] là đã đặt, [ ] là trống).
-     *
-     * @note **Design Pattern**: Áp dụng nguyên lý tách biệt (Separation of Concerns). 
-     * UI không tự gọi BUS để lấy dữ liệu mà đợi dữ liệu được truyền vào (Dependency Injection).
-     * Điều này giúp UI dễ dàng tái sử dụng cho nhiều phòng chiếu hoặc dữ liệu giả lập khác nhau.
-     *
-     * @param roomId Mã phòng chiếu đang hiển thị (để in tiêu đề).
-     * @param listRows Vector chứa các con trỏ `Seat*`. Nhờ tính đa hình, vector này
-     * có thể chứa cả `NormalSeat` và `VipSeat`.
+     * @brief Hàm chạy chính của chương trình.
+     * @details Chứa vòng lặp vô hạn hiển thị Menu chính cho đến khi người dùng chọn Thoát.
      */
-    void renderSeatMap(string roomId, const vector<Seat*>& listRows);
+    void run();
+    void setCurrentUser(string userId);
+private:
+    // --- CÁC MÀN HÌNH CHỨC NĂNG ---
+    
+    /**
+     * @brief Hiển thị danh sách tất cả các phim đang chiếu.
+     * @details Lấy dữ liệu từ MovieBUS và in ra màn hình dạng bảng.
+     */
+    void viewMovies();
+    
+    /**
+     * @brief Thực hiện quy trình đặt vé trọn gói.
+     * @details Bao gồm các bước tuần tự:
+     * 1. Hiển thị danh sách phim -> Người dùng chọn Phim.
+     * 2. Hiển thị các suất chiếu của phim đó -> Người dùng chọn Suất.
+     * 3. Hiển thị sơ đồ ghế -> Người dùng nhập các ghế muốn đặt.
+     * 4. Tính tiền và gọi BookingFacade để chốt đơn.
+     */
+    void processBookingWorkflow();
+    
+    /**
+     * @brief Thực hiện quy trình hủy vé.
+     * @details Yêu cầu người dùng nhập Mã vé, sau đó gọi Facade để hoàn tác (trả lại trạng thái ghế trống).
+     */
+    void processCancelWorkflow();
+
+    // --- HÀM HỖ TRỢ HIỂN THỊ (HELPER) ---
+    
+    /**
+     * @brief Vẽ trực quan sơ đồ ghế của phòng chiếu lên màn hình console.
+     * * @param showtimeId Mã suất chiếu (để xác định trạng thái ghế booked/available trong suất đó).
+     * @param roomId Mã phòng chiếu (để xác định cấu trúc hàng/cột của phòng).
+     */
+    void drawSeatMap(string showtimeId, string roomId);
+    
+    // --- HÀM HỖ TRỢ HIỂN THỊ (HELPER) ---
+    void clearScreen();
+    void printHeader(string title);
+
+ 
 };
 
 #endif // TICKET_UI_H

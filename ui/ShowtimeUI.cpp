@@ -4,15 +4,21 @@
  */
 
 #include "ShowtimeUI.h"
+#include "../utils/InputUtils.h"
+#include "../utils/FormatUI.h" // Import để dùng màu và clearScreen
 
 #include <iostream>
 #include <string>
 #include <limits>
+#include <iomanip> // Để dùng setw
 
 using std::cin;
 using std::cout;
 using std::string;
+using std::left;
+using std::setw;
 
+// --- Helper Functions Local ---
 static string trim(string s) {
     const char* ws = " \t\r\n";
     auto b = s.find_first_not_of(ws);
@@ -28,9 +34,10 @@ static string inputNonEmptyLine(const string& prompt) {
         std::getline(cin, s);
         s = trim(s);
         if (!s.empty()) return s;
-        cout << "-> Khong duoc de trong. Vui long nhap lai!\n";
+        cout << YELLOW << "-> Khong duoc de trong. Vui long nhap lai!\n" << RESET;
     }
 }
+// ------------------------------
 
 ShowtimeUI::ShowtimeUI(const std::string& showtimesPath, const std::string& moviesPath)
     : showtimeBUS(ShowtimeDAL(showtimesPath), MovieDAL(moviesPath)) {}
@@ -74,9 +81,31 @@ void ShowtimeUI::searchShowtimesByMovieId() {
     string movieId = inputNonEmptyLine("Nhap Movie ID: ");
 
     auto sts = showtimeBUS.getByMovie(movieId);
+    
+    cout << "\n";
     if (sts.empty()) {
-        cout << "-> Khong co suat chieu nao cho phim nay.\n";
-        return;
+        cout << YELLOW << ">> Khong co suat chieu nao cho phim nay.\n" << RESET;
+    } else {
+        cout << GREEN << ">> Tim thay " << sts.size() << " suat chieu:\n" << RESET;
+        
+        // Header bảng
+        cout << "---------------------------------------------------------\n";
+        cout << "| " << left << setw(10) << "ID"
+             << "| " << left << setw(10) << "MovieID"
+             << "| " << left << setw(20) << "Start Time"
+             << "| " << left << setw(10) << "Room"
+             << " |\n";
+        cout << "---------------------------------------------------------\n";
+
+        // Dữ liệu
+        for (const auto& s : sts) {
+            cout << "| " << left << setw(10) << s.getId()
+                 << "| " << left << setw(10) << s.getMovieId()
+                 << "| " << left << setw(20) << s.getStartTime()
+                 << "| " << left << setw(10) << s.getRoom()
+                 << " |\n";
+        }
+        cout << "---------------------------------------------------------\n";
     }
 
     for (const auto& s : sts) {
@@ -92,16 +121,23 @@ void ShowtimeUI::addShowtime() {
     string id = inputNonEmptyLine("Nhap Showtime ID: ");
     string movieId = inputNonEmptyLine("Nhap Movie ID: ");
     string startTime = inputNonEmptyLine("Nhap StartTime (yyyy-mm-dd HH:MM): ");
-    string room = inputNonEmptyLine("Nhap phong: ");
+    string room = inputNonEmptyLine("Nhap Phong chieu: ");
 
     // DTO Showtime ctor: (id, movieId, room, startTime)
     Showtime s(id, movieId, room, startTime);
 
     if (showtimeBUS.addShowtime(s)) {
-        cout << "-> Them suat chieu thanh cong!\n";
+        cout << GREEN << "\n>> Them suat chieu thanh cong!" << RESET << "\n";
     } else {
-        cout << "-> Them THAT BAI (movieId khong ton tai / trung lich / sai datetime / trung ID)!\n";
+        cout << RED << "\n>> Them THAT BAI!" << RESET << "\n";
+        cout << "   (Nguyen nhan: ID trung, MovieID khong ton tai, hoac loi Dinh dang/Trung lich)\n";
     }
+    
+    cout << "(An Enter de tiep tuc...)";
+    // Clean buffer logic
+    // cin.ignore() thường không cần thiết sau getline nếu không bị thừa ký tự, 
+    // nhưng cứ thêm để an toàn
+    // cin.get();
 }
 
 void ShowtimeUI::deleteShowtime() {

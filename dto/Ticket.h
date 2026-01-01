@@ -21,8 +21,9 @@ using std::string;
  * Chứa các thông tin chi tiết về giao dịch đặt vé như: phim, phòng, ghế, giá tiền, thời gian...
  */
 class Ticket {
-private:
+protected:
     string _ticketID;       ///< Mã định danh duy nhất của vé (VD: TKT1234).
+    string _showtimeID;   ///< Mã suất chiếu (VD: S001).
     string _movie;          ///< Tên phim.
     string _roomID;         ///< Mã phòng chiếu.
     string _seatID;         ///< Vị trí ghế (VD: A5).
@@ -36,6 +37,7 @@ public:
      * @brief Constructor khởi tạo đầy đủ thông tin cho vé.
      *
      * @param ticketID Mã vé (thường được sinh tự động từ Factory).
+     * @param showtimeID Mã suất chiếu.
      * @param movie Tên phim.
      * @param roomID Mã phòng.
      * @param seatID Mã ghế.
@@ -44,67 +46,85 @@ public:
      * @param showTime Giờ chiếu.
      * @param date Ngày chiếu.
      */
-    Ticket(string ticketID, string movie, string roomID, string seatID,
-           string customerName, string price, string showTime, string date) {
-        this->_ticketID = ticketID;
-        this->_movie = movie;
-        this->_roomID = roomID;
-        this->_seatID = seatID;
-        this->_customerName = customerName;
-        this->_price = price;
-        this->_showTime = showTime;
-        this->_date = date;
-    }
+    Ticket(string ticketID, string showtimeID, string movie, string roomID, string seatID,
+           string customerName, string price, string showTime, string date);
 
+    Ticket();
+    virtual ~Ticket() {}
+public:
     // --- Getters (Truy xuất thông tin) ---
 
     /**
      * @brief Lấy mã vé.
      * @return string ID vé.
      */
-    string getTicketID() const { return _ticketID; }
+    string getTicketID() const;
+
+    /**
+     * @brief Lấy mã suất chiếu.
+     * @return string Mã suất chiếu.
+     */
+    string getShowtimeID() const;
 
     /**
      * @brief Lấy tên phim.
      * @return string Tên phim.
      */
-    string getMovie() const { return _movie; }
+    string getMovie() const;
 
     /**
      * @brief Lấy mã phòng chiếu.
      * @return string Mã phòng.
      */
-    string getRoomID() const { return _roomID; }
+    string getRoomID() const;
 
     /**
      * @brief Lấy mã ghế.
      * @return string Mã ghế.
      */
-    string getSeatID() const { return _seatID; }
+    string getSeatID() const;
 
     /**
      * @brief Lấy tên khách hàng.
      * @return string Tên khách hàng.
      */
-    string getCustomerName() const { return _customerName; }
+    string getCustomerName() const;
 
     /**
      * @brief Lấy giá vé.
      * @return string Giá vé.
      */
-    string getPrice() const { return _price; }
+    string getPrice() const;
 
     /**
      * @brief Lấy giờ chiếu.
      * @return string Giờ chiếu.
      */
-    string getShowTime() const { return _showTime; }
+    string getShowTime() const;
 
     /**
      * @brief Lấy ngày chiếu.
      * @return string Ngày chiếu.
      */
-    string getDate() const { return _date; }
+    string getDate() const;
+
+    // --- Setters (Set thông tin) ---
+
+    void setTicketID(string ticketID);
+
+    void setMovie(string movie);
+
+    void setRoomID(string roomID);
+
+    void setSeatID(string seatID);
+
+    void setCustomerName(string customerName);
+
+    void setPrice(string price);
+
+    void setShowTime(string showTime);
+
+    void setDate(string date);
 };
 
 #endif // TICKET_H

@@ -6,7 +6,7 @@
       "type": "shell",
       "command": "g++",
       "args": [
-        "-std=c++20",
+        "-std=c++23",
         "ui/*.cpp",
         "dal/*.cpp",
         "dto/*.cpp",

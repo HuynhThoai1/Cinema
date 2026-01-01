@@ -1,52 +1,48 @@
 /**
- * @file Revenue_DAL.h
- * @brief Khai báo lớp RevenueDAL dùng để quản lý truy cập dữ liệu doanh thu.
- * @details File này cung cấp các phương thức để thao tác với danh sách doanh thu như đọc, ghi và lấy dữ liệu.
+ * @file RevenueDAL.h
+ * @brief Lớp truy cập dữ liệu cho Doanh thu.
  */
 
 #ifndef REVENUE_DAL_H
 #define REVENUE_DAL_H
 
 #include <vector>
+#include <string>
+#include <fstream>
+#include <sstream>
 #include "../dto/Revenue.h"
-
-// Sử dụng using std::vector thay vì using namespace std để tránh xung đột tên trong header
-using std::vector; 
 
 /**
  * @class RevenueDAL
- * @brief Lớp Data Access Layer (DAL) quản lý các thao tác dữ liệu cho đối tượng Revenue.
- * * Lớp này chịu trách nhiệm tương tác với nguồn dữ liệu (file/database) 
- * để thực hiện các nghiệp vụ liên quan đến doanh thu.
+ * @brief Quản lý việc Đọc/Ghi dữ liệu doanh thu từ file văn bản.
  */
 class RevenueDAL {
 private:
-    /**
-     * @brief Vector lưu trữ danh sách các đối tượng Revenue trong bộ nhớ.
-     */
-    vector<Revenue> listRevenue;
+    std::vector<Revenue> listRevenue; ///< Danh sách doanh thu trong RAM
+    const std::string FILE_NAME = "../data/Revenue.txt"; ///< Đường dẫn file
 
 public:
     /**
-     * @brief Tải dữ liệu doanh thu từ nguồn lưu trữ.
-     * * Hàm này đọc dữ liệu (thường là từ file text hoặc binary), 
-     * parse dữ liệu và lưu vào biến thành viên listRevenue.
+     * @brief Nạp dữ liệu doanh thu từ file text.
      */
     void loadRevenues();
 
     /**
-     * @brief Thêm một bản ghi doanh thu mới.
-     * * Hàm này sẽ thêm một đối tượng Revenue vào danh sách listRevenue
-     * và thường sẽ thực hiện ghi cập nhật xuống file lưu trữ.
-     * * @param rev Đối tượng Revenue cần thêm (truyền tham chiếu hằng `const &` để tránh copy dữ liệu, giúp tối ưu hiệu năng).
+     * @brief Ghi đè danh sách doanh thu hiện tại xuống file.
+     */
+    void saveRevenues();
+
+    /**
+     * @brief Thêm bản ghi doanh thu mới.
+     * @param rev Đối tượng doanh thu cần lưu.
      */
     void addRevenue(const Revenue& rev);
 
     /**
-     * @brief Lấy danh sách toàn bộ doanh thu.
-     * * @return vector<Revenue> Bản sao danh sách các đối tượng Revenue hiện có.
+     * @brief Lấy toàn bộ danh sách doanh thu.
+     * @return std::vector<Revenue> Vector chứa các bản ghi.
      */
-    vector<Revenue> getList() const;
+    std::vector<Revenue> getList() const;
 };
 
 #endif

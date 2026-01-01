@@ -21,10 +21,6 @@ private:
     /** @brief Đối tượng nghiệp vụ quản lý phim. */
     MovieBUS movieBUS;
 
-    /**
-     * @brief Hiển thị danh sách phim hiện có.
-     */
-    void showAll();
 
     /**
      * @brief Nhập thông tin và gọi BUS để thêm phim mới.
@@ -42,6 +38,11 @@ private:
     void deleteMovie();
 
 public:
+    /**
+     * @brief Hiển thị danh sách phim hiện có.
+     */
+    void showAll();
+
     /**
      * @brief Chạy menu quản lý phim.
      */

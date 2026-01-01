@@ -1,8 +1,6 @@
 /**
  * @file Revenue.h
- * @brief Khai báo lớp Revenue (DTO) đại diện cho thông tin doanh thu.
- * @details File này định nghĩa cấu trúc dữ liệu doanh thu bao gồm tiền vé và tiền đồ ăn
- * theo từng suất chiếu hoặc ngày (tùy nghiệp vụ), cùng các phương thức tính toán tổng.
+ * @brief Định nghĩa lớp đối tượng Doanh thu (Data Transfer Object).
  */
 
 #ifndef REVENUE_H
@@ -12,71 +10,65 @@
 #include <iostream>
 #include <iomanip>
 
-using std::string;
-
 /**
  * @class Revenue
- * @brief Lớp đại diện cho một bản ghi doanh thu.
- * * Lớp này lưu trữ thông tin về doanh thu bán vé và bán đồ ăn
- * gắn liền với một bộ phim và ngày cụ thể.
+ * @brief Lớp lưu trữ thông tin về một bản ghi doanh thu.
+ * @details Bao gồm doanh thu từ vé và đồ ăn của một bộ phim trong một ngày cụ thể.
  */
 class Revenue {
 private:
-    /** @brief Mã định danh của bản ghi doanh thu. */
-    string id;
-
-    /** @brief Ngày ghi nhận doanh thu (định dạng chuỗi, ví dụ: DD/MM/YYYY). */
-    string date;
-
-    /** @brief Mã của bộ phim liên quan đến doanh thu này. */
-    string movieId;
-
-    /** @brief Doanh thu từ bán vé (đơn vị tiền tệ). */
-    int ticketRevenue;
-
-    /** @brief Doanh thu từ bán đồ ăn/nước uống (đơn vị tiền tệ). */
-    int foodRevenue;
+    std::string id;             ///< Mã bản ghi doanh thu (Ví dụ: R01)
+    std::string timestamp;      ///< Thời gian thực tế (dd/mm/yyyy HH:MM:SS)
+    std::string revenueType;    ///< Loại doanh thu: TICKET hoặc FOOD
+    std::string relatedId;      ///< Mã liên quan (Mã phim nếu TICKET, Mã món ăn nếu FOOD)
+    int amount;                 ///< Số tiền doanh thu
+    std::string additionalInfo; ///< Thông tin bổ sung (tùy chọn)
 
 public:
     /**
      * @brief Constructor mặc định.
-     * * Khởi tạo đối tượng Revenue với các giá trị rỗng hoặc bằng 0.
      */
     Revenue();
 
     /**
      * @brief Constructor đầy đủ tham số.
-     * * @param id Mã bản ghi.
-     * @param date Ngày tháng.
-     * @param movieId Mã bộ phim.
-     * @param tRev Doanh thu vé (Ticket Revenue).
-     * @param fRev Doanh thu đồ ăn (Food Revenue).
+     * @param id Mã bản ghi.
+     * @param timestamp Thời gian thực (dd/mm/yyyy HH:MM:SS).
+     * @param type Loại doanh thu (TICKET/FOOD).
+     * @param relatedId Mã liên quan.
+     * @param amount Số tiền.
+     * @param info Thông tin bổ sung (mặc định rỗng).
      */
-    Revenue(string id, string date, string movieId, int tRev, int fRev);
+    Revenue(std::string id, std::string timestamp, std::string type, std::string relatedId, int amount, std::string info = "");
+
+    // --- Các phương thức Getter ---
+    
+    /** @brief Lấy ID bản ghi. */
+    std::string getId() const;
+    
+    /** @brief Lấy timestamp. */
+    std::string getTimestamp() const;
+    
+    /** @brief Lấy loại doanh thu (TICKET/FOOD). */
+    std::string getRevenueType() const;
+    
+    /** @brief Lấy mã liên quan. */
+    std::string getRelatedId() const;
+    
+    /** @brief Lấy số tiền doanh thu. */
+    int getAmount() const;
+    
+    /** @brief Lấy thông tin bổ sung. */
+    std::string getAdditionalInfo() const;
 
     /**
-     * @brief Lấy ngày ghi nhận doanh thu.
-     * * @return string Chuỗi ngày tháng.
+     * @brief Lấy ngày từ timestamp (dd/mm/yyyy).
+     * @return std::string Ngày.
      */
-    string getDate() const;
+    std::string getDateOnly() const;
 
     /**
-     * @brief Lấy mã bộ phim.
-     * * @return string ID của phim.
-     */
-    string getMovieId() const;
-
-    /**
-     * @brief Tính tổng doanh thu.
-     * * Hàm này cộng doanh thu vé và doanh thu đồ ăn để trả về tổng số tiền thu được.
-     * * @return int Tổng doanh thu (ticketRevenue + foodRevenue).
-     */
-    int getTotalRevenue() const;
-
-    /**
-     * @brief Hiển thị chi tiết doanh thu.
-     * * In ra màn hình các thông tin: Ngày, Phim, Tiền vé, Tiền đồ ăn và Tổng cộng
-     * theo định dạng bảng (sử dụng setw).
+     * @brief Hiển thị chi tiết bản ghi ra màn hình.
      */
     void display() const;
 };

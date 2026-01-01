@@ -1,24 +1,39 @@
 #include "FoodBUS.h"
-#include <vector>
-#include <string>
-using namespace std;
 
-vector<Food> FoodBUS::getAll() {
+FoodBUS::FoodBUS() {
+    foodDal.loadFoods(); 
+}
+
+std::vector<Food> FoodBUS::getAll() {
     foodDal.loadFoods();
     return foodDal.getList();
 }
 
-int FoodBUS::calculateOrderTotal(const vector<string>& idList) {
-    foodDal.loadFoods();
-    vector<Food> foods = foodDal.getList();
+void FoodBUS::addNewFood(std::string id, std::string name, int price) {
+    if (price < 0) return; 
+    Food f(id, name, price);
+    foodDal.addFood(f);
+}
 
+int FoodBUS::calculateOrderTotal(const std::vector<std::string>& idList) {
     int total = 0;
-    for (const auto& id : idList) { 
-        for (const auto& f : foods) {
-            if (f.getId() == id) { 
-                total += f.getPrice();
-            }
+    for (const std::string& id : idList) {
+        Food* f = foodDal.getFoodById(id);
+        if (f) {
+            total += f->getPrice();
         }
     }
     return total;
+}
+
+bool FoodBUS::updateFood(std::string id, std::string name, int price) {
+    if (id.empty() || name.empty() || price < 0) return false;
+    foodDal.loadFoods();
+    return foodDal.updateFood(id, name, price);
+}
+
+bool FoodBUS::deleteFood(std::string id) {
+    if (id.empty()) return false;
+    foodDal.loadFoods();
+    return foodDal.deleteFood(id);
 }
