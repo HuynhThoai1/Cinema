@@ -15,30 +15,30 @@ void Menu::showMainMenu() {
     int choice;
     while (true) {
         clearScreen();
-        printHeader("HE THONG QUAN LY RAP CHIEU PHIM");
+        printHeader("HỆ THỐNG QUẢN LÝ RẠP CHIẾU PHIM");
 
-        cout << CYAN << "1. Dang nhap" << RESET << "\n";
-        cout << CYAN << "2. Dang ky" << RESET << "\n";
-        cout << CYAN << "0. Thoat" << RESET << "\n";
+        cout << CYAN << "1. Đăng nhập" << RESET << "\n";
+        cout << CYAN << "2. Đăng ký" << RESET << "\n";
+        cout << CYAN << "0. Thoát" << RESET << "\n";
         cout << "------------------------------------------" << "\n";
 
-        choice = InputUtils::readInt("Nhap lua chon: ");
+        choice = InputUtils::readInt("Nhập lựa chọn: ");
 
         if (choice == 0) {
-            cout << GREEN << "Tam biet!" << RESET << "\n";
+            cout << GREEN << "Tạm biệt!" << RESET << "\n";
             break;
         }
 
         switch (choice) {
             case 1: {
                 std::string u, p;
-                cout << "Username: "; cin >> u;
-                cout << "Password: "; cin >> p;
+                cout << YELLOW << "Username: " << RESET; cin >> u;
+                cout << YELLOW << "Password: " << RESET; cin >> p;
 
                 User* loggedInUser = userBus.login(u, p);
 
                 if (loggedInUser != nullptr) {
-                    cout << GREEN << "\n>> Dang nhap thanh cong! Xin chao: " << RESET << loggedInUser->getUsername() << "\n";
+                    cout << GREEN << "\n>> Đăng nhập thành công! Xin chào: " << RESET << loggedInUser->getUsername() << "\n";
 
                     if (loggedInUser->getRole() == "Admin" || loggedInUser->getRole() == "admin") {
                         adminMenu.show();
@@ -47,26 +47,26 @@ void Menu::showMainMenu() {
                         custMenu.show();
                     }
                 } else {
-                    cout << RED << ">> Dang nhap that bai (Sai thong tin hoac tai khoan bi khoa)!" << RESET << "\n";
-                    cout << "(An Enter de tiep tuc...)"; cin.ignore(); cin.get();
+                    cout << RED << ">> Đăng nhập thất bại (Sai thông tin hoặc tài khoản bị khóa)!" << RESET << "\n";
+                    cout << "(Ấn Enter để tiếp tục...)"; cin.ignore(); cin.get();
                 }
                 break;
             }
             case 2: {
                 std::string u, p;
-                cout << "Tao Username: "; cin >> u;
-                cout << "Tao Password: "; cin >> p;
+                cout << "Tạo Username: "; cin >> u;
+                cout << "Tạo Password: "; cin >> p;
                 if (userBus.registerUser(u, p)) {
-                    cout << GREEN << ">> Dang ky thanh cong! Vui long dang nhap." << RESET << "\n";
+                    cout << GREEN << ">> Đăng ký thành công! Vui lòng đăng nhập." << RESET << "\n";
                 } else {
-                    cout << RED << ">> Username da ton tai!" << RESET << "\n";
+                    cout << RED << ">> Username đã tồn tại!" << RESET << "\n";
                 }
-                cout << "(An Enter de tiep tuc...)"; cin.ignore(); cin.get();
+                cout << "(Ấn Enter để tiếp tục...)"; cin.ignore(); cin.get();
                 break;
             }
             default:
-                cout << YELLOW << "Lua chon khong hop le!" << RESET << "\n";
-                cout << "(An Enter de tiep tuc...)"; cin.ignore(); cin.get();
+                cout << YELLOW << "Lựa chọn không hợp lệ!" << RESET << "\n";
+                cout << "(Ấn Enter để tiếp tục...)"; cin.ignore(); cin.get();
         }
     }
 }

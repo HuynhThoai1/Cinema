@@ -1,5 +1,5 @@
-F01,Bắp rang bơ,45000
-F02,Nước ngọt Pepsi,25000
-F03,Combo Hot Dog,65000
-F04,Snack Khoai Tây,20000
-C01,Cơm chay,20000
+F01,Popcorn,45000
+F02,Nachos,25000
+F03,Hot Dog,65000
+F04,Soda,20000
+C01,Candy/Sweets,10000

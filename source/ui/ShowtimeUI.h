@@ -39,8 +39,8 @@ public:
      * @param moviesPath File movies (vd: data/Movies.txt) để BUS validate movieId tồn tại
      */
     explicit ShowtimeUI(
-        const std::string& showtimesPath = "data/Showtime.txt",
-        const std::string& moviesPath = "data/Movies.txt"
+        const std::string& showtimesPath = "../data/Showtime.txt",
+        const std::string& moviesPath = "../data/Movies.txt"
     );
 
     /**

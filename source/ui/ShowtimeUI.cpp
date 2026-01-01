@@ -6,6 +6,7 @@
 #include "ShowtimeUI.h"
 #include "../utils/InputUtils.h"
 #include "../utils/FormatUI.h" // Import để dùng màu và clearScreen
+#include "MovieUI.h"
 
 #include <iostream>
 #include <string>
@@ -34,7 +35,7 @@ static string inputNonEmptyLine(const string& prompt) {
         std::getline(cin, s);
         s = trim(s);
         if (!s.empty()) return s;
-        cout << YELLOW << "-> Khong duoc de trong. Vui long nhap lai!\n" << RESET;
+        cout << YELLOW << "-> Không được để trống. Vui lòng nhập lại!\n" << RESET;
     }
 }
 // ------------------------------
@@ -43,28 +44,14 @@ ShowtimeUI::ShowtimeUI(const std::string& showtimesPath, const std::string& movi
     : showtimeBUS(ShowtimeDAL(showtimesPath), MovieDAL(moviesPath)) {}
 
 void ShowtimeUI::showAllShowtimes() {
-    cout << "===== TAT CA SUAT CHIEU (LICH CHIEU) =====\n";
+    cout << "===== TẤT CẢ SUẤT CHIẾU (LỊCH CHIẾU) =====\n";
 
-    // ShowtimeBUS hiện có getByMovie(movieId). Để show tất cả,
-    // ta đọc trực tiếp từ DAL thông qua BUS? Hiện BUS chưa có getAll(),
-    // nên cách đơn giản là: dùng DAL đọc trực tiếp tại UI là không đúng 3-layer.
-    // => Mình giữ đúng 3-layer: tạo "movieId = *" không hợp lý.
-    // GIẢI PHÁP: UI sẽ dùng ShowtimeDAL trực tiếp? (không nên).
-    //
-    // => Mình làm đúng 3-layer bằng cách:
-    // - Dùng ShowtimeDAL loadShowtimes() ngay tại UI là vi phạm nhẹ.
-    // - Nên nhất: thêm ShowtimeBUS::getAll() (nhưng bạn bảo sửa UI thôi).
-    //
-    // Mình chọn cách TỐT NHẤT mà vẫn ít thay đổi: UI đọc từ DAL qua bus nội bộ
-    // bằng cách tái tạo ShowtimeDAL cùng path và gọi loadShowtimes().
-    // Nếu bạn muốn "chuẩn 100%" thì mình sẽ gửi thêm file ShowtimeBUS.h/cpp để có getAll().
 
-    // Cách an toàn trong phạm vi UI:
     ShowtimeDAL dal("data/Showtime.txt");
     auto showtimes = dal.loadShowtimes();
 
     if (showtimes.empty()) {
-        cout << "-> Chua co suat chieu nao.\n";
+        cout << "-> Chưa có suất chiếu nào.\n";
         return;
     }
 
@@ -77,63 +64,56 @@ void ShowtimeUI::showAllShowtimes() {
 }
 
 void ShowtimeUI::searchShowtimesByMovieId() {
-    cout << "===== TIM SUAT CHIEU THEO MOVIE ID (TUY CHON) =====\n";
-    string movieId = inputNonEmptyLine("Nhap Movie ID: ");
+    cout << "===== TÌM SUẤT CHIẾU THEO MOVIE ID (TÙY CHỌN) =====\n";
+    string movieId = inputNonEmptyLine("Nhập Movie ID: ");
 
     auto sts = showtimeBUS.getByMovie(movieId);
     
     cout << "\n";
     if (sts.empty()) {
-        cout << YELLOW << ">> Khong co suat chieu nao cho phim nay.\n" << RESET;
+        cout << YELLOW << ">> Không có suất chiếu nào cho phim này.\n" << RESET;
     } else {
-        cout << GREEN << ">> Tim thay " << sts.size() << " suat chieu:\n" << RESET;
+        cout << GREEN << ">> Tìm thấy " << sts.size() << " suất chiếu:\n" << RESET;
         
         // Header bảng
-        cout << "---------------------------------------------------------\n";
-        cout << "| " << left << setw(10) << "ID"
-             << "| " << left << setw(10) << "MovieID"
-             << "| " << left << setw(20) << "Start Time"
-             << "| " << left << setw(10) << "Room"
-             << " |\n";
-        cout << "---------------------------------------------------------\n";
+        cout << GREEN << "---------------------------------------------------------\n";
+        cout << "| " << YELLOW << left << setw(10) << "ID"
+             << GREEN << "| " << YELLOW << left << setw(10) << "MovieID"
+             << GREEN << "| " << YELLOW << left << setw(20) << "Start Time"
+             << GREEN << "| " << YELLOW << left << setw(10) << "Room"
+             << GREEN << " |\n";
+        cout << "---------------------------------------------------------" << RESET << "\n";
 
         // Dữ liệu
         for (const auto& s : sts) {
-            cout << "| " << left << setw(10) << s.getId()
-                 << "| " << left << setw(10) << s.getMovieId()
-                 << "| " << left << setw(20) << s.getStartTime()
-                 << "| " << left << setw(10) << s.getRoom()
-                 << " |\n";
+            cout << GREEN << "| " << CYAN << left << setw(10) << s.getId()
+                 << GREEN << "| " << RESET << left << setw(10) << s.getMovieId()
+                 << GREEN << "| " << RESET << left << setw(20) << s.getStartTime()
+                 << GREEN << "| " << RESET << left << setw(10) << s.getRoom()
+                 << GREEN << " |" << RESET << "\n";
         }
-        cout << "---------------------------------------------------------\n";
-    }
-
-    for (const auto& s : sts) {
-        cout << "ID: " << s.getId()
-             << " | MovieID: " << s.getMovieId()
-             << " | Start: " << s.getStartTime()
-             << " | Room: " << s.getRoom() << "\n";
+        cout << GREEN << "---------------------------------------------------------" << RESET << "\n";
     }
 }
 
 void ShowtimeUI::addShowtime() {
-    cout << "===== ADMIN: THEM SUAT CHIEU =====\n";
-    string id = inputNonEmptyLine("Nhap Showtime ID: ");
-    string movieId = inputNonEmptyLine("Nhap Movie ID: ");
-    string startTime = inputNonEmptyLine("Nhap StartTime (yyyy-mm-dd HH:MM): ");
-    string room = inputNonEmptyLine("Nhap Phong chieu: ");
+    cout << "===== ADMIN: THÊM SUẤT CHIẾU =====\n";
+    string id = inputNonEmptyLine("Nhập Showtime ID: ");
+    string movieId = inputNonEmptyLine("Nhập Movie ID: ");
+    string startTime = inputNonEmptyLine("Nhập StartTime (yyyy-mm-dd HH:MM): ");
+    string room = inputNonEmptyLine("Nhập Phòng chiếu: ");
 
     // DTO Showtime ctor: (id, movieId, room, startTime)
     Showtime s(id, movieId, room, startTime);
 
     if (showtimeBUS.addShowtime(s)) {
-        cout << GREEN << "\n>> Them suat chieu thanh cong!" << RESET << "\n";
+        cout << GREEN << "\n>> Thêm suất chiếu thành công!" << RESET << "\n";
     } else {
-        cout << RED << "\n>> Them THAT BAI!" << RESET << "\n";
-        cout << "   (Nguyen nhan: ID trung, MovieID khong ton tai, hoac loi Dinh dang/Trung lich)\n";
+        cout << RED << "\n>> Thêm THẤT BẠI!" << RESET << "\n";
+        cout << "   (Nguyên nhân: ID trùng, MovieID không tồn tại, hoặc lỗi Định dạng/Trùng lịch)\n";
     }
     
-    cout << "(An Enter de tiep tuc...)";
+    cout << "(Ấn Enter để tiếp tục...)";
     // Clean buffer logic
     // cin.ignore() thường không cần thiết sau getline nếu không bị thừa ký tự, 
     // nhưng cứ thêm để an toàn
@@ -141,66 +121,98 @@ void ShowtimeUI::addShowtime() {
 }
 
 void ShowtimeUI::deleteShowtime() {
-    cout << "===== ADMIN: XOA SUAT CHIEU =====\n";
-    string id = inputNonEmptyLine("Nhap Showtime ID can xoa: ");
+    cout << "===== ADMIN: XÓA SUẤT CHIẾU =====\n";
+    string id = inputNonEmptyLine("Nhập Showtime ID cần xóa: ");
 
     if (showtimeBUS.deleteShowtime(id)) {
-        cout << "-> Xoa suat chieu thanh cong!\n";
+        cout << "-> Xóa suất chiếu thành công!\n";
     } else {
-        cout << "-> Xoa THAT BAI (ID khong ton tai)!\n";
+        cout << "-> Xóa THẤT BẠI (ID không tồn tại)!\n";
     }
 }
 
 void ShowtimeUI::runAdmin() {
+    MovieUI movieUI;
     while (true) {
-        cout << "\n===== SHOWTIME MENU (ADMIN) =====\n";
-        cout << "1. Xem TAT CA suat chieu\n";
-        cout << "2. Tim suat chieu theo Movie ID (tuy chon)\n";
-        cout << "3. Them suat chieu\n";
-        cout << "4. Xoa suat chieu\n";
-        cout << "0. Thoat\n";
-        cout << "Chon: ";
+        clearScreen();
+        printHeader("SHOWTIME MENU (ADMIN)");
+        
+        cout << CYAN << "1. Xem lịch chiếu" << RESET << "\n";
+        cout << CYAN << "2. Thêm suất chiếu" << RESET << "\n";
+        cout << CYAN << "3. Xóa suất chiếu" << RESET << "\n";
+        cout << CYAN << "0. Thoát" << RESET << "\n";
+        cout << "------------------------------------------\n";
+        cout << "Chọn: ";
 
         int choice;
         if (!(cin >> choice)) {
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            cout << "-> Lua chon khong hop le.\n";
+            cout << RED << "-> Lựa chọn không hợp lệ." << RESET << "\n";
+            cout << "(Ấn Enter để tiếp tục...)"; cin.get();
             continue;
         }
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch (choice) {
-            case 1: showAllShowtimes(); break;
-            case 2: searchShowtimesByMovieId(); break;
-            case 3: addShowtime(); break;
-            case 4: deleteShowtime(); break;
+            case 1: 
+                clearScreen();
+                movieUI.showAll();
+                searchShowtimesByMovieId();
+                cout << "(Ấn Enter để tiếp tục...)"; cin.get();
+                break;
+            case 2: 
+                clearScreen();
+                addShowtime();
+                cout << "(Ấn Enter để tiếp tục...)"; cin.get();
+                break;
+            case 3: 
+                clearScreen();
+                deleteShowtime();
+                cout << "(Ấn Enter để tiếp tục...)"; cin.get();
+                break;
             case 0: return;
-            default: cout << "-> Lua chon khong hop le.\n"; break;
+            default: 
+                cout << RED << "-> Lựa chọn không hợp lệ." << RESET << "\n";
+                cout << "(Ấn Enter để tiếp tục...)"; cin.get();
+                break;
         }
     }
 }
 
 void ShowtimeUI::runCustomer() {
+    MovieUI movieUI;
     while (true) {
-        cout << "\n===== SHOWTIME MENU (CUSTOMER) =====\n";
-        cout << "1. Xem lich chieu (TAT CA suat chieu)\n";
-        cout << "0. Thoat\n";
-        cout << "Chon: ";
+        clearScreen();
+        printHeader("SHOWTIME MENU (CUSTOMER)");
+        
+        cout << CYAN << "1. Xem lịch chiếu" << RESET << "\n";
+        cout << CYAN << "0. Thoát" << RESET << "\n";
+        cout << "------------------------------------------\n";
+        cout << "Chọn: ";
 
         int choice;
         if (!(cin >> choice)) {
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            cout << "-> Lua chon khong hop le.\n";
+            cout << RED << "-> Lựa chọn không hợp lệ." << RESET << "\n";
+            cout << "(Ấn Enter để tiếp tục...)"; cin.get();
             continue;
         }
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch (choice) {
-            case 1: showAllShowtimes(); break;
+            case 1: 
+                clearScreen();
+                movieUI.showAll();
+                searchShowtimesByMovieId();
+                cout << "(Ấn Enter để tiếp tục...)"; cin.get();
+                break;
             case 0: return;
-            default: cout << "-> Lua chon khong hop le.\n"; break;
+            default: 
+                cout << RED << "-> Lựa chọn không hợp lệ." << RESET << "\n";
+                cout << "(Ấn Enter để tiếp tục...)"; cin.get();
+                break;
         }
     }
 }

@@ -19,76 +19,84 @@ void AdminMenu::manageUsersMenu() {
     int subChoice;
     while (true) {
         clearScreen();
-        printHeader("QUAN LY NGUOI DUNG");
+        printHeader("QUẢN LÝ NGƯỜI DÙNG");
 
-        cout << CYAN << "1. Xem danh sach User" << RESET << "\n";
-        cout << CYAN << "2. Khoa tai khoan" << RESET << "\n";
-        cout << CYAN << "3. Mo khoa tai khoan" << RESET << "\n";
-        cout << CYAN << "0. Quay lai Menu chinh" << RESET << "\n";
+        cout << CYAN << "1. Xem danh sách User" << RESET << "\n";
+        cout << CYAN << "2. Khóa tài khoản" << RESET << "\n";
+        cout << CYAN << "3. Mở khóa tài khoản" << RESET << "\n";
+        cout << CYAN << "0. Quay lại Menu chính" << RESET << "\n";
         cout << "------------------------------------------\n";
         
-        subChoice = InputUtils::readInt("Nhap lua chon: ");
+        subChoice = InputUtils::readInt("Nhập lựa chọn: ");
 
         if (subChoice == 0) break; 
 
         switch (subChoice) {
             case 1: {
                 clearScreen();
-                printHeader("DANH SACH KHACH HANG");
+                printHeader("DANH SÁCH KHÁCH HÀNG");
                 vector<User*> users = adminBus.getAllUsers();
                 
+                cout << "\n";
+                if (users.empty()) {
+                    cout << YELLOW << ">> Chưa có người dùng nào." << RESET << "\n";
+                    cout << "(Ấn Enter để quay lại...)"; 
+                    cin.ignore(); cin.get();
+                    break;
+                }
+                
                 // Header bảng
-                cout << "---------------------------------------------------------\n";
-                cout << "| " << left << setw(5)  << "ID" 
-                     << "| " << left << setw(25) << "Username"
-                     << "| " << left << setw(15) << "Role"
-                     << " |\n";
-                cout << "---------------------------------------------------------\n";
+                cout << GREEN << "---------------------------------------------------------\n";
+                cout << "| " << YELLOW << left << setw(5)  << "ID" 
+                     << GREEN << "| " << YELLOW << left << setw(25) << "Username"
+                     << GREEN << "| " << YELLOW << left << setw(15) << "Role"
+                     << GREEN << " |\n";
+                cout << "---------------------------------------------------------" << RESET << "\n";
                 
                 // Dữ liệu bảng
                 for (auto u : users) {
                     if (u->getRole() == "Admin" || u->getRole() == "admin") continue;
                     
-                    cout << "| " << left << setw(5)  << u->getId()
-                         << "| " << left << setw(25) << u->getUsername()
-                         << "| " << left << setw(15) << u->getRole()
-                         << " |\n";
+                    cout << GREEN << "| " << CYAN << left << setw(5)  << u->getId()
+                         << GREEN << "| " << RESET << left << setw(25) << u->getUsername()
+                         << GREEN << "| " << RESET << left << setw(15) << u->getRole()
+                         << GREEN << " |" << RESET << "\n";
                 }
-                cout << "---------------------------------------------------------\n";
+                cout << GREEN << "---------------------------------------------------------" << RESET << "\n";
                 
-                cout << "(An Enter de quay lai...)"; 
-                cin.ignore(); cin.get();
+                cout << "(Ấn Enter để quay lại...)"; 
+                cin.get();
                 break; 
             }
             case 2: {
                 string id;
-                cout << "Nhap ID can khoa: "; cin >> id;
+                cout << "Nhập ID cần khóa: "; cin >> id;
                 if (adminBus.lockUser(id)) {
-                    cout << GREEN << ">> Khoa tai khoan thanh cong!" << RESET << "\n";
+                    cout << GREEN << ">> Khóa tài khoản thành công!" << RESET << "\n";
                 } else {
-                    cout << RED << ">> Loi: ID khong ton tai hoac la Admin." << RESET << "\n";
+                    cout << RED << ">> Lỗi: ID không tồn tại hoặc là Admin." << RESET << "\n";
                 }
                 
-                cout << "(An Enter de tiep tuc...)"; 
+                cout << "(Ấn Enter để tiếp tục...)"; 
                 cin.ignore(); cin.get();
                 break;
             }
             case 3: {
                 string id;
-                cout << "Nhap ID can mo khoa: "; cin >> id;
+                cout << "Nhập ID cần mở khóa: "; cin >> id;
                 if (adminBus.unlockUser(id)) {
-                    cout << GREEN << ">> Mo khoa thanh cong!" << RESET << "\n";
+                    cout << GREEN << ">> Mở khóa thành công!" << RESET << "\n";
                 } else {
-                    cout << RED << ">> Loi: ID khong hop le." << RESET << "\n";
+                    cout << RED << ">> Lỗi: ID không hợp lệ." << RESET << "\n";
                 }
                 
-                cout << "(An Enter de tiep tuc...)"; 
+                cout << "(Ấn Enter để tiếp tục...)"; 
                 cin.ignore(); cin.get();
                 break;
             }
             default:
-                cout << YELLOW << ">> Lua chon khong hop le!" << RESET << "\n";
-                cout << "(An Enter de thu lai...)"; 
+                cout << YELLOW << ">> Lựa chọn không hợp lệ!" << RESET << "\n";
+                cout << "(Ấn Enter để thử lại...)"; 
                 cin.ignore(); cin.get();
         }
     }
@@ -105,18 +113,18 @@ void AdminMenu::show() {
         clearScreen();
         printHeader("ADMIN DASHBOARD");
 
-        cout << CYAN << "1. Quan ly Nguoi dung (Xem/Khoa/Mo)" << RESET << "\n";
-        cout << CYAN << "2. Quan ly Phim (Movie Module)" << RESET << "\n";
-        cout << CYAN << "3. Quan suat chieu (Movie Module)" << RESET << "\n";
-        cout << CYAN << "4. Quan ly Doanh thu (Revenue Module)" << RESET << "\n";
-        cout << CYAN << "5. Quan ly Do an (Food Module)" << RESET << "\n";
-        cout << CYAN << "0. Dang xuat" << RESET << "\n";
+        cout << CYAN << "1. Quản lý Người dùng (Xem/Khóa/Mở)" << RESET << "\n";
+        cout << CYAN << "2. Quản lý Phim (Movie Module)" << RESET << "\n";
+        cout << CYAN << "3. Quản suất chiếu (Movie Module)" << RESET << "\n";
+        cout << CYAN << "4. Quản lý Doanh thu (Revenue Module)" << RESET << "\n";
+        cout << CYAN << "5. Quản lý Đồ ăn (Food Module)" << RESET << "\n";
+        cout << CYAN << "0. Đăng xuất" << RESET << "\n";
         cout << "------------------------------------------\n";
 
-        choice = InputUtils::readInt("Nhap lua chon: ");
+        choice = InputUtils::readInt("Nhập lựa chọn: ");
 
         if (choice == 0) {
-            cout << GREEN << ">> Dang dang xuat..." << RESET << "\n";
+            cout << GREEN << ">> Đang đăng xuất..." << RESET << "\n";
             // Có thể thêm sleep hoặc pause nhẹ ở đây nếu cần
             break;
         }
@@ -129,7 +137,7 @@ void AdminMenu::show() {
             movieUI.run();
             break;
         case 3:
-            showtimeUI.run();
+            showtimeUI.runAdmin();
             break;
         case 4:
             revenueUI.process();
@@ -138,8 +146,8 @@ void AdminMenu::show() {
             foodUI.adminMenu();
             break;
         default:
-            cout << YELLOW << ">> Lua chon khong hop le!" << RESET << "\n";
-            cout << "(An Enter de thu lai...)"; 
+            cout << YELLOW << ">> Lựa chọn không hợp lệ!" << RESET << "\n";
+            cout << "(Ấn Enter để thử lại...)"; 
             cin.ignore(); cin.get();
         }
     }

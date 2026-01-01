@@ -14,10 +14,13 @@
 #include <iostream>
 #include <string>
 #include <limits>
+#include <iomanip>
 
 using std::cin;
 using std::cout;
 using std::string;
+using std::left;
+using std::setw;
 
 static string trim(string s) {
     const char* ws = " \t\r\n";
@@ -34,7 +37,7 @@ static string inputNonEmptyLine(const string& prompt) {
         std::getline(cin, s);
         s = trim(s);
         if (!s.empty()) return s;
-        cout << "-> Khong duoc de trong. Vui long nhap lai!\n";
+        cout << "-> Không được để trống. Vui lòng nhập lại!\n";
     }
 }
 
@@ -49,74 +52,89 @@ static int inputIntInRange(const string& prompt, int minVal, int maxVal) {
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
-        cout << "-> Gia tri khong hop le. Vui long nhap lai!\n";
+        cout << "-> Giá trị không hợp lệ. Vui lòng nhập lại!\n";
     }
 }
 
 void MovieUI::showAll() {
     auto movies = movieBUS.getAll();
+    
+    cout << "\n";
     if (movies.empty()) {
-        cout << "Chua co phim nao.\n";
+        cout << YELLOW << ">> Chưa có phim nào.\n" << RESET;
         return;
     }
 
-    cout << "===== DANH SACH PHIM =====\n";
+    cout << GREEN << ">> Tìm thấy " << movies.size() << " phim:\n" << RESET;
+    
+    // Header bảng
+    cout << GREEN << "-------------------------------------------------------------------------\n";
+    cout << "| " << YELLOW << left << setw(10) << "ID"
+         << GREEN << "| " << YELLOW << left << setw(25) << "Tên Phim"
+         << GREEN << "| " << YELLOW << left << setw(15) << "Thể Loại"
+         << GREEN << "| " << YELLOW << left << setw(12) << "Thời Lượng"
+         << GREEN << " |\n";
+    cout << "-------------------------------------------------------------------------" << RESET << "\n";
+
+    // Dữ liệu
     for (const auto& m : movies) {
-        cout << CYAN << "ID: " << m.getId()
-             << " | Ten: " << m.getTitle()
-             << " | The loai: " << m.getGenre()
-             << " | Thoi luong: " << m.getDuration() << " phut"<< RESET <<"\n";
+        cout << GREEN << "| " << CYAN << left << setw(10) << m.getId()
+             << GREEN << "| " << RESET << left << setw(25) << m.getTitle()
+             << GREEN << "| " << RESET << left << setw(15) << m.getGenre()
+             << GREEN << "| " << RESET << left << setw(12) << (std::to_string(m.getDuration()) + " phút")
+             << GREEN << " |" << RESET << "\n";
     }
+    cout << GREEN << "-------------------------------------------------------------------------" << RESET << "\n";
 }
 
 void MovieUI::addMovie() {
-    cout << "===== THEM PHIM =====\n";
-    string id = inputNonEmptyLine("Nhap ID phim: ");
-    string title = inputNonEmptyLine("Nhap ten phim: ");
-    string genre = inputNonEmptyLine("Nhap the loai: ");
-    int duration = inputIntInRange("Nhap thoi luong (1..500): ", 1, 500);
+    cout << "===== THÊM PHIM =====\n";
+    string id = inputNonEmptyLine("Nhập ID phim: ");
+    string title = inputNonEmptyLine("Nhập tên phim: ");
+    string genre = inputNonEmptyLine("Nhập thể loại: ");
+    int duration = inputIntInRange("Nhập thời lượng (1..500): ", 1, 500);
 
     Movie movie(id, title, genre, duration);
-    if (movieBUS.addMovie(movie)) cout << "-> Them phim thanh cong!\n";
-    else cout << "-> Them phim THAT BAI (co the trung ID / du lieu khong hop le)!\n";
+    if (movieBUS.addMovie(movie)) cout << "-> Thêm phim thành công!\n";
+    else cout << "-> Thêm phim THẤT BẠI (có thể trùng ID / dữ liệu không hợp lệ)!\n";
 }
 
 void MovieUI::updateMovie() {
-    cout << "===== CAP NHAT PHIM =====\n";
-    string id = inputNonEmptyLine("Nhap ID phim can cap nhat: ");
-    string title = inputNonEmptyLine("Nhap ten phim moi: ");
-    string genre = inputNonEmptyLine("Nhap the loai moi: ");
-    int duration = inputIntInRange("Nhap thoi luong moi (1..500): ", 1, 500);
+    cout << "===== CẬP NHẬT PHIM =====\n";
+    string id = inputNonEmptyLine("Nhập ID phim cần cập nhật: ");
+    string title = inputNonEmptyLine("Nhập tên phim mới: ");
+    string genre = inputNonEmptyLine("Nhập thể loại mới: ");
+    int duration = inputIntInRange("Nhập thời lượng mới (1..500): ", 1, 500);
 
     Movie movie(id, title, genre, duration);
-    if (movieBUS.updateMovie(movie)) cout << "-> Cap nhat phim thanh cong!\n";
-    else cout << "-> Cap nhat THAT BAI (ID khong ton tai / du lieu khong hop le)!\n";
+    if (movieBUS.updateMovie(movie)) cout << "-> Cập nhật phim thành công!\n";
+    else cout << "-> Cập nhật THẤT BẠI (ID không tồn tại / dữ liệu không hợp lệ)!\n";
 }
 
 void MovieUI::deleteMovie() {
-    cout << "===== XOA PHIM =====\n";
-    string id = inputNonEmptyLine("Nhap ID phim can xoa: ");
+    cout << "===== XÓA PHIM =====\n";
+    string id = inputNonEmptyLine("Nhập ID phim cần xóa: ");
 
-    if (movieBUS.deleteMovie(id)) cout << "-> Xoa phim thanh cong!\n";
-    else cout << "-> Xoa THAT BAI (ID khong ton tai / phim dang co suat chieu)!\n";
+    if (movieBUS.deleteMovie(id)) cout << "-> Xóa phim thành công!\n";
+    else cout << "-> Xóa THẤT BẠI (ID không tồn tại / phim đang có suất chiếu)!\n";
 }
 
 void MovieUI::run() {
     while (true) {
         clearScreen();
         printHeader("MOVIE MENU");
-        cout << CYAN << "1. Xem danh sach phim" << RESET << "\n";
-        cout << CYAN << "2. Them phim" << RESET << "\n";
-        cout << CYAN << "3. Cap nhat phim" << RESET << "\n";
-        cout << CYAN << "4. Xoa phim" << RESET << "\n";
-        cout << CYAN << "0. Thoat" << RESET << "\n";
-        cout << "Chon: ";
+        cout << CYAN << "1. Xem danh sách phim" << RESET << "\n";
+        cout << CYAN << "2. Thêm phim" << RESET << "\n";
+        cout << CYAN << "3. Cập nhật phim" << RESET << "\n";
+        cout << CYAN << "4. Xóa phim" << RESET << "\n";
+        cout << CYAN << "0. Thoát" << RESET << "\n";
+        cout << "Chọn: ";
 
         int choice;
         if (!(cin >> choice)) {
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            cout << "-> Lua chon khong hop le.\n";
+            cout << "-> Lựa chọn không hợp lệ.\n";
             continue;
         }
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -127,8 +145,8 @@ void MovieUI::run() {
             case 3: updateMovie(); break;
             case 4: deleteMovie(); break;
             case 0: return;
-            default: cout << "-> Lua chon khong hop le.\n"; break;
+            default: cout << "-> Lựa chọn không hợp lệ.\n"; break;
         }
-        cout << "(An Enter de tiep tuc...)"; cin.ignore(); cin.get();
+        cout << "(Ấn Enter để tiếp tục...)"; cin.ignore(); cin.get();
     }
 }
