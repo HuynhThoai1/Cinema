@@ -23,3 +23,4 @@ TKT17669317651 | S002 | Avengers: Endgame | Room 1 | C6 | U10 | 50000 | 22:00 | 
 TKT17669319322 | S001 | Avengers: Endgame | Room 1 | D6 | U10 | 80000 | 19:30 | 2025-12-30
 TKT17669326641 | S002 | Avengers: Endgame | Room 1 | D6 | U10 | 80000 | 22:00 | 2025-12-05
 TKT17669331821 | S002 | Avengers: Endgame | Room 1 | E10 | U10 | 80000 | 22:00 | 2025-12-05
+TKT17672662921 | S002 | Avatar: The Way of Water | Room 1 | E1 | U10 | 80000 | 22:00 | 2025-12-05

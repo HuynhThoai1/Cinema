@@ -128,23 +128,31 @@ void FoodUI::deleteFood() {
 
 void FoodUI::showAllFoods() {
     std::vector<Food> list = foodBus.getAll();
+    
+    std::cout << "\n";
     if (list.empty()) {
-        std::cout << RED << "\n>> Chưa có món ăn nào trong hệ thống." << RESET << "\n";
+        std::cout << YELLOW << ">> Chưa có món ăn nào trong hệ thống." << RESET << "\n";
         return;
     }
 
-    std::cout << BLUE << std::string(40, '=') << RESET << "\n";
-    std::cout << std::left << std::setw(10) << "ID" 
-              << std::setw(25) << "TÊN MÓN" 
-              << std::right << std::setw(12) << "GIÁ (VND)" << "\n";
-    std::cout << BLUE << std::string(40, '=') << RESET << "\n";
+    std::cout << GREEN << ">> Tìm thấy " << list.size() << " món ăn:\n" << RESET;
+    
+    // Header bảng
+    std::cout << GREEN << "-------------------------------------------------------\n";
+    std::cout << "| " << YELLOW << std::left << std::setw(10) << "ID"
+         << GREEN << "| " << YELLOW << std::left << std::setw(30) << "Menu"
+         << GREEN << "| " << YELLOW << std::left << std::setw(12) << "Giá (VND)"
+         << GREEN << " |\n";
+    std::cout << "-------------------------------------------------------" << RESET << "\n";
 
+    // Dữ liệu
     for (auto &f : list) {
-        std::cout << std::left << std::setw(10) << f.getId()
-                  << std::setw(25) << f.getName()
-                  << std::right << std::setw(12) << f.getPrice() << "\n";
+        std::cout << GREEN << "| " << CYAN << std::left << std::setw(10) << f.getId()
+             << GREEN << "| " << RESET << std::left << std::setw(30) << f.getName()
+             << GREEN << "| " << RESET << std::left << std::setw(12) << f.getPrice()
+             << GREEN << " |" << RESET << "\n";
     }
-    std::cout << BLUE << std::string(40, '=') << RESET << "\n";
+    std::cout << GREEN << "-------------------------------------------------------" << RESET << "\n";
 }
 
 void FoodUI::purchaseFood() {

@@ -46,13 +46,13 @@ void TicketUI::printHeader(string title) {
 void TicketUI::drawSeatMap(string showtimeId, string roomId) {
     vector<SeatDisplay> seats = seatBus.getSeatsByShowtime(showtimeId, roomId);
     
-    cout << "\n\t" << CYAN << "--- SO DO PHONG CHIEU: " << roomId << " (Suat: " << showtimeId << ") ---" << RESET << "\n";
+    cout << "\n\t" << CYAN << "--- SƠ ĐỒ PHÒNG CHIẾU: " << roomId << " (Suất: " << showtimeId << ") ---" << RESET << "\n";
     cout << "\n\t       ___________________________________";
-    cout << "\n\t      |            MAN HINH               |";
+    cout << "\n\t      |            MÀN HÌNH               |";
     cout << "\n\t       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n\n";
 
     if (seats.empty()) {
-        cout << RED << "\t(!) Khong tim thay du lieu ghe." << RESET << endl;
+        cout << RED << "\t(!) Không tìm thấy dữ liệu ghế." << RESET << endl;
         return;
     }
 
@@ -71,20 +71,20 @@ void TicketUI::drawSeatMap(string showtimeId, string roomId) {
             cout << GREEN << "[" << setw(2) << s.id << "]" << RESET << " ";
         }
     }
-    cout << "\n\n\t" << GREEN << "[  ] Ghe Trong" << RESET << " | " << RED << "[XX] Da Dat" << RESET << endl;
+    cout << "\n\n\t" << GREEN << "[  ] Ghế Trống" << RESET << " | " << RED << "[XX] Đã Đặt" << RESET << endl;
 }
 
 // Vẫn giữ hàm này để hiển thị khi người dùng vào quy trình đặt vé
 void TicketUI::viewMovies() {
-    printHeader("DANH SACH PHIM DANG CHIEU");
+    printHeader("DANH SÁCH PHIM ĐANG CHIẾU");
     vector<Movie> movies = movieBus.getAll(); 
 
     if (movies.empty()) {
-        cout << "(!) Chua co phim nao trong he thong.\n";
+        cout << "(!) Chưa có phim nào trong hệ thống.\n";
         return;
     }
 
-    cout << left << setw(10) << "ID" << setw(30) << "Ten Phim" << setw(15) << "Thoi luong" << endl;
+    cout << left << setw(10) << "ID" << setw(30) << "Tên Phim" << setw(15) << "Thời lượng" << endl;
     cout << "--------------------------------------------------------" << endl;
     for (const auto& m : movies) {
         cout << left << setw(10) << m.getId() 
@@ -97,20 +97,20 @@ void TicketUI::processBookingWorkflow() {
     // 1. CHỌN PHIM
     viewMovies();
     string movieId;
-    cout << "\n>> Nhap ID Phim muon xem (hoac '0' de quay lai): ";
+    cout << "\n>> Nhập ID Phim muốn xem (hoặc '0' để quay lại): ";
     cin >> movieId;
     if (movieId == "0") return;
 
     // 2. CHỌN SUẤT CHIẾU
     vector<Showtime> shows = showtimeBus.getByMovie(movieId); 
     if (shows.empty()) {
-        cout << RED << "(!) Phim nay hien chua co suat chieu nao." << RESET << endl;
-        cout << "(An Enter de quay lai...)"; cin.ignore(); cin.get();
+        cout << RED << "(!) Phim này hiện chưa có suất chiếu nào." << RESET << endl;
+        cout << "(Ấn Enter để quay lại...)"; cin.ignore(); cin.get();
         return;
     }
 
-    printHeader("CHON SUAT CHIEU");
-    cout << left << setw(10) << "ID" << setw(20) << "Thoi gian" << setw(10) << "Phong" << endl;
+    printHeader("CHỌN SUẤT CHIẾU");
+    cout << left << setw(10) << "ID" << setw(20) << "Thời gian" << setw(10) << "Phòng" << endl;
     for (const auto& s : shows) {
         cout << left << setw(10) << s.getId() 
              << setw(20) << s.getStartTime() 
@@ -118,12 +118,12 @@ void TicketUI::processBookingWorkflow() {
     }
 
     string showtimeId;
-    cout << "\n>> Nhap ID Suat chieu: ";
+    cout << "\n>> Nhập ID Suất chiếu: ";
     cin >> showtimeId;
 
     Showtime* selectedShow = showtimeBus.findById(showtimeId);
     if (selectedShow == nullptr) {
-        cout << RED << "(!) Ma suat chieu khong hop le!" << RESET << endl;
+        cout << RED << "(!) Mã suất chiếu không hợp lệ!" << RESET << endl;
         return;
     }
     string roomId = selectedShow->getRoom();
@@ -133,16 +133,16 @@ void TicketUI::processBookingWorkflow() {
     drawSeatMap(showtimeId, roomId);
 
     int qty;
-    cout << "\n>> Ban muon dat bao nhieu ve? ";
+    cout << "\n>> Bạn muốn đặt bao nhiêu vé? ";
     
     // VALIDATION NHẬP SỐ LƯỢNG (Code cũ giữ nguyên)
     while (true) {
         cin >> qty;
         if (cin.fail()) {
-            cout << "     [!] Loi: Vui long chi nhap so nguyen. Nhap lai: ";
+            cout << "     [!] Lỗi: Vui lòng chỉ nhập số nguyên. Nhập lại: ";
             cin.clear(); cin.ignore(10000, '\n');
         } else if (qty <= 0 || qty > 50) { // Giả sử max là 50
-            cout << "     [!] Loi: So luong phai > 0 va <= 50. Nhap lai: ";
+            cout << "     [!] Lỗi: Số lượng phải > 0 và <= 50. Nhập lại: ";
         } else {
             cin.ignore(10000, '\n'); // Xóa enter thừa
             break;
@@ -157,12 +157,12 @@ void TicketUI::processBookingWorkflow() {
 
     for (int i = 0; i < qty; i++) {
         string s;
-        cout << "   - Nhap ma ghe thu " << (i + 1) << " (VD: A" << (i + 1) << "): ";
+        cout << "   - Nhập mã ghế thứ " << (i + 1) << " (VD: A" << (i + 1) << "): ";
         cin >> s;
 
         // --- BƯỚC 1: KIỂM TRA ĐỊNH DẠNG (Code cũ giữ nguyên) ---
         if (!isValidSeatFormat(s)) {
-             cout << RED << "     [!] Loi: Dinh dang ghe sai! (VD dung: A1, B12). Nhap lai!\n" << RESET;
+             cout << RED << "     [!] Lỗi: Định dạng ghế sai! (VD đúng: A1, B12). Nhập lại!\n" << RESET;
              i--; continue;
         }
 
@@ -175,7 +175,7 @@ void TicketUI::processBookingWorkflow() {
             if (seat == s) { isDuplicate = true; break; }
         }
         if (isDuplicate) {
-            cout << YELLOW << "     [!] Ghe nay da duoc ban chon roi. Chon ghe khac!\n" << RESET;
+            cout << YELLOW << "     [!] Ghế này đã được bạn chọn rồi. Chọn ghế khác!\n" << RESET;
             i--; continue;
         }
 
@@ -184,17 +184,17 @@ void TicketUI::processBookingWorkflow() {
         long long p = seatBus.getSeatPrice(showtimeId, roomId, s); // Đây là giá gốc
 
         if (!seatAvailable) {
-            cout << RED << "     [!] Ghe " << s << " khong ton tai hoac da duoc dat. Vui long chon ghe khac!\n" << RESET;
+            cout << RED << "     [!] Ghế " << s << " không tồn tại hoặc đã được đặt. Vui lòng chọn ghế khác!\n" << RESET;
             i--; continue;
         }
 
         if (p <= 0) {
-             cout << RED << "     [!] Loi du lieu ghe " << s << ". Vui long chon ghe khac!\n" << RESET;
+             cout << RED << "     [!] Lỗi dữ liệu ghế " << s << ". Vui lòng chọn ghế khác!\n" << RESET;
              i--; continue;
         }
 
         // --- [THÊM MỚI] BƯỚC 4.5: CHỌN LOẠI VÉ CHO GHẾ NÀY ---
-        cout << "     Loai ve cho ghe " << s << "? (1.NguoiLon, 2.TreEm-50%, 3.SinhVien-20%): ";
+        cout << "     Loại vé cho ghế " << s << "? (1.NgườiLớn, 2.TrẻÊm-50%, 3.SinhViên-20%): ";
         int typeChoice;
         // Validate nhập số đơn giản
         if(!(cin >> typeChoice)) { 
@@ -222,13 +222,13 @@ void TicketUI::processBookingWorkflow() {
         // [SỬA] Cộng giá đã giảm vào tổng tiền hiển thị (thay vì giá gốc p)
         tempTotalPrice += finalPrice;
         
-        cout << "     -> Da them: " << GREEN << s << RESET 
+        cout << "     -> Đã thêm: " << GREEN << s << RESET 
              << " (" << typeStr << ")" // In thêm loại vé cho user biết
-             << " | Gia: " << finalPrice << " VND\n";
+             << " | Giá: " << finalPrice << " VND\n";
     }
 
-    cout << "\nTong tien du kien: " << YELLOW << tempTotalPrice << " VND" << RESET << endl;
-    cout << "Xac nhan dat " << qty << " ve nay? (y/n): ";
+    cout << "\nTổng tiền dự kiến: " << YELLOW << tempTotalPrice << " VND" << RESET << endl;
+    cout << "Xác nhận đặt " << qty << " vé này? (y/n): ";
     char confirm;
     cin >> confirm;
 
@@ -237,26 +237,26 @@ void TicketUI::processBookingWorkflow() {
         // (Đây là chỗ bắt buộc phải sửa vì hàm bên kia đã thay đổi)
         bookingFacade.processBooking(currentUserId, showtimeId, selectedSeats, selectedTypes);
     } else {
-        cout << "\nDa huy thao tac." << endl;
+        cout << "\nĐã hủy thao tác." << endl;
     }
 
-    cout << "(An Enter de tiep tuc...)"; cin.ignore(); cin.get();
+    cout << "(Ấn Enter để tiếp tục...)"; cin.ignore(); cin.get();
 }
 
 void TicketUI::processCancelWorkflow() {
-    printHeader("HUY VE DA DAT");
+    printHeader("HỦY VÉ ĐÃ ĐẶT");
     string ticketId;
 
-    cout << ">> Nhap Ma Ve can huy (VD: TKT123456789): ";
+    cout << ">> Nhập Mã Vé cần hủy (VD: TKT123456789): ";
     cin >> ticketId;
 
-    cout << "Ban co chac chan muon huy ve " << YELLOW << ticketId << RESET << "? (y/n): ";
+    cout << "Bạn có chắc chắn muốn hủy vé " << YELLOW << ticketId << RESET << "? (y/n): ";
     char confirm;
     cin >> confirm;
 
     if (confirm != 'y' && confirm != 'Y') {
-        cout << "\nDa huy thao tac." << endl;
-        cout << "(An Enter de quay lai...)"; cin.ignore(); cin.get();
+        cout << "\nĐã hủy thao tác." << endl;
+        cout << "(Ấn Enter để quay lại...)"; cin.ignore(); cin.get();
         return;
     }
 
@@ -264,46 +264,47 @@ void TicketUI::processCancelWorkflow() {
     bool success = bookingFacade.cancelTicket(ticketId, resultMsg);
 
     if (success) {
-        cout << "\n" << GREEN << "(!) THANH CONG: " << resultMsg << RESET << endl;
+        cout << "\n" << GREEN << "(!) THÀNH CÔNG: " << resultMsg << RESET << endl;
     } else {
-        cout << "\n" << RED << "(!) THAT BAI: " << resultMsg << RESET << endl;
+        cout << "\n" << RED << "(!) THẤT BẠI: " << resultMsg << RESET << endl;
     }
 
-    cout << "(An Enter de quay lai...)"; cin.ignore(); cin.get();
+    cout << "(Ấn Enter để quay lại...)"; cin.ignore(); cin.get();
 }
 
 void TicketUI::run() {
     int choice;
     while (true) {
         clearScreen();
-        printHeader("HE THONG DAT VE XEM PHIM (DEMO)");
+        printHeader("HE THONG DAT VE XEM PHIM");
         
-        // --- MENU ĐÃ ĐƯỢC RÚT GỌN ---
-        cout << "1. Dat ve xem phim (Booking)" << endl;
-        cout << "2. Huy ve da dat (Cancel Ticket)" << endl;
-        cout << "0. Thoat" << endl;
-        
-        cout << "------------------------------------------" << endl;
-        cout << ">> Nhap lua chon: ";
+        cout << CYAN << "1. Dat ve xem phim" << RESET << "\n";
+        cout << CYAN << "2. Huy ve da dat" << RESET << "\n";
+        cout << CYAN << "0. Quay lai" << RESET << "\n";
+        cout << "------------------------------------------\n";
+        cout << "Chon: ";
         
         if (!(cin >> choice)) {
-            cin.clear(); cin.ignore(1000, '\n'); continue;
+            cin.clear(); cin.ignore(1000, '\n'); 
+            cout << RED << ">> Lua chon khong hop le!" << RESET << "\n";
+            cout << "(An Enter de tiep tuc...)"; cin.get();
+            continue;
         }
 
         switch (choice) {
             case 1: 
-                // Không cần clearScreen ở đây vì trong hàm Booking đã có rồi
                 processBookingWorkflow(); 
                 break;
             case 2: 
-                clearScreen(); // Cancel cần clear màn hình cho sạch
+                clearScreen();
                 processCancelWorkflow(); 
                 break;
             case 0: 
-                cout << "Tam biet!" << endl; 
                 return;
             default: 
-                cout << "Lua chon khong hop le!" << endl;
+                cout << RED << ">> Lua chon khong hop le!" << RESET << "\n";
+                cout << "(An Enter de tiep tuc...)"; cin.ignore(); cin.get();
+                break;
         }
     }
 }

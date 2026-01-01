@@ -3,6 +3,7 @@
 #include "../utils/FormatUI.h"
 #include "TicketUI.h"
 #include "FoodUI.h"
+#include "ShowtimeUI.h"
 #include <iostream>
 
 using namespace std;
@@ -17,10 +18,11 @@ void CustomerMenu::show() {
     TicketUI ticketUI;
     MovieUI movieUI;
     FoodUI foodUI;
+    ShowtimeUI showtimeUI;
     int choice;
     while (true) {
         clearScreen();
-        printHeader("KHACH HANG");
+        printHeader("KHÁCH HÀNG");
 
         cout << CYAN << "1. Xem danh sách phim" << RESET << "\n";
         cout << CYAN << "2. Xem lịch chiếu phim" << RESET << "\n";
@@ -36,14 +38,13 @@ void CustomerMenu::show() {
                 movieUI.showAll();
                 break;
             case 2:
-                // TODO: Xem lịch chiếu phim
-                
+                showtimeUI.runCustomer();
                 break;
             case 3:
                 if (currentUser != nullptr) {
                     ticketUI.setCurrentUser(currentUser->getId());
                 } else {
-                    cout << RED << "Loi: Khong xac dinh duoc nguoi dung!" << RESET << "\n";
+                    cout << RED << "Lỗi: Không xác định được người dùng!" << RESET << "\n";
                     break;
                 }
                 ticketUI.run();
@@ -52,8 +53,8 @@ void CustomerMenu::show() {
                 foodUI.customerMenu();
                 break;
             default:
-                cout << YELLOW << ">> Sai lua chon!" << RESET << "\n";
+                cout << YELLOW << ">> Sai lựa chọn!" << RESET << "\n";
         }
-        cout << "(An Enter de tiep tuc...)"; cin.ignore(); cin.get();
+        cout << "(Ấn Enter để tiếp tục...)"; cin.ignore(); cin.get();
     }
 }
