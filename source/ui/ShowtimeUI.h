@@ -18,7 +18,7 @@
 class ShowtimeUI {
 private:
     /** @brief BUS xử lý nghiệp vụ suất chiếu. */
-    ShowtimeBUS showtimeBUS;
+    ShowtimeBUS showtimeBUS{ShowtimeDAL("../data/Showtime.txt")};
 
     /** @brief Hiển thị toàn bộ suất chiếu (không tìm kiếm). */
     void showAllShowtimes();
@@ -33,15 +33,7 @@ private:
     void deleteShowtime();
 
 public:
-    /**
-     * @brief Khởi tạo ShowtimeUI với đường dẫn dữ liệu.
-     * @param showtimesPath File showtimes (vd: data/Showtime.txt)
-     * @param moviesPath File movies (vd: data/Movies.txt) để BUS validate movieId tồn tại
-     */
-    explicit ShowtimeUI(
-        const std::string& showtimesPath = "../data/Showtime.txt",
-        const std::string& moviesPath = "../data/Movies.txt"
-    );
+
 
     /**
      * @brief Menu của Admin (xem tất cả, tìm theo movieId, thêm, xóa).
