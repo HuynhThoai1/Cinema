@@ -28,7 +28,7 @@ g++ -std=c++23 \
     -o out/cinema
 
 cp out/cinema ../release/
-cp out/cinema ../release/
+cp -r data ../release/
 ```
 
 ## Hướng dẫn chạy
