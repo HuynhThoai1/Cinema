@@ -19,7 +19,7 @@ BookingFacade::BookingFacade() {
 
 
 bool BookingFacade::processBooking(string userId, string showtimeId, vector<string> seatList, vector<string> typeList) {
-    cout << "\n --- XU LY DAT VE (" << seatList.size() << " ghe) ---" << "\n";
+    cout << "\n --- XỬ LÝ ĐẶT VÉ (" << seatList.size() << " ghế) ---" << "\n";
 
     string movieTitle = "Unknown";
     string roomName = "Unknown";
@@ -28,7 +28,7 @@ bool BookingFacade::processBooking(string userId, string showtimeId, vector<stri
     // --- BƯỚC 1: TÌM SUẤT CHIẾU (Chỉ cần làm 1 lần) ---
     Showtime* showtimePtr = showtimeBus.findById(showtimeId);
     if (showtimePtr == nullptr) {
-        cout << " -> LOI: Khong tim thay suat chieu ID: " << showtimeId << "\n";
+        cout << " -> Lỗi: Không tìm thấy suất chiếu ID: " << showtimeId << "\n";
         return false;
     }
 
@@ -43,14 +43,14 @@ bool BookingFacade::processBooking(string userId, string showtimeId, vector<stri
     }
 
 
-    cout << " -> B1: Xac nhan: " << movieTitle 
-         << " | Thoi gian: " << fullStartTime 
-         << " | Phong: " << roomName << "\n";
+    cout << " -> B1: xác nhận: " << movieTitle 
+         << " | Thời gian: " << fullStartTime 
+         << " | Phòng: " << roomName << "\n";
 
     // --- BƯỚC 2: CHECK TOÀN BỘ GHẾ TRƯỚC (Pre-check) ---
     for (const string& seatId : seatList) {
         if (!seatBus.checkAvailable(showtimeId, roomName, seatId)) {
-            cout << " -> LOI: Ghe " << seatId << " da co nguoi dat. Huy toan bo giao dich." << "\n";
+            cout << " -> Lỗi: Ghế " << seatId << " đã có người đặt. Hủy toàn bộ giao dịch." << "\n";
             return false;
         }
     }
@@ -94,7 +94,7 @@ bool BookingFacade::processBooking(string userId, string showtimeId, vector<stri
 
         // 3.2. Đặt ghế
         if (!seatBus.bookSeat(showtimeId, roomName, seatId)) {
-            cout << " -> LOI: Khong the dat ghe " << seatId << " (Loi he thong)." << "\n";
+            cout << " -> Lỗi: Không thể đặt ghế " << seatId << " (ỗi hệ thống)." << "\n";
             totalPrice -= finalPrice; // Trừ lại tiền nếu lỗi
             continue; 
         }
@@ -158,7 +158,7 @@ bool BookingFacade::cancelTicket(string ticketId, string& outMessage) {
     Ticket* ticket = ticketBus.getTicketById(ticketId); // Cần thêm hàm này ở TicketBUS
     
     if (ticket == nullptr) {
-        outMessage = "Khong tim thay ma ve nay trong he thong.";
+        outMessage = "Không tìm thấy mã vé này trong hệ thống.";
         return false;
     }
 
@@ -169,18 +169,18 @@ bool BookingFacade::cancelTicket(string ticketId, string& outMessage) {
     // B2: Mở khóa ghế (Unlock)
     // Vì ghế đã đặt rồi nên unlockSeat sẽ trả về true nếu mở thành công
     if (!seatBus.unlockSeat(showtimeId, roomId, seatId)) {
-        outMessage = "Loi he thong: Khong the mo khoa ghe (hoac du lieu ghe khong khop).";
+        outMessage = "ỗi hệ thống: Không thể mở khóa ghế (hoặc dữ liệu ghế không khớp).";
         delete ticket; 
         return false;
     }
 
     // B3: Xóa vé khỏi file Tickets.txt
     if (ticketBus.cancelTicket(ticketId)) {
-        outMessage = "Da huy ve va hoan lai ghe " + seatId + " cho suat chieu " + showtimeId;
+        outMessage = "Đã hủy vé và hoàn lại ghế " + seatId + " cho suất chiếu " + showtimeId;
         delete ticket;
         return true;
     } else {
-        outMessage = "Loi: Khong the xoa ve khoi co so du lieu.";
+        outMessage = "Lỗi: Không thể xóa vé khỏi cơ sở dữ liệu.";
         // (Ở đây lẽ ra nên rollback lock lại ghế, nhưng tạm thời bỏ qua cho đơn giản)
         delete ticket;
         return false;

@@ -110,12 +110,6 @@ void ShowtimeUI::addShowtime() {
         cout << RED << "\n>> Thêm THẤT BẠI!" << RESET << "\n";
         cout << "   (Nguyên nhân: ID trùng, MovieID không tồn tại, hoặc lỗi Định dạng/Trùng lịch)\n";
     }
-    
-    cout << "(Ấn Enter để tiếp tục...)";
-    // Clean buffer logic
-    // cin.ignore() thường không cần thiết sau getline nếu không bị thừa ký tự, 
-    // nhưng cứ thêm để an toàn
-    // cin.get();
 }
 
 void ShowtimeUI::deleteShowtime() {

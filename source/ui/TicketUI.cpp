@@ -300,7 +300,6 @@ void TicketUI::run() {
                 processCancelWorkflow(); 
                 break;
             case 0: 
-                std::cout << "(Nhấn Enter để tiếp tục...)"; std::cin.get();
                 return;
             default: 
                 cout << RED << ">> lựa chọn không hợp lệ!" << RESET << "\n";
