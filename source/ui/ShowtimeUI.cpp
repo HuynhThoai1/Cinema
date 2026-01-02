@@ -40,8 +40,6 @@ static string inputNonEmptyLine(const string& prompt) {
 }
 // ------------------------------
 
-ShowtimeUI::ShowtimeUI(const std::string& showtimesPath, const std::string& moviesPath)
-    : showtimeBUS(ShowtimeDAL(showtimesPath), MovieDAL(moviesPath)) {}
 
 void ShowtimeUI::showAllShowtimes() {
     cout << "===== TẤT CẢ SUẤT CHIẾU (LỊCH CHIẾU) =====\n";

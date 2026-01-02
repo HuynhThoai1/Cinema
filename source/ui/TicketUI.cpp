@@ -276,7 +276,7 @@ void TicketUI::run() {
     int choice;
     while (true) {
         clearScreen();
-        printHeader("HE THONG DAT VE XEM PHIM");
+        printHeader("DAT VE XEM PHIM");
         
         cout << CYAN << "1. Dat ve xem phim" << RESET << "\n";
         cout << CYAN << "2. Huy ve da dat" << RESET << "\n";

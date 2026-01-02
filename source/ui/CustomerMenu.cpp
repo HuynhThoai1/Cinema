@@ -55,6 +55,6 @@ void CustomerMenu::show() {
             default:
                 cout << YELLOW << ">> Sai lựa chọn!" << RESET << "\n";
         }
-        cout << "(Ấn Enter để tiếp tục...)"; cin.ignore(); cin.get();
+        cout << "(Ấn Enter để tiếp tục...)";  cin.get();
     }
 }
