@@ -37,3 +37,6 @@ cd ../release
 ./cinema
 ```
 
+Lưu ý: Trong môi trường Linux (Codespaces), file thực thi không có đuôi `.exe`
+và được chạy bằng lệnh `./cinema`. Khi biên dịch trên Windows, chương trình sẽ
+tạo file `cinema.exe` và có thể chạy trực tiếp bằng cách nhấn đúp.
