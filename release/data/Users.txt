@@ -1,0 +1,11 @@
+U00|admin|1|Admin
+U01|nguoi_A|123456|Customer
+U02|Mai_Van_Hien|123456789|Customer
+U03|admin_vip|123456|Admin
+U04|khach_hang_A|123456|Customer
+U05|khach_hang_B|password_yeu|Customer
+U06|ke_xau_xa|123456|Locked
+U07|admin_du_phong|1|Admin
+U08|khach_vip|vip123|Customer
+U10|hoangvu|123456|Customer
+U11|thoai123|thoai123|Customer

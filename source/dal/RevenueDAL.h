@@ -11,6 +11,7 @@
 #include <fstream>
 #include <sstream>
 #include "../dto/Revenue.h"
+#include "../utils/FilePath.h"
 
 /**
  * @class RevenueDAL
@@ -19,7 +20,7 @@
 class RevenueDAL {
 private:
     std::vector<Revenue> listRevenue; ///< Danh sách doanh thu trong RAM
-    const std::string FILE_NAME = "../data/Revenue.txt"; ///< Đường dẫn file
+    const std::string FILE_NAME = DATA_PATH("Revenue.txt"); ///< Đường dẫn file
 
 public:
     /**

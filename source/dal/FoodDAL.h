@@ -11,6 +11,7 @@
 #include <fstream>
 #include <sstream>
 #include "../dto/Food.h"
+#include "../utils/FilePath.h"
 
 /**
  * @class FoodDAL
@@ -19,7 +20,7 @@
 class FoodDAL {
 private:
     std::vector<Food> listFood; ///< Cache danh sách món ăn trong bộ nhớ
-    const std::string FILE_NAME = "../data/FoodandDrink.txt"; ///< Đường dẫn file dữ liệu
+    const std::string FILE_NAME = DATA_PATH("FoodandDrink.txt"); ///< Đường dẫn file dữ liệu
 
 public:
     /**

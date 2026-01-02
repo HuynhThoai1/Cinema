@@ -1,10 +1,10 @@
 #include "AdminBUS.h"
 
-AdminBUS::AdminBUS() : DATA_FILE("../data/Users.txt") {
+AdminBUS::AdminBUS() : DATA_FILE(DATA_PATH("Users.txt")) {
     this->loadUsers();
 }
 
-AdminBUS::AdminBUS(const string& filename) : DATA_FILE(filename) {
+AdminBUS::AdminBUS(const string& filename) : DATA_FILE(DATA_PATH(filename)) {
     this->loadUsers();
 }
 

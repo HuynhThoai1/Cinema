@@ -276,18 +276,18 @@ void TicketUI::run() {
     int choice;
     while (true) {
         clearScreen();
-        printHeader("DAT VE XEM PHIM");
+        printHeader("ĐẶT VÉ & HỦY VÉ");
         
-        cout << CYAN << "1. Dat ve xem phim" << RESET << "\n";
-        cout << CYAN << "2. Huy ve da dat" << RESET << "\n";
-        cout << CYAN << "0. Quay lai" << RESET << "\n";
+        cout << CYAN << "1. Đặt vé xem phim" << RESET << "\n";
+        cout << CYAN << "2. Hủy vé đã đặt" << RESET << "\n";
+        cout << CYAN << "0. Quay lại" << RESET << "\n";
         cout << "------------------------------------------\n";
-        cout << "Chon: ";
+        cout << "Chọn: ";
         
         if (!(cin >> choice)) {
             cin.clear(); cin.ignore(1000, '\n'); 
-            cout << RED << ">> Lua chon khong hop le!" << RESET << "\n";
-            cout << "(An Enter de tiep tuc...)"; cin.get();
+            cout << RED << ">> lựa chọn không hợp lệ!" << RESET << "\n";
+            cout << "(Ấn Enter để tiếp tục...)"; cin.get();
             continue;
         }
 
@@ -300,10 +300,11 @@ void TicketUI::run() {
                 processCancelWorkflow(); 
                 break;
             case 0: 
+                std::cout << "(Nhấn Enter để tiếp tục...)"; std::cin.get();
                 return;
             default: 
-                cout << RED << ">> Lua chon khong hop le!" << RESET << "\n";
-                cout << "(An Enter de tiep tuc...)"; cin.ignore(); cin.get();
+                cout << RED << ">> lựa chọn không hợp lệ!" << RESET << "\n";
+                cout << "(Ấn Enter để tiếp tục...)"; cin.ignore(); cin.get();
                 break;
         }
     }

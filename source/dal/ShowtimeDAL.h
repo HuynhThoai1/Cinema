@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../dto/Showtime.h"
+#include "../utils/FilePath.h"
 
 /**
  * @class ShowtimeDAL
@@ -15,7 +16,7 @@ private:
     std::string filePath;
 
 public:
-    explicit ShowtimeDAL(std::string filePath = "../data/Showtime.txt");
+    explicit ShowtimeDAL(std::string filePath = DATA_PATH("Showtime.txt"));
 
     std::vector<Showtime> loadShowtimes();
     void saveShowtimes(const std::vector<Showtime>& showtimes);

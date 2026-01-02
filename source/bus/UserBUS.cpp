@@ -1,12 +1,12 @@
 #include "UserBUS.h"
 #include "../utils/Validation.h" 
 
-UserBUS::UserBUS() : DATA_FILE("../data/Users.txt") {
+UserBUS::UserBUS() : DATA_FILE(DATA_PATH("Users.txt")) {
     this->currentUser = nullptr;
     this->loadData();
 }
 
-UserBUS::UserBUS(const string& filename) : DATA_FILE(filename) {
+UserBUS::UserBUS(const string& filename) : DATA_FILE(DATA_PATH(filename)) {
     this->currentUser = nullptr;
     this->loadData();
 }

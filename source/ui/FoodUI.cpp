@@ -37,7 +37,7 @@ void FoodUI::customerMenu() {
     int choice;
     do {
         clearScreen();
-        printHeader("MENU THỨC ĂN");
+        printHeader("MUA THỨC ĂN");
         std::cout << CYAN << "1. Xem menu thức ăn" << RESET << "\n";
         std::cout << CYAN << "2. Mua thức ăn" << RESET << "\n";
         std::cout << CYAN << "0. Quay lại" << RESET << "\n";

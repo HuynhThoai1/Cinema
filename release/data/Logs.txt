@@ -1,0 +1,7 @@
+03/12/2025 08:00:00|ADMIN|LOGIN|Dang nhap he thong thanh cong
+03/12/2025 08:30:15|STAFF01|SELL_TICKET|Ban ve TK001 cho khach Doan Phuoc D
+03/12/2025 08:30:15|STAFF01|SELL_TICKET|Ban ve TK002 cho khach Nguyen Van A
+03/12/2025 09:15:00|ADMIN|ADD_MOVIE|Them phim moi: Avatar 3
+04/12/2025 10:00:00|STAFF02|SELL_FOOD|Ban F01 (Bap rang bo) x2
+05/12/2025 14:00:00|SYSTEM|ERROR|Khong tim thay file cau hinh man hinh, ma loi 404
+05/12/2025 17:00:00|ADMIN|LOGOUT|Dang xuat he thong

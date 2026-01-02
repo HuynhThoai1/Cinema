@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "../dto/Movie.h"
+#include "../utils/FilePath.h"
 
 /**
  * @class MovieDAL
@@ -14,7 +15,7 @@ private:
     std::string filePath;
 
 public:
-    explicit MovieDAL(std::string filePath = "../data/Movies.txt");
+    explicit MovieDAL(std::string filePath = DATA_PATH("Movies.txt"));
 
     std::vector<Movie> loadMovies();
     void saveMovies(const std::vector<Movie>& movies);

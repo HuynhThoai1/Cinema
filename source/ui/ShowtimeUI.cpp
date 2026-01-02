@@ -45,7 +45,7 @@ void ShowtimeUI::showAllShowtimes() {
     cout << "===== TẤT CẢ SUẤT CHIẾU (LỊCH CHIẾU) =====\n";
 
 
-    ShowtimeDAL dal("data/Showtime.txt");
+    ShowtimeDAL dal(DATA_PATH("Showtime.txt"));
     auto showtimes = dal.loadShowtimes();
 
     if (showtimes.empty()) {
@@ -62,7 +62,7 @@ void ShowtimeUI::showAllShowtimes() {
 }
 
 void ShowtimeUI::searchShowtimesByMovieId() {
-    cout << "===== TÌM SUẤT CHIẾU THEO MOVIE ID (TÙY CHỌN) =====\n";
+    printHeader("TÌM SUẤT CHIẾU THEO MOVIE ID");
     string movieId = inputNonEmptyLine("Nhập Movie ID: ");
 
     auto sts = showtimeBUS.getByMovie(movieId);
