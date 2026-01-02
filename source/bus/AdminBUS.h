@@ -11,6 +11,7 @@
 #include <iostream>
 #include "../dal/UserDAL.h"
 #include "../dto/User.h"
+#include "../utils/FilePath.h"
 
 class AdminBUS {
 private:

@@ -4,6 +4,7 @@
 #include "../bus/ShowtimeBUS.h"
 #include "../dal/ShowtimeDAL.h"
 #include "../dal/MovieDAL.h"
+#include "../utils/FilePath.h"
 
 /**
  * @file ShowtimeUI.h

@@ -147,6 +147,8 @@ void MovieUI::run() {
             case 0: return;
             default: cout << "-> Lựa chọn không hợp lệ.\n"; break;
         }
-        cout << "(Ấn Enter để tiếp tục...)"; cin.ignore(); cin.get();
+        cout << "(Ấn Enter để tiếp tục...)"; 
+        // cin.ignore(); 
+        cin.get();
     }
 }

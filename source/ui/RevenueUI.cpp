@@ -12,31 +12,31 @@ void RevenueUI::process() {
         clearScreen();
         printHeader("QUAN LY DOANH THU");
         
-        std::cout << CYAN << "1. Xem bao cao" << RESET << "\n";
-        std::cout << CYAN << "2. Nhap doanh thu" << RESET << "\n";
-        std::cout << CYAN << "0. Quay lai" << RESET << "\n";
+        std::cout << CYAN << "1. Xem báo cáo" << RESET << "\n";
+        std::cout << CYAN << "2. Nhập doanh thu" << RESET << "\n";
+        std::cout << CYAN << "0. Quay lại" << RESET << "\n";
         std::cout << "------------------------------------------\n";
         
-        choice = InputUtils::readInt("Chon: ");
+        choice = InputUtils::readInt("Chọn: ");
         
         if (choice == 0) break;
         
         switch(choice) {
             case 1: 
                 clearScreen();
-                printHeader("BAO CAO DOANH THU");
+                printHeader("BÁO CÁO DOANH THU");
                 showAllRevenue();
-                std::cout << "(An Enter de tiep tuc...)"; std::cin.get();
+                std::cout << "(Ấn Enter để tiếp tục...)"; std::cin.get();
                 break;
             case 2: 
                 clearScreen();
-                printHeader("NHAP DOANH THU");
+                printHeader("NHẬP DOANH THU");
                 inputRevenue();
-                std::cout << "(An Enter de tiep tuc...)"; std::cin.get();
+                std::cout << "(Ấn Enter để tiếp tục...)"; std::cin.get();
                 break;
             default:
-                std::cout << RED << ">> Lua chon khong hop le!" << RESET << "\n";
-                std::cout << "(An Enter de tiep tuc...)"; std::cin.get();
+                std::cout << RED << ">> Lựa chọn không hợp lệ!" << RESET << "\n";
+                std::cout << "(Ấn Enter để tiếp tục...)"; std::cin.get();
                 break;
         }
     }
@@ -44,12 +44,12 @@ void RevenueUI::process() {
 
 void RevenueUI::inputRevenue() {
     std::string date, movie; int tick, food;
-    std::cout << YELLOW << "Ngay (dd/mm/yyyy): " << RESET; getline(std::cin, date);
-    std::cout << YELLOW << "Ma phim: " << RESET; getline(std::cin, movie);
-    tick = InputUtils::readInt(std::string(YELLOW) + "Tien ve: " + RESET);
-    food = InputUtils::readInt(std::string(YELLOW) + "Tien do an: " + RESET);
+    std::cout << YELLOW << "Ngày (dd/mm/yyyy): " << RESET; getline(std::cin, date);
+    std::cout << YELLOW << "Mã phim: " << RESET; getline(std::cin, movie);
+    tick = InputUtils::readInt(std::string(YELLOW) + "Tiền vé: " + RESET);
+    food = InputUtils::readInt(std::string(YELLOW) + "Tiền đồ ăn: " + RESET);
     revBus.addRevenueRecord(date, movie, tick, food);
-    std::cout << GREEN << ">> Da luu ban ghi doanh thu!" << RESET << "\n";
+    std::cout << GREEN << ">> Đã lưu bản ghi doanh thu!" << RESET << "\n";
 }
 
 void RevenueUI::showAllRevenue() {
@@ -57,13 +57,13 @@ void RevenueUI::showAllRevenue() {
     
     std::cout << "\n";
     if (list.empty()) {
-        std::cout << YELLOW << ">> Chua co ban ghi doanh thu nao." << RESET << "\n";
+        std::cout << YELLOW << ">> Chưa có bản ghi doanh thu nào." << RESET << "\n";
         return;
     }
     
-    std::cout << GREEN << ">> Tim thay " << list.size() << " ban ghi:\n" << RESET;
+    std::cout << GREEN << ">> Tìm thấy " << list.size() << " bản ghi:\n" << RESET;
     
-    // Header bang
+    // Header bảng
     std::cout << GREEN << "--------------------------------------------------------------------------------\n";
     std::cout << "| " << YELLOW << std::left << std::setw(6) << "ID"
               << GREEN << "| " << YELLOW << std::left << std::setw(25) << "Thoi Gian" 
@@ -84,6 +84,6 @@ void RevenueUI::showAllRevenue() {
         totalRevenue += r.getAmount();
     }
     std::cout << GREEN << "--------------------------------------------------------------------------------" << RESET << "\n";
-    std::cout << YELLOW << "TONG DOANH THU: " << totalRevenue << " VND" << RESET << "\n";
+    std::cout << YELLOW << "TỔNG DOANH THU: " << totalRevenue << " VND" << RESET << "\n";
     std::cout << GREEN << "--------------------------------------------------------------------------------" << RESET << "\n";
 }

@@ -22,6 +22,7 @@
 #include "ShowtimeBUS.h"
 #include "MovieBUS.h"
 #include "RevenueBUS.h"  // [MỚI] Để ghi nhận doanh thu tự động
+#include "../utils/FilePath.h"
 
 using std::string;
 

@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include "../utils/FilePath.h"
 
 using std::string;
 using std::vector;
@@ -36,7 +37,7 @@ struct SeatDisplay {
 class SeatBUS {
 private:
     SeatDAL seatDal;                            ///< Đối tượng thao tác với dữ liệu ghế (DAL).
-    const string FILE_NAME = "../data/Seats.txt"; ///< Đường dẫn đến file dữ liệu gốc của ghế.
+    const string FILE_NAME = DATA_PATH("Seats.txt"); ///< Đường dẫn đến file dữ liệu gốc của ghế.
     const vector<string> ALL_ROWS = {"A", "B", "C", "D", "E"}; ///< Danh sách các hàng ghế cố định.
     const int SEATS_PER_ROW = 10;               ///< Số lượng ghế tối đa trên mỗi hàng.
 

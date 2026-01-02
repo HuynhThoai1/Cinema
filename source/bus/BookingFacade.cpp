@@ -13,8 +13,8 @@ using std::stringstream;
 using std::to_string;
 
 BookingFacade::BookingFacade() {
-    movieBus.load("../data/Movies.txt");
-    showtimeBus.load("../data/Showtime.txt");
+    movieBus.load(DATA_PATH("Movies.txt"));
+    showtimeBus.load(DATA_PATH("Showtime.txt"));
 }
 
 

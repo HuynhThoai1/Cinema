@@ -25,7 +25,7 @@ string TicketBUS::createAndSaveTicket(string type, string customerName, string s
     string generatedID = newTicket->getTicketID();
 
     // 2. Lưu xuống File qua DAL
-    bool success = TicketDAL::saveTickets("../data/Tickets.txt", *newTicket);
+    bool success = TicketDAL::saveTickets(DATA_PATH("Tickets.txt"), *newTicket);
 
     // 3. Dọn dẹp bộ nhớ (Vì Factory dùng 'new', ta phải 'delete')
     delete newTicket; 
@@ -42,7 +42,7 @@ string TicketBUS::createAndSaveTicket(string type, string customerName, string s
 
 
 Ticket* TicketBUS::getTicketById(string ticketId) {
-    string fileName = "../data/Tickets.txt"; // [SỬA] Đường dẫn tương đối
+    string fileName = DATA_PATH("Tickets.txt"); // [SỬA] Đường dẫn tương đối
     if(!DALUtils::fileManagementTest(fileName)) return nullptr;
 
     vector<Ticket> allTickets = TicketDAL::loadTickets(fileName);
@@ -56,7 +56,7 @@ Ticket* TicketBUS::getTicketById(string ticketId) {
     return nullptr;
 }
 bool TicketBUS::cancelTicket(string ticketID) {
-    string fileName = "../data/Tickets.txt"; // [SỬA] Đường dẫn tương đối
+    string fileName = DATA_PATH("Tickets.txt"); // [SỬA] Đường dẫn tương đối
     if(!DALUtils::fileManagementTest(fileName)) return false;
 
     // Lưu ý: TicketDAL::loadTickets cần được implement đúng để hàm này chạy
