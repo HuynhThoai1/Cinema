@@ -3,13 +3,22 @@
 #include <ctime>     // tzset
 
 RevenueBUS::RevenueBUS() {
-    // Đặt timezone nếu môi trường đang là UTC (Codespaces/Container)
     const char* tz = std::getenv("TZ");
-    if (!tz || std::string(tz) == "UTC" || std::string(tz) == "Etc/UTC") {
-        // Mặc định chuyển sang múi giờ Việt Nam để khớp giờ máy người dùng
+
+    bool isUTC = (!tz || std::string(tz) == "UTC" || std::string(tz) == "Etc/UTC");
+
+    if (isUTC) {
+    #ifdef _WIN32
+        // Windows: dùng _putenv_s
+        _putenv_s("TZ", "Asia/Ho_Chi_Minh");
+        _tzset();
+    #else
+        // Linux / Mac / Codespaces
         setenv("TZ", "Asia/Ho_Chi_Minh", 1);
         tzset();
+    #endif
     }
+
     revenueDal.loadRevenues();
 }
 
