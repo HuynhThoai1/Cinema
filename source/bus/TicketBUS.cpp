@@ -3,7 +3,7 @@
 #include <format> // Cần cho hàm format trong cancelTicket
 #include <fstream>
 using std::cout;
-
+using std::format;
 
 #include "TicketBUS.h"
 

@@ -29,7 +29,7 @@ public:
      * @return std::string Chuỗi tiền tệ đã được định dạng đẹp mắt.
      */
     static std::string formatCurrency(long long amount);
-
+    static bool isValidSeatId(const std::string& seatId);
     // static void cancelTicket(Ticket ticket);
 };
 

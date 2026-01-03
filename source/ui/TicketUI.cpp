@@ -182,7 +182,10 @@ void TicketUI::processBookingWorkflow() {
         // --- BƯỚC 4: KIỂM TRA TỒN TẠI & TRẠNG THÁI (Code cũ giữ nguyên) ---
         bool seatAvailable = seatBus.checkAvailable(showtimeId, roomId, s);
         long long p = seatBus.getSeatPrice(showtimeId, roomId, s); // Đây là giá gốc
-
+        if (!BUSUtils::isValidSeatId(s)) {
+            cout << RED << "     [!] Ghế " << s << " không tồn tại trong phòng " << roomId << ". Vui lòng chọn ghế khác!\n" << RESET;
+            i--; continue;
+        }
         if (!seatAvailable) {
             cout << RED << "     [!] Ghế " << s << " không tồn tại hoặc đã được đặt. Vui lòng chọn ghế khác!\n" << RESET;
             i--; continue;

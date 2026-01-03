@@ -88,7 +88,7 @@ public:
 
     /**
      * @brief Lấy giá tiền của một ghế cụ thể.
-     * @details Giá vé có thể phụ thuộc vào loại ghế (VIP/Thường) hoặc vị trí.
+     * @details Giá vé có thể phụ thuộc vào loại ghế (Normal, Child,...) hoặc vị trí.
      * @param showtimeId Mã suất chiếu (để tính giá theo khung giờ nếu cần).
      * @param roomId Mã phòng chiếu.
      * @param seatId Mã ghế cần lấy giá.

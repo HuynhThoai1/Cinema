@@ -49,6 +49,11 @@ bool BookingFacade::processBooking(string userId, string showtimeId, vector<stri
 
     // --- BƯỚC 2: CHECK TOÀN BỘ GHẾ TRƯỚC (Pre-check) ---
     for (const string& seatId : seatList) {
+        // 🔴 2.1. Check ghế có tồn tại không
+        if (!BUSUtils::isValidSeatId(seatId)) {
+            cout << " -> Lỗi: Ghế " << seatId << " KHÔNG TỒN TẠI trong phòng " << roomName << "\n";
+            return false;
+        }
         if (!seatBus.checkAvailable(showtimeId, roomName, seatId)) {
             cout << " -> Lỗi: Ghế " << seatId << " đã có người đặt. Hủy toàn bộ giao dịch." << "\n";
             return false;
@@ -169,7 +174,7 @@ bool BookingFacade::cancelTicket(string ticketId, string& outMessage) {
     // B2: Mở khóa ghế (Unlock)
     // Vì ghế đã đặt rồi nên unlockSeat sẽ trả về true nếu mở thành công
     if (!seatBus.unlockSeat(showtimeId, roomId, seatId)) {
-        outMessage = "ỗi hệ thống: Không thể mở khóa ghế (hoặc dữ liệu ghế không khớp).";
+        outMessage = "Lỗi hệ thống: Không thể mở khóa ghế (hoặc dữ liệu ghế không khớp).";
         delete ticket; 
         return false;
     }
